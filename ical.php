@@ -38,10 +38,10 @@ class ical {
 
         // fix missing time on all day events
         if($key === "DTSTART" && strlen(trim($value)) === 8){
-          $value = trim($value) . "T000000Z\n";
+          $value = trim($value) . "T000000Z\r\n";
         }
         if($key === "DTEND" && strlen(trim($value)) === 8){
-          $value = trim($value) . "T000000Z\n";
+          $value = trim($value) . "T000000Z\r\n";
         }
 
         // avoid overwriting end event tag (with end calendar tag)

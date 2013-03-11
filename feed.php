@@ -1,6 +1,6 @@
 <?php
 header('Content-type: text/calendar;charset=utf-8');
-header('Content-Disposition: attachment; filename="file.ics"');
+header('Content-Disposition: attachment; filename="feed.ics"');
 
 // header('Content-Type: text/plain; charset=utf-8');
 
