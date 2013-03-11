@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule feed.ics feed.php [L]
