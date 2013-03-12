@@ -4,7 +4,9 @@ If you are like me, you have been overloaded by annoying events from friends you
 
 This service will filter your events, so only the events you are attending, or maybe attending will show up.
 
+### Contributions
+I took inspirations in Roman Ožana's (@OzzyCzech) work on iCalendar parsing.
 
-* Roadmap *
+### Roadmap
  - Make a better UI
  - Show new pending events from "Close friends"
