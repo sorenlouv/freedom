@@ -20,9 +20,9 @@ $('#facebook-feed').submit(function(e){
 
     var uid = queryString[1];
     var key = queryString[2];
-    var newLink = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
+    //var newLink = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
     var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
-    var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newLink);
+    var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
     // Add succes event to GA
     _gaq.push(['_trackEvent', 'feedSubmitted', 'success', uid]);
