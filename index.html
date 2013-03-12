@@ -10,11 +10,6 @@
     <h1>fCalendar - a better way to export Facebook events!</h1>
     <form id="facebook-feed" class="navbar-form pull-left">
       <input type="text" placeholder="Paste Facebook feed url">
-<!--       <div class="btn-group" data-toggle="buttons-checkbox">
-        <button type="button" class="btn btn-primary active">Attending</button>
-        <button type="button" class="btn btn-primary active">Maybe attending</button>
-      </div> -->
-
       <button type="submit" class="btn">Fix my feed</button>
     </form>
 
@@ -26,6 +21,28 @@
 
     <div class="alert alert-success" style="display:none">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+
+    <div class="accordion" id="accordion2">
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+            How to find your Facebook feed
+          </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <p>1. Open <a href="https://www.facebook.com/events/list">https://www.facebook.com/events/list</a></p>
+            <p>2. Click the options icon <img src="img/options-icon.png" width="20"></p>
+            <p>3. Click "Export"</p>
+            <p>4. Copy the "upcoming events" link</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+
     </div>
     <script src="js/jquery-1.9.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>

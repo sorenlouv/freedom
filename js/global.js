@@ -1,3 +1,4 @@
+// submit feed
 $('#facebook-feed').submit(function(e){
     e.preventDefault();
 
@@ -14,8 +15,6 @@ $('#facebook-feed').submit(function(e){
         .fadeIn();
         return false;
     }
-
-
 
     var uid = queryString[1];
     var key = queryString[2];
