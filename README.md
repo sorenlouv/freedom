@@ -1,6 +1,6 @@
 fCalendar is a simple service to improve upon Facebook's event feed.
 
-If you are like me, you have been overloaded by annoying events from friends you don't even know. These event find their way into the calendar on you phone and computer, before you can click "Unattend!!".
+If you are like me, you have been overloaded by annoying events from friends you don't even know. These events find their way into the calendar on you phone and computer, before you can click "Unattend!!".
 
 This service will filter your events, so only the events you are attending, or maybe attending will show up.
 
