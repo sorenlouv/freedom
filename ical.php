@@ -75,12 +75,12 @@ class ical {
      * Header
      **/
     // calendar begin
-    // $header = "BEGIN:" . $calendarHeader["BEGIN"];
-    // unset($calendarHeader["BEGIN"]);
+    $header = "BEGIN:" . $calendarHeader["BEGIN"];
+    unset($calendarHeader["BEGIN"]);
 
-    // // calendar version
-    // $header .= "VERSION:" . $calendarHeader["VERSION"];
-    // unset($calendarHeader["VERSION"]);
+    // calendar version
+    $header .= "VERSION:" . $calendarHeader["VERSION"];
+    unset($calendarHeader["VERSION"]);
 
     // header
     foreach($calendarHeader as $key => $value){
