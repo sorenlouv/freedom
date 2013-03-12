@@ -75,21 +75,19 @@ class ical {
      * Header
      **/
     // calendar begin
-    $header = "BEGIN:" . $calendarHeader["BEGIN"];
-    unset($calendarHeader["BEGIN"]);
+    // $header = "BEGIN:" . $calendarHeader["BEGIN"];
+    // unset($calendarHeader["BEGIN"]);
 
-    // calendar version
-    $header .= "VERSION:" . $calendarHeader["VERSION"];
-    unset($calendarHeader["VERSION"]);
+    // // calendar version
+    // $header .= "VERSION:" . $calendarHeader["VERSION"];
+    // unset($calendarHeader["VERSION"]);
 
-    // other params
+    // header
     foreach($calendarHeader as $key => $value){
       $header .= $key . ":" . $value;
     }
 
-    /*
-     * Body
-     **/
+    // body
     $body = "";
     foreach($filteredCalendarBody as $i => $events){
       foreach($events as $key => $value){
@@ -97,8 +95,11 @@ class ical {
       }
     }
 
+    // footer
+    $footer = "END:VCALENDAR\r\n";
+
     // combine header, body and end tag
-    $output = $header . $body . "END:VCALENDAR";
+    $output = $header . $body . $footer;
 
     // return
     return $output;
