@@ -13,8 +13,15 @@ $('#facebook-feed').submit(function(e){
         $(".alert-error")
         .text('Error: the URL was not valid')
         .fadeIn();
+
+        // Add error to Google Analytics
+        _gaq.push(['_trackEvent', 'feedSubmitted', 'error', originalFeed]);
+
         return false;
     }
+
+    // Add succes event to GA
+    _gaq.push(['_trackEvent', 'feedSubmitted', 'success', uid]);
 
     var uid = queryString[1];
     var key = queryString[2];
@@ -26,5 +33,6 @@ $('#facebook-feed').submit(function(e){
     $(".alert-success")
     .html('<strong>Well done!</strong> Your can now <a href="' + newWebcal + '">download the feed</a> or ' + googleButton)
     .fadeIn();
+
     return false;
 });
