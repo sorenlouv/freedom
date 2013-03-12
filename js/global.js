@@ -10,9 +10,7 @@ $('#facebook-feed').submit(function(e){
 
     // not valid
     if(queryString === null){
-        $(".alert-error")
-        .text('Error: the URL was not valid')
-        .fadeIn();
+        $(".alert-error").fadeIn();
 
         // Add error to Google Analytics
         _gaq.push(['_trackEvent', 'feedSubmitted', 'error', originalFeed]);
@@ -27,12 +25,14 @@ $('#facebook-feed').submit(function(e){
     var key = queryString[2];
     var newLink = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
     var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
-    var googleButton = '<a href="http://www.google.com/calendar/render?cid=' + encodeURIComponent(newLink) + '" target="_blank"><img src="//www.google.com/calendar/images/ext/gc_button6.gif" border=0></a>';
+    var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newLink);
+
+    // Update links
+    $("a.import-feed").attr('href', googleLink);
+    $("a.download-feed").attr('href', newWebcal);
 
     // appear
-    $(".alert-success")
-    .html('<strong>Well done!</strong> Your can now <a href="' + newWebcal + '">download the feed</a> or ' + googleButton)
-    .fadeIn();
+    $(".alert-success").fadeIn();
 
     return false;
 });
