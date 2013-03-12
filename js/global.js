@@ -18,11 +18,12 @@ $('#facebook-feed').submit(function(e){
 
     var uid = queryString[1];
     var key = queryString[2];
-    var newFeedUrl = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
+    var newLink = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
+    var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
 
     // appear
     $(".alert-success")
-    .html('<strong>Well done!</strong> Your new, better feed is: ' + newFeedUrl)
+    .html('<strong>Well done!</strong> Your new, better feed is: <a href="' + newWebcal + '">' + newLink + "</a>")
     .fadeIn();
     return false;
 });
