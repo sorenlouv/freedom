@@ -15,6 +15,8 @@ $('#facebook-feed').submit(function(e){
         return false;
     }
 
+
+
     var uid = queryString[1];
     var key = queryString[2];
     var newFeedUrl = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
