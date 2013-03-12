@@ -20,10 +20,11 @@ $('#facebook-feed').submit(function(e){
     var key = queryString[2];
     var newLink = "http://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
     var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
+    var googleButton = '<a href="http://www.google.com/calendar/render?cid=' + encodeURIComponent(newLink) + '" target="_blank"><img src="//www.google.com/calendar/images/ext/gc_button6.gif" border=0></a>';
 
     // appear
     $(".alert-success")
-    .html('<strong>Well done!</strong> Your new, better feed is: <a href="' + newWebcal + '">' + newLink + "</a>")
+    .html('<strong>Well done!</strong> Your can now <a href="' + newWebcal + '">download the feed</a> or ' + googleButton)
     .fadeIn();
     return false;
 });
