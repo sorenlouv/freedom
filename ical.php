@@ -34,10 +34,48 @@ class ical {
     return $header . $body . $footer;
   }
 
+
+
   private function get_by_access_token($access_token){
+
+    // splitting ical content into 75-octet lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
+    function ical_split($preamble, $value) {
+      $value = trim($value);
+      $value = strip_tags($value);
+      $value = preg_replace('/\n+/', ' ', $value);
+      $value = preg_replace('/\s{2,}/', ' ', $value);
+      $value = str_replace(',', '\\,', $value);
+
+      $preamble_len = strlen($preamble);
+
+      $lines = array();
+      while (strlen($value)>(75-$preamble_len)) {
+        $space = (75-$preamble_len);
+        $mbcc = $space;
+        while ($mbcc) {
+          $line = mb_substr($value, 0, $mbcc);
+          $oct = strlen($line);
+          if ($oct > $space) {
+            $mbcc -= $oct-$space;
+          }
+          else {
+            $lines[] = $line;
+            $preamble_len = 1; // Still take the tab into account
+            $value = mb_substr($value, $mbcc);
+            break;
+          }
+        }
+      }
+      if (!empty($value)) {
+        $lines[] = $value;
+      }
+
+      return join($lines, "\n\t");
+    }
+
     $facebook = new Facebook(array(
       'appId'  => 408564152572106,
-      'secret' => fb77ed0cdc61baa591b710231994c8d7,
+      'secret' => 'fb77ed0cdc61baa591b710231994c8d7',
     ));
     $facebook->setAccessToken($_GET["access_token"]);
     $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,is_date_only,location,owner,rsvp_status,start_time,name,timezone,updated_time)','GET');
@@ -45,7 +83,6 @@ class ical {
 
     $body = "";
     foreach($events as $event){
-      // print_r($event);
       $event_url = 'https://www.facebook.com/event.php?eid=' . $event['id'];
 
       // start time
@@ -53,7 +90,13 @@ class ical {
       $start_time_formatted = $start_time->format('Ymd\THis\Z');
 
       // end time
-      $end_time = new DateTime($event['end_time']);
+      if(isset($event['end_time'])){
+        $end_time = new DateTime($event['end_time']);
+      }else{
+        $end_time = new DateTime($event['start_time']);
+        $end_time->add(new DateInterval('P1D'));
+      }
+
       $end_time_formatted = $end_time->format('Ymd\THis\Z');
 
       // updated time
@@ -61,9 +104,10 @@ class ical {
       $updated_time_formatted = $updated_time->format('Ymd\THis\Z');
 
       // description
-      $description = str_replace("\n", "\\n", trim($event["description"]));
-      $description = str_replace(",", "\\,", $description);
-      $description = wordwrap($description, 37, "\r\n ");
+      $description = $split = ical_split('DESCRIPTION:', $event["description"]);
+
+      // timezone
+      $timezone = isset($event["timezone"]) ? $event["timezone"] : "Europe/Copenhagen";
 
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time_formatted . "\r\n";
@@ -73,7 +117,7 @@ class ical {
       $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
       $body .= "DTSTART:" . $start_time_formatted . "\r\n";
       $body .= "DTEND:" . $end_time_formatted . "\r\n";
-      $body .= "TZID:" . $event["timezone"] . "\r\n";
+      $body .= "TZID:" . $timezone . "\r\n";
       $body .= "UID:" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
       $body .= "LOCATION:" . $event["location"] . "\r\n";
