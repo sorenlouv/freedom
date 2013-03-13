@@ -107,7 +107,7 @@ class ical {
       $description = $split = ical_split('DESCRIPTION:', $event["description"]);
 
       // timezone
-      $timezone = isset($event["timezone"]) ? $event["timezone"] : "Europe/Copenhagen";
+      //$timezone = isset($event["timezone"]) ? $event["timezone"] : "Europe/Copenhagen";
 
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time_formatted . "\r\n";
@@ -117,7 +117,7 @@ class ical {
       $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
       $body .= "DTSTART:" . $start_time_formatted . "\r\n";
       $body .= "DTEND:" . $end_time_formatted . "\r\n";
-      $body .= "TZID:" . $timezone . "\r\n";
+      //$body .= "TZID:" . $timezone . "\r\n";
       $body .= "UID:" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
       $body .= "LOCATION:" . $event["location"] . "\r\n";
