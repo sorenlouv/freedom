@@ -170,6 +170,7 @@ class ical {
 
       // insert actual linebreak
       $value = wordwrap($value, 50, "\r\n ");
+
       return $value;
     }
 
