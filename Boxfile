@@ -2,3 +2,4 @@ web1:
   name: calendar
   php_extensions:
     - curl
+    - mbstring
