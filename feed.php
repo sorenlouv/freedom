@@ -1,8 +1,8 @@
 <?php
-// header('Content-type: text/calendar;charset=utf-8');
-// header('Content-Disposition: attachment; filename="feed.ics"');
+header('Content-type: text/calendar;charset=utf-8');
+header('Content-Disposition: attachment; filename="feed.ics"');
 
-header('Content-Type: text/plain; charset=utf-8');
+// header('Content-Type: text/plain; charset=utf-8');
 
 require_once "facebook-sdk/facebook.php";
 require_once 'ical.php';
