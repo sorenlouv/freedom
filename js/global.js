@@ -10,7 +10,7 @@ $('#facebook-feed').submit(function(e){
 
     // not valid
     if(queryString === null){
-        $(".alert-error").fadeIn();
+        $(".alert-error").text('Error: the URL was not valid').fadeIn();
 
         // Add error to Google Analytics
         _gaq.push(['_trackEvent', 'feedSubmitted', 'error', originalFeed]);
@@ -45,15 +45,13 @@ $('.facebook-connect-button').click(function(e){
     $('.alert').hide();
 
     FB.login(function(response) {
-
-
         if (response.authResponse) {
             var accessToken = FB.getAuthResponse()['accessToken'];
 
             var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?access_token=" + accessToken;
             var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
-            // Add succes event to GA
+            // Add success event to GA
             _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook']);
 
             // Update links
@@ -63,6 +61,8 @@ $('.facebook-connect-button').click(function(e){
             // appear
             $(".alert-success").fadeIn();
 
+        }else{
+            $(".alert-error").text('Facebook connect failed').fadeIn();
         }
     }, {scope: 'offline_access, user_events'});
 });
