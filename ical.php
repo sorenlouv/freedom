@@ -44,21 +44,32 @@ class ical {
       'secret' => 'fb77ed0cdc61baa591b710231994c8d7',
     ));
     $facebook->setAccessToken($_GET["access_token"]);
-    $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,is_date_only,location,owner,rsvp_status,start_time,name,timezone,updated_time)','GET');
+    $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
     $events = $data["events"]["data"];
 
     $body = "";
     foreach($events as $event){
       $event_url = 'https://www.facebook.com/event.php?eid=' . $event['id'];
 
-      // start time
-      $start_time = $this->date_string_to_time($event['start_time']);
 
-      // end time
-      if(isset($event['end_time'])){
-        $end_time = $this->date_string_to_time($event['end_time']);
+      // all day event without time and end
+      if($event["is_date_only"]){
+        $start_time = $this->date_string_to_time($event['start_time'], "-1 day");
+        $end_time = $this->date_string_to_time($event['start_time']);
+
+      // specific time
       }else{
-        $end_time = null;
+
+        // without end (set end as 3 hours after start)
+        if(!isset($event['end_time'])){
+          $start_time = $this->date_string_to_time($event['start_time']);
+          $end_time = $this->date_string_to_time($event['start_time'], "+3 hours");
+
+        // specific start and end time
+        }else{
+          $start_time = $this->date_string_to_time($event['start_time']);
+          $end_time = $this->date_string_to_time($event['end_time']);
+        }
       }
 
       // updated time
@@ -74,15 +85,12 @@ class ical {
       $body .= "SEQUENCE:0\r\n";
       $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
       $body .= "DTSTART:" . $start_time . "\r\n";
+      $body .= "DTEND:" . $end_time . "\r\n";
 
-      if(isset($end_time)){
-        $body .= "DTEND:" . $end_time . "\r\n";
-      }
-
-      if(isset($event["timezone"])){
-        $body .= "TZID:" . $event["timezone"] . "\r\n";
-      }
-      $body .= "UID:" . $event['id'] . "@facebook.com\r\n";
+      // if(isset($event["timezone"])){
+      //   $body .= "TZID:" . $event["timezone"] . "\r\n";
+      // }
+      $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
       $body .= "LOCATION:" . $event["location"] . "\r\n";
       $body .= "URL:" . $event_url . "\r\n";
@@ -152,42 +160,22 @@ class ical {
   }
 
 
-    // splitting ical content into 75-octet lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
+    // splitting ical content into multiple lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
     private function ical_split($preamble, $value) {
       $value = trim($value);
-      $value = strip_tags($value);
-      $value = preg_replace('/\n+/', ' ', $value);
-      $value = preg_replace('/\s{2,}/', ' ', $value);
+
+      // escape linebreaks
+      $value = str_replace("\n", "\\n", $value);
+
+      // escape commas
       $value = str_replace(',', '\\,', $value);
 
-      $preamble_len = strlen($preamble);
-
-      $lines = array();
-      while (strlen($value)>(75-$preamble_len)) {
-        $space = (75-$preamble_len);
-        $mbcc = $space;
-        while ($mbcc) {
-          $line = mb_substr($value, 0, $mbcc);
-          $oct = strlen($line);
-          if ($oct > $space) {
-            $mbcc -= $oct-$space;
-          }
-          else {
-            $lines[] = $line;
-            $preamble_len = 1; // Still take the tab into account
-            $value = mb_substr($value, $mbcc);
-            break;
-          }
-        }
-      }
-      if (!empty($value)) {
-        $lines[] = $value;
-      }
-
-      return join($lines, "\n\t");
+      // insert actual linebreak
+      $value = wordwrap($value, 50, "\n ");
+      return $value;
     }
 
-    private function date_string_to_time($date_string){
+    private function date_string_to_time($date_string, $offset = ""){
       if(!isset($date_string)){
         return null;
       }
@@ -198,13 +186,13 @@ class ical {
       if(strlen($date_string) === 10){
         $facebook_format = 'Y-m-d';
         $icalendar_format = 'Ymd';
-        $timestamp = strtotime($date_obj->format($facebook_format));
+        $timestamp = strtotime($date_obj->format($facebook_format) . $offset);
 
       // date with time
       }else{
         $facebook_format = 'Y-m-d H:i:s';
         $icalendar_format = 'Ymd\THis\Z';
-        $timestamp = strtotime($date_obj->format($facebook_format)) - $date_obj->format('Z');
+        $timestamp = strtotime($date_obj->format($facebook_format) . $offset) - $date_obj->format('Z');
       }
 
       $date = date($icalendar_format, $timestamp);
