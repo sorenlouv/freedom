@@ -1,9 +1,38 @@
-.take-action .facebook-connect-button, .take-action h2, .take-action form * {
+/*.take-action .facebook-connect-button, .take-action h2, .take-action form * {
   float: left;
   margin: 10px;
-}
+}*/
 
-form#facebook-feed {
+/*form#facebook-feed {
     margin-top: 10px;
     width: 400px;
+}*/
+
+/* align center */
+.header, .sub-header, .take-action {
+    text-align:center;
+}
+
+.sub-header {
+    margin-top: -15px;
+    color: #666;
+}
+
+.take-action {
+    margin: 40px auto;
+}
+
+.take-action h2 {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10px;
+}
+
+.take-action input {
+    height: 25px;
+    margin: 0;
+}
+
+.take-action .btn {
+    height: 36px;
 }
