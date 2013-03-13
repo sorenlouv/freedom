@@ -49,8 +49,6 @@ class ical {
 
     $body = "";
     foreach($events as $event){
-      $event_url = 'https://www.facebook.com/event.php?eid=' . $event['id'];
-
 
       // all day event without time and end
       if($event["is_date_only"]){
@@ -93,7 +91,7 @@ class ical {
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
       $body .= "LOCATION:" . $event["location"] . "\r\n";
-      $body .= "URL:" . $event_url . "\r\n";
+      $body .= "URL:http://www.facebook.com/events/" . $event['id'] . "/\r\n";
       $body .= "DESCRIPTION:" . $description . "\r\n";
       $body .= "CLASS:PUBLIC\r\n";
       $body .= "STATUS:CONFIRMED\r\n";
