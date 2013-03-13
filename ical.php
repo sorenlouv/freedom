@@ -18,6 +18,7 @@ class ical {
 
   public function get_feed(){
 
+    // header
     $header = "BEGIN:VCALENDAR\r\n";
     $header .= "VERSION:2.0\r\n";
     $header .= "PRODID:-//Facebook//NONSGML Facebook Events V1.0//EN\r\n";
@@ -27,75 +28,16 @@ class ical {
     $header .= "CALSCALE:GREGORIAN\r\n";
     $header .= "METHOD:PUBLISH\r\n";
 
-    $footer = "END:VCALENDAR\r\n";
-
+    // body
     $body = $this->calendar_body;
+
+    // footer
+    $footer = "END:VCALENDAR\r\n";
 
     return $header . $body . $footer;
   }
 
-
-
   private function get_by_access_token($access_token){
-
-    // splitting ical content into 75-octet lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
-    function ical_split($preamble, $value) {
-      $value = trim($value);
-      $value = strip_tags($value);
-      $value = preg_replace('/\n+/', ' ', $value);
-      $value = preg_replace('/\s{2,}/', ' ', $value);
-      $value = str_replace(',', '\\,', $value);
-
-      $preamble_len = strlen($preamble);
-
-      $lines = array();
-      while (strlen($value)>(75-$preamble_len)) {
-        $space = (75-$preamble_len);
-        $mbcc = $space;
-        while ($mbcc) {
-          $line = mb_substr($value, 0, $mbcc);
-          $oct = strlen($line);
-          if ($oct > $space) {
-            $mbcc -= $oct-$space;
-          }
-          else {
-            $lines[] = $line;
-            $preamble_len = 1; // Still take the tab into account
-            $value = mb_substr($value, $mbcc);
-            break;
-          }
-        }
-      }
-      if (!empty($value)) {
-        $lines[] = $value;
-      }
-
-      return join($lines, "\n\t");
-    }
-
-    function date_string_to_time($date_string){
-      if(!isset($date_string)){
-        return null;
-      }
-
-      $date_obj = new DateTime($date_string);
-
-      // date without time
-      if(strlen($date_string) === 10){
-        $facebook_format = 'Y-m-d';
-        $icalendar_format = 'Ymd';
-        $timestamp = strtotime($date_obj->format($facebook_format));
-      // date with time
-      }else{
-        $facebook_format = 'Y-m-d H:i:s';
-        $icalendar_format = 'Ymd\THis\Z';
-        $timestamp = strtotime($date_obj->format($facebook_format)) - $date_obj->format('Z');
-      }
-
-      $date = date($icalendar_format, $timestamp);
-
-      return $date;
-    }
 
     $facebook = new Facebook(array(
       'appId'  => 408564152572106,
@@ -110,20 +52,20 @@ class ical {
       $event_url = 'https://www.facebook.com/event.php?eid=' . $event['id'];
 
       // start time
-      $start_time = date_string_to_time($event['start_time']);
+      $start_time = $this->date_string_to_time($event['start_time']);
 
       // end time
       if(isset($event['end_time'])){
-        $end_time = date_string_to_time($event['end_time']);
+        $end_time = $this->date_string_to_time($event['end_time']);
       }else{
         $end_time = null;
       }
 
       // updated time
-      $updated_time = date_string_to_time($event['updated_time']);
+      $updated_time = $this->date_string_to_time($event['updated_time']);
 
       // description
-      $description = $split = ical_split('DESCRIPTION:', $event["description"]);
+      $description = $split = $this->ical_split('DESCRIPTION:', $event["description"]);
 
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time . "\r\n";
@@ -208,4 +150,65 @@ class ical {
     // return
     return $body;
   }
+
+
+    // splitting ical content into 75-octet lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
+    private function ical_split($preamble, $value) {
+      $value = trim($value);
+      $value = strip_tags($value);
+      $value = preg_replace('/\n+/', ' ', $value);
+      $value = preg_replace('/\s{2,}/', ' ', $value);
+      $value = str_replace(',', '\\,', $value);
+
+      $preamble_len = strlen($preamble);
+
+      $lines = array();
+      while (strlen($value)>(75-$preamble_len)) {
+        $space = (75-$preamble_len);
+        $mbcc = $space;
+        while ($mbcc) {
+          $line = mb_substr($value, 0, $mbcc);
+          $oct = strlen($line);
+          if ($oct > $space) {
+            $mbcc -= $oct-$space;
+          }
+          else {
+            $lines[] = $line;
+            $preamble_len = 1; // Still take the tab into account
+            $value = mb_substr($value, $mbcc);
+            break;
+          }
+        }
+      }
+      if (!empty($value)) {
+        $lines[] = $value;
+      }
+
+      return join($lines, "\n\t");
+    }
+
+    private function date_string_to_time($date_string){
+      if(!isset($date_string)){
+        return null;
+      }
+
+      $date_obj = new DateTime($date_string);
+
+      // date without time
+      if(strlen($date_string) === 10){
+        $facebook_format = 'Y-m-d';
+        $icalendar_format = 'Ymd';
+        $timestamp = strtotime($date_obj->format($facebook_format));
+
+      // date with time
+      }else{
+        $facebook_format = 'Y-m-d H:i:s';
+        $icalendar_format = 'Ymd\THis\Z';
+        $timestamp = strtotime($date_obj->format($facebook_format)) - $date_obj->format('Z');
+      }
+
+      $date = date($icalendar_format, $timestamp);
+
+      return $date;
+    }
 }
