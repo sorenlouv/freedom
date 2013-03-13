@@ -90,7 +90,9 @@ class ical {
       // }
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
-      $body .= "LOCATION:" . $event["location"] . "\r\n";
+      if(isset($event["location"])){
+        $body .= "LOCATION:" . $event["location"] . "\r\n";
+      }
       $body .= "URL:http://www.facebook.com/events/" . $event['id'] . "/\r\n";
       $body .= "DESCRIPTION:" . $description . "\r\n";
       $body .= "CLASS:PUBLIC\r\n";
