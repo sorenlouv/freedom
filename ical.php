@@ -73,6 +73,30 @@ class ical {
       return join($lines, "\n\t");
     }
 
+    function date_string_to_time($date_string){
+      if(!isset($date_string)){
+        return null;
+      }
+
+      $date_obj = new DateTime($date_string);
+
+      // date without time
+      if(strlen($date_string) === 10){
+        $facebook_format = 'Y-m-d';
+        $icalendar_format = 'Ymd';
+        $timestamp = strtotime($date_obj->format($facebook_format));
+      // date with time
+      }else{
+        $facebook_format = 'Y-m-d H:i:s';
+        $icalendar_format = 'Ymd\THis\Z';
+        $timestamp = strtotime($date_obj->format($facebook_format)) - $date_obj->format('Z');
+      }
+
+      $date = date($icalendar_format, $timestamp);
+
+      return $date;
+    }
+
     $facebook = new Facebook(array(
       'appId'  => 408564152572106,
       'secret' => 'fb77ed0cdc61baa591b710231994c8d7',
@@ -86,38 +110,36 @@ class ical {
       $event_url = 'https://www.facebook.com/event.php?eid=' . $event['id'];
 
       // start time
-      $start_time = new DateTime($event['start_time']);
-      $start_time_formatted = $start_time->format('Ymd\THis\Z');
+      $start_time = date_string_to_time($event['start_time']);
 
       // end time
       if(isset($event['end_time'])){
-        $end_time = new DateTime($event['end_time']);
+        $end_time = date_string_to_time($event['end_time']);
       }else{
-        $end_time = new DateTime($event['start_time']);
-        $end_time->add(new DateInterval('P1D'));
+        $end_time = null;
       }
 
-      $end_time_formatted = $end_time->format('Ymd\THis\Z');
-
       // updated time
-      $updated_time = new DateTime($event['updated_time']);
-      $updated_time_formatted = $updated_time->format('Ymd\THis\Z');
+      $updated_time = date_string_to_time($event['updated_time']);
 
       // description
       $description = $split = ical_split('DESCRIPTION:', $event["description"]);
 
-      // timezone
-      //$timezone = isset($event["timezone"]) ? $event["timezone"] : "Europe/Copenhagen";
-
       $body .= "BEGIN:VEVENT\r\n";
-      $body .= "DTSTAMP:" . $updated_time_formatted . "\r\n";
-      $body .= "LAST-MODIFIED:" . $updated_time_formatted . "\r\n";
-      $body .= "CREATED:" . $updated_time_formatted . "\r\n";
+      $body .= "DTSTAMP:" . $updated_time . "\r\n";
+      $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
+      $body .= "CREATED:" . $updated_time . "\r\n";
       $body .= "SEQUENCE:0\r\n";
       $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
-      $body .= "DTSTART:" . $start_time_formatted . "\r\n";
-      $body .= "DTEND:" . $end_time_formatted . "\r\n";
-      //$body .= "TZID:" . $timezone . "\r\n";
+      $body .= "DTSTART:" . $start_time . "\r\n";
+
+      if(isset($end_time)){
+        $body .= "DTEND:" . $end_time . "\r\n";
+      }
+
+      if(isset($event["timezone"])){
+        $body .= "TZID:" . $event["timezone"] . "\r\n";
+      }
       $body .= "UID:" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
       $body .= "LOCATION:" . $event["location"] . "\r\n";
