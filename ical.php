@@ -169,7 +169,7 @@ class ical {
       $value = str_replace(',', '\\,', $value);
 
       // insert actual linebreak
-      $value = wordwrap($value, 50, "\n ");
+      $value = wordwrap($value, 50, "\r\n ");
       return $value;
     }
 
