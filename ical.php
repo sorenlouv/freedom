@@ -52,8 +52,8 @@ class ical {
 
       // all day event without time and end
       if($event["is_date_only"]){
-        $start_time = $this->date_string_to_time($event['start_time'], "-1 day");
-        $end_time = $this->date_string_to_time($event['start_time']);
+        $start_time = $this->date_string_to_time($event['start_time']);
+        $end_time = $this->date_string_to_time($event['start_time'], "+1 day");
 
       // specific time
       }else{
