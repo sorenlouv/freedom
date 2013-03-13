@@ -3,3 +3,4 @@ web1:
   php_extensions:
     - curl
     - mbstring
+    - mcrypt
