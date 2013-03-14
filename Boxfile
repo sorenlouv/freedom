@@ -4,3 +4,6 @@ web1:
     - curl
     - mbstring
     - mcrypt
+  after_build:
+    - "mv pagoda/config.php config.php"
+    - "rm -R pagoda"

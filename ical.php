@@ -7,7 +7,12 @@ class ical {
   private $client_secret;
 
   public function __construct($uid = null, $key = null, $access_token = null){
-    // webcal url
+    // Facebook credentials
+    include_once 'config.php';
+    $this->client_id = $client_id;
+    $this->client_secret = $client_secret;
+
+    // by webcal url
     if (!is_null($uid) && !is_null($key) ) {
       $url = "https://www.facebook.com/ical/u.php?uid=" . $uid . "&key=" . $key;
       $this->calendar_body = $this->get_by_url($url);
@@ -42,8 +47,8 @@ class ical {
   private function get_by_access_token($access_token){
 
     $facebook = new Facebook(array(
-      'appId'  => $_SERVER["CLIENT_ID"],
-      'secret' => $_SERVER["CLIENT_SECRET"],
+      'appId'  => $this->client_id,
+      'secret' => $this->client_secret,
     ));
     $facebook->setAccessToken($_GET["access_token"]);
     $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');

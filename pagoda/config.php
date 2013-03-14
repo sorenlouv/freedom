@@ -1,0 +1,4 @@
+<?php
+    $CLIENT_ID = $_SERVER["CLIENT_ID"];
+    $CLIENT_SECRET = $_SERVER["CLIENT_SECRET"];
+?>
