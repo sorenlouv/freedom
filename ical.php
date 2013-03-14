@@ -178,7 +178,7 @@ class ical {
     private function ical_split($value) {
       $value = trim($value);
 
-      // escape backlashes
+      // escape backslashes
       $value = str_replace("\\", "_", $value);
 
       // escape semicolon
