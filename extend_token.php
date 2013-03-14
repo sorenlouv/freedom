@@ -1,9 +1,11 @@
 <?php
   function extend_access_token($access_token){
+    // Facebook credentials
+    include_once 'config.php';
 
     $facebook = new Facebook(array(
-      'appId'  => $_SERVER["CLIENT_ID"],
-      'secret' => $_SERVER["CLIENT_SECRET"],
+      'appId'  => $client_id,
+      'secret' => $client_secret,
     ));
 
     $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=" . $client_id . "&client_secret=" . $client_secret . "&fb_exchange_token=" . $access_token . "&grant_type=fb_exchange_token";
