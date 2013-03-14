@@ -46,20 +46,28 @@ $('.facebook-connect-button').click(function(e){
 
     FB.login(function(response) {
         if (response.authResponse) {
-            var accessToken = FB.getAuthResponse()['accessToken'];
 
-            var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?access_token=" + accessToken;
-            var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
+            // short lived access token
+            var accessTokenShort = FB.getAuthResponse()['accessToken'];
 
-            // Add success event to GA
-            _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook']);
+            // extend access token
+            $.getJSON('/extend_token.php?access_token=' + accessTokenShort, function(response) {
+                var accessTokenLong = response.access_token;
 
-            // Update links
-            $("a.import-feed").attr('href', googleLink);
-            $("a.download-feed").attr('href', newWebcal);
+                var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?access_token=" + accessTokenLong;
+                var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
-            // appear
-            $(".alert-success").fadeIn();
+                // Add success event to GA
+                _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook']);
+
+                // Update links
+                $("a.import-feed").attr('href', googleLink);
+                $("a.download-feed").attr('href', newWebcal);
+
+                // appear
+                $(".alert-success").fadeIn();
+
+            });
 
         }else{
             $(".alert-error").text('Facebook connect failed').fadeIn();
