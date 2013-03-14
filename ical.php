@@ -179,7 +179,10 @@ class ical {
       $value = trim($value);
 
       // escape backlashes
-      $value = str_replace("\\", "\\\\", $value);
+      $value = str_replace("\\", "_", $value);
+
+      // escape semicolon
+      $value = str_replace(";", "\\;", $value);
 
       // escape linebreaks
       $value = str_replace("\n", "\\n", $value);
