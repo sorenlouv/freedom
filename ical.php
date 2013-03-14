@@ -47,8 +47,8 @@ class ical {
   private function get_by_access_token($access_token){
 
     $facebook = new Facebook(array(
-      'appId'  => $CLIENT_ID,
-      'secret' => $CLIENT_SECRET,
+      'appId'  => $this->CLIENT_ID,
+      'secret' => $this->CLIENT_SECRET,
     ));
 
     $facebook->setAccessToken($_GET["access_token"]);
