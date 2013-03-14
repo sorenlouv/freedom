@@ -21,7 +21,7 @@ $('#facebook-feed').submit(function(e){
     var uid = queryString[1];
     var key = queryString[2];
 
-    var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
+    var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?uid=" + uid + "&key=" + key;
     var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
     // Add succes event to GA
@@ -48,7 +48,7 @@ $('.facebook-connect-button').click(function(e){
         if (response.authResponse) {
             var accessToken = FB.getAuthResponse()['accessToken'];
 
-            var newWebcal = "webcal://fcalendar.pagodabox.com/feed.ics?access_token=" + accessToken;
+            var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?access_token=" + accessToken;
             var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
             // Add success event to GA

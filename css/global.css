@@ -14,12 +14,14 @@
 }
 
 .sub-header {
-    margin-top: -15px;
+    margin-top: -30px;
     color: #666;
+    line-height: 30px;
 }
 
 .take-action {
     margin: 40px auto;
+    line-height: 50px;
 }
 
 .take-action h2 {
@@ -35,4 +37,8 @@
 
 .take-action .btn {
     height: 36px;
+}
+
+.hide {
+    display:none;
 }
