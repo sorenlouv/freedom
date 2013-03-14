@@ -3,7 +3,6 @@
   <head>
     <title>Freedom - A better Facebook event feed</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <link href="css/global.css" rel="stylesheet" media="screen">
@@ -11,105 +10,110 @@
   </head>
   <body>
     <div class="container">
-    <a href="https://github.com/sqren/freedom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+      <a href="https://github.com/sqren/freedom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-    <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
-    <h3 class="sub-header">A better way to sync Facebook events</h3>
+      <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
+      <h3 class="sub-header">A better way to sync Facebook events</h3>
 
-    <form id="facebook-feed">
-      <div class="take-action">
-        <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
+      <form id="facebook-feed">
+        <div class="take-action">
+          <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
 
-        <h2>or</h2>
-        <input type="text" placeholder="Insert Facebook feed">
-        <button type="submit" class="btn">Fix my feed</button>
+          <h2>or</h2>
+          <input type="text" placeholder="Insert Facebook feed">
+          <button type="submit" class="btn">Fix my feed</button>
+        </div>
+      </form>
+
+
+      <div style="clear: both;" id="clear-div">&nbsp;</div>
+
+      <div class="alert alert-error hide"></div>
+
+      <div class="alert alert-success hide">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Well done!</strong> Your can now <a href="" target="_blank" class="import-feed"><img src="//www.google.com/calendar/images/ext/gc_button6.gif" border=0></a> OR <a href="" class='download-feed'>download the calendar</a>
       </div>
-    </form>
 
 
-    <div style="clear: both;">&nbsp;</div>
-
-    <div class="alert alert-error hide"></div>
-
-    <div class="alert alert-success hide">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>Well done!</strong> Your can now <a href="" target="_blank" class="import-feed"><img src="//www.google.com/calendar/images/ext/gc_button6.gif" border=0></a> OR <a href="" class='download-feed'>download the calendar</a>
-    </div>
-
-
-  <div class="accordion" id="about-freedom">
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#why">
-          Why this service?
-        </a>
+    <div class="accordion" id="about-freedom">
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#why">
+            Why this service?
+          </a>
+        </div>
+        <div id="why" class="accordion-body collapse in">
+          <div class="accordion-inner">
+            <p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p>
+            <p>This service filters the events from Facebook and only shows those events you have marked as "attending" and "maybe attending"; removing those you haven't replied to yet. </p>
+            <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>
+          </div>
+        </div>
       </div>
-      <div id="why" class="accordion-body collapse in">
-        <div class="accordion-inner">
-          <p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p>
-          <p>This service filters the events from Facebook and only shows those events you have marked as "attending" and "maybe attending"; removing those you haven't replied to yet. </p>
-          <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#how">
+             How to use
+          </a>
+        </div>
+        <div id="how" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <p>1. Connect with Facebook (recommended) OR insert your Facebook feed (advanced, <a target="_blank" href="https://www.facebook.com/help/152652248136178/">instructions</a>)</p>
+            <p>2. Sync with Google Calendar by clicking "Add to Google Calendar" (recommended) OR download and sync with your desktop calendar application</p>
+            <p>3. Tell me what you think :)</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#privacy">
+             Privacy
+          </a>
+        </div>
+        <div id="privacy" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <p> I don't store any of your data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc on my behalf. If you don't believe me, you can always check out the source code on <a href="https://github.com/sqren/freedom">GitHub</a> :)
+          </div>
+        </div>
+      </div>
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#who">
+             Who am I?
+          </a>
+        </div>
+        <div id="who" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <p>I am a 25-year old tech-happy, hope-to-be-entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href="https://twitter.com/sqrendk" target="_blank">Twitter</a>, <a href="https://github.com/sqren" target="_blank">GitHub</a>, <a href="https://www.facebook.com/sorenlouv" target="_blank">Facebook</a>, <a href="dk.linkedin.com/in/sorenlouv/" target="_blank">LinkedIn</a>.</p>
+
+            Co-founder of <a href="http://konscript.com" target="_blank">Konscript</a>, developer in <a href="http://www.kobstaden.dk" target="_blank">Købstaden</a> and part of <a href="http://www.creativedestruction.dk" target="_blank">Creative Destruction</a>
+
+          </div>
+        </div>
+      </div>
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#facebook-rant">
+             A little note about Facebook
+          </a>
+        </div>
+        <div id="facebook-rant" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less usable and more buggy. Not adhering to the <a target="_blank" href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar specification</a> makes it unusable on some devices, <a href="http://forums.macrumors.com/showthread.php?t=1470436">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p>
+            <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br>
+              I asked myself: How was I able to do a better job than the highly skilled developers @ Palo Alto? The answer is: they don't wan't to do a good job at exporting precious data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. <a href="http://iamnumberfourfans.com/wp-content/uploads/2012/10/Joaquin-Phoenix-source_IGN.com_.jpg">We'll see.</a> </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#how">
-           How to use
-        </a>
-      </div>
-      <div id="how" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <p>1. Connect with Facebook (recommended) OR insert your Facebook feed (advanced, <a target="_blank" href="https://www.facebook.com/help/152652248136178/">instructions</a>)</p>
-          <p>2. Sync with Google Calendar by clicking "Add to Google Calendar" (recommended) OR download and sync with your desktop calendar application</p>
-          <p>3. Tell me what you think :)</p>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#privacy">
-           Privacy
-        </a>
-      </div>
-      <div id="privacy" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <p> I don't store any of your data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc on my behalf. If you don't believe me, you can always check out the source code on <a href="https://github.com/sqren/freedom">GitHub</a> :)
-        </div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#who">
-           Who am I?
-        </a>
-      </div>
-      <div id="who" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <p>I am a 25-year old tech-happy, hope-to-be-entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href="https://twitter.com/sqrendk" target="_blank">Twitter</a>, <a href="https://github.com/sqren" target="_blank">GitHub</a>, <a href="https://www.facebook.com/sorenlouv" target="_blank">Facebook</a>, <a href="dk.linkedin.com/in/sorenlouv/" target="_blank">LinkedIn</a>.</p>
+    <div id="fb-root"></div>
 
-          Co-founder of <a href="http://konscript.com" target="_blank">Konscript</a>, developer in <a href="http://www.kobstaden.dk" target="_blank">Købstaden</a> and part of <a href="http://www.creativedestruction.dk" target="_blank">Creative Destruction</a>
-
-        </div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#facebook-rant">
-           A little note about Facebook
-        </a>
-      </div>
-      <div id="facebook-rant" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less usable and more buggy. Not adhering to the <a target="_blank" href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar specification</a> makes it unusable on some devices, <a href="http://forums.macrumors.com/showthread.php?t=1470436">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p>
-          <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br>
-            I asked myself: How was I able to do a better job than the highly skilled developers @ Palo Alto? The answer is: they don't wan't to do a good job at exporting precious data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. <a href="http://iamnumberfourfans.com/wp-content/uploads/2012/10/Joaquin-Phoenix-source_IGN.com_.jpg">We'll see.</a> </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-  <div id="fb-root"></div>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/spin.min.js"></script>
+    <script src="js/global.js"></script>
 
     <script type="text/javascript">
       var _gaq = _gaq || [];
@@ -122,9 +126,6 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/global.js"></script>
     <script>
       // sdk loaded
       window.fbAsyncInit = function() {

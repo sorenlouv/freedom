@@ -44,6 +44,8 @@ $('.facebook-connect-button').click(function(e){
     // hide all alerts
     $('.alert').hide();
 
+    var spinner = new Spinner().spin(document.getElementById('clear-div'));
+
     FB.login(function(response) {
         if (response.authResponse) {
 
@@ -66,6 +68,9 @@ $('.facebook-connect-button').click(function(e){
 
                 // appear
                 $(".alert-success").fadeIn();
+
+                //stop spinner
+                spinner.stop();
 
             });
 
