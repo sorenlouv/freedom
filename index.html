@@ -68,6 +68,18 @@
     </div>
     <div class="accordion-group">
       <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-fcalendar" href="#privacy">
+           Privacy
+        </a>
+      </div>
+      <div id="privacy" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <p> I don't store any of your data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc on my behalf. If you don't believe me, you can always check out the source code on <a href="https://github.com/sqren/fcalendar">GitHub</a> :)
+        </div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-fcalendar" href="#who">
            Who am I?
         </a>
@@ -78,6 +90,20 @@
 
           Co-founder of <a href="http://konscript.com" target="_blank">Konscript</a>, developer in <a href="http://www.kobstaden.dk" target="_blank">Købstaden</a> and part of <a href="http://www.creativedestruction.dk" target="_blank">Creative Destruction</a>
 
+        </div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-fcalendar" href="#facebook-rant">
+           A little note about Facebook
+        </a>
+      </div>
+      <div id="facebook-rant" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less usable and more buggy. Not adhering to the <a target="_blank" href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar specification</a> makes it unusable on some devices, <a href="http://forums.macrumors.com/showthread.php?t=1470436">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p>
+          <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br>
+            I asked myself: How was I able to do a better job than the highly skilled developers @ Palo Alto? The answer is: they don't wan't to do a good job at exporting precious data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. We'll see. </p>
         </div>
       </div>
     </div>
