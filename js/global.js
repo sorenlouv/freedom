@@ -55,7 +55,7 @@ $(document).ready(function(){
                 var accessTokenShort = FB.getAuthResponse()['accessToken'];
 
                 // extend access token
-                $.getJSON('/extend_token.php?access_token=' + accessTokenShort, function(response) {
+                $.getJSON('/extend_token.php?access_token_short=' + accessTokenShort, function(response) {
                     var accessTokenLong = response.access_token;
 
                     var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?access_token=" + accessTokenLong;

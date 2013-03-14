@@ -1,5 +1,5 @@
 <?php
-  function extend_access_token($access_token){
+  function extend_access_token($access_token_short){
     // Facebook credentials
     include_once 'config.php';
 
@@ -8,29 +8,21 @@
       'secret' => $CLIENT_SECRET,
     ));
 
-    $token_url  = "https://graph.facebook.com/oauth/access_token?client_id=" . $CLIENT_ID . "&client_secret=" . $CLIENT_SECRET . "&fb_exchange_token=" . $access_token . "&grant_type=fb_exchange_token";
+    // set short lived access token
+    $facebook->setAccessToken($access_token_short);
 
-    $ch = curl_init($token_url);
-    $options = array(
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => array('Content-type: application/json'),
-        CURLOPT_BINARYTRANSFER => true
-    );
+    // get long-lived
+    $facebook->setExtendedAccessToken();
+    $access_token = $facebook->getAccessToken();
 
-    // Setting curl options
-    curl_setopt_array( $ch, $options );
-
-    // get result and parse to array
-    $data_string = parse_str(curl_exec($ch), $data_array);
-    return $data_array;
+    return $access_token;
   }
 
   require_once "facebook-sdk/facebook.php";
-  $data = extend_access_token($_GET["access_token"]);
+  $access_token = extend_access_token($_GET["access_token_short"]);
 
   // output
   header("Content-type: application/json");
-  echo json_encode($data);
+  echo json_encode(array("access_token" => $access_token));
 
 ?>
