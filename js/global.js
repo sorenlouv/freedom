@@ -7,7 +7,7 @@ $(document).ready(function(){
         // hide all alerts
         $('.alert').hide();
 
-        var originalFeed = $(this).children('input')[0].value;
+        var originalFeed = $(this).find('input')[0].value;
         var queryString = originalFeed.match(/uid=(\d+)&key=(\w+)/);
 
         // not valid
