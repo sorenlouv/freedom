@@ -26,24 +26,43 @@
     }
 
 
-// Galla
-echo date_string_to_time("2013-03-16T15:00:00+0100");
-echo "<br>";
-echo date_string_to_time("2013-03-16T15:00:00+0100", "+3 hours");
+// // Galla
+// echo date_string_to_time("2013-03-16T15:00:00+0100");
+// echo "<br>";
+// echo date_string_to_time("2013-03-16T15:00:00+0100", "+3 hours");
 
-// skal blive til:
-// DTSTART:20130316T140000Z
-// DTEND:20130316T170000Z
+// // skal blive til:
+// // DTSTART:20130316T140000Z
+// // DTEND:20130316T170000Z
 
-echo "<br>";
-echo "<br>";
+// echo "<br>";
+// echo "<br>";
 
 
-// Tour de Gulv
-echo date_string_to_time("2013-04-06", "-1 day");
-echo "<br>";
-echo date_string_to_time("2013-04-06");
+// // Tour de Gulv
+// echo date_string_to_time("2013-04-06", "-1 day");
+// echo "<br>";
+// echo date_string_to_time("2013-04-06");
 
-// skal blive til
-// DTSTART:20130405
-// DTEND:20130406
+// // skal blive til
+// // DTSTART:20130405
+// // DTEND:20130406
+
+$data = array(
+  "events" => array(
+    "data" => array()
+  )
+);
+
+if(isset($data["events"]["data"])){
+  $events = $data["events"]["data"];
+}else{
+  $events = array();
+}
+
+foreach($events as $event){
+  echo"asd";
+}
+
+
+// $events = null;

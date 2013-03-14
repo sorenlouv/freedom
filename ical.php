@@ -45,8 +45,9 @@ class ical {
     ));
     $facebook->setAccessToken($_GET["access_token"]);
     $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
-    $events = $data["events"]["data"];
 
+    // make sure at least one event is available
+    $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
     $body = "";
     foreach($events as $event){
 
