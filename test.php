@@ -26,6 +26,27 @@
     }
 
 
+    function ical_split($value) {
+      $value = trim($value);
+
+      // escape linebreaks
+      $value = str_replace("\n", "\\n", $value);
+
+      // escape commas
+      $value = str_replace(',', '\\,', $value);
+
+      // escape backlashes
+      $value = str_replace("\\", "\\\\", $value);
+
+      // insert actual linebreak
+      $value = wordwrap($value, 50, "\r\n ");
+
+      return $value;
+    }
+
+
+echo ical_split("_\_\_ \n\nKom og nyd BILLIG PÅSKEBRYG til SVEDIGE RYTMER og hils på de søde");
+
 // // Galla
 // echo date_string_to_time("2013-03-16T15:00:00+0100");
 // echo "<br>";
@@ -47,22 +68,3 @@
 // // skal blive til
 // // DTSTART:20130405
 // // DTEND:20130406
-
-$data = array(
-  "events" => array(
-    "data" => array()
-  )
-);
-
-if(isset($data["events"]["data"])){
-  $events = $data["events"]["data"];
-}else{
-  $events = array();
-}
-
-foreach($events as $event){
-  echo"asd";
-}
-
-
-// $events = null;

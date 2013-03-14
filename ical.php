@@ -99,14 +99,14 @@ class ical {
 
       // location
       if(isset($event["location"])){
-        $body .= "LOCATION:" . $event["location"] . "\r\n";
+        $body .= "LOCATION:" . $this->ical_split($event["location"]) . "\r\n";
       }
 
       $body .= "URL:http://www.facebook.com/events/" . $event['id'] . "/\r\n";
 
       // description
       if(isset($event["description"])){
-        $body .= "DESCRIPTION:" . $this->ical_split('DESCRIPTION:', $event["description"]) . "\r\n";
+        $body .= "DESCRIPTION:" . $this->ical_split($event["description"]) . "\r\n";
       }
 
       $body .= "CLASS:PUBLIC\r\n";
@@ -175,7 +175,7 @@ class ical {
 
 
     // splitting ical content into multiple lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
-    private function ical_split($preamble, $value) {
+    private function ical_split($value) {
       $value = trim($value);
 
       // escape linebreaks
@@ -183,6 +183,9 @@ class ical {
 
       // escape commas
       $value = str_replace(',', '\\,', $value);
+
+      // escape backlashes
+      $value = str_replace("\\", "\\\\", $value);
 
       // insert actual linebreak
       $value = wordwrap($value, 50, "\r\n ");
