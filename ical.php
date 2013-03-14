@@ -95,7 +95,7 @@ class ical {
       //   $body .= "TZID:" . $event["timezone"] . "\r\n";
       // }
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
-      $body .= "SUMMARY:" . $event["name"] . "\r\n";
+      $body .= "SUMMARY:" . $this->ical_split($event["name"]) . "\r\n";
 
       // location
       if(isset($event["location"])){
@@ -178,14 +178,14 @@ class ical {
     private function ical_split($value) {
       $value = trim($value);
 
+      // escape backlashes
+      $value = str_replace("\\", "\\\\", $value);
+
       // escape linebreaks
       $value = str_replace("\n", "\\n", $value);
 
       // escape commas
       $value = str_replace(',', '\\,', $value);
-
-      // escape backlashes
-      $value = str_replace("\\", "\\\\", $value);
 
       // insert actual linebreak
       $value = wordwrap($value, 50, "\r\n ");
