@@ -74,9 +74,6 @@ class ical {
       // updated time
       $updated_time = $this->date_string_to_time($event['updated_time']);
 
-      // description
-      $description = $split = $this->ical_split('DESCRIPTION:', $event["description"]);
-
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time . "\r\n";
       $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
@@ -91,11 +88,19 @@ class ical {
       // }
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $event["name"] . "\r\n";
+
+      // location
       if(isset($event["location"])){
         $body .= "LOCATION:" . $event["location"] . "\r\n";
       }
+
       $body .= "URL:http://www.facebook.com/events/" . $event['id'] . "/\r\n";
-      $body .= "DESCRIPTION:" . $description . "\r\n";
+
+      // description
+      if(isset($event["description"])){
+        $body .= "DESCRIPTION:" . $this->ical_split('DESCRIPTION:', $event["description"]) . "\r\n";
+      }
+
       $body .= "CLASS:PUBLIC\r\n";
       $body .= "STATUS:CONFIRMED\r\n";
       $body .= "PARTSTAT:ACCEPTED\r\n";
