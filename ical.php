@@ -59,13 +59,26 @@ class ical {
     $body = "";
     foreach($events as $event){
 
+      // updated time
+      $updated_time = $this->date_string_to_time($event['updated_time']);
+
+      $body .= "BEGIN:VEVENT\r\n";
+      $body .= "DTSTAMP:" . $updated_time . "\r\n";
+      $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
+      $body .= "CREATED:" . $updated_time . "\r\n";
+      $body .= "SEQUENCE:0\r\n";
+      $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
+
+
       // all day event without time and end
       if($event["is_date_only"]){
         $start_time = $this->date_string_to_time($event['start_time']);
         $end_time = $this->date_string_to_time($event['start_time'], "+1 day");
+        $time_type = "VALUE=DATE";
 
       // specific time
       }else{
+        $time_type = "VALUE=DATE-TIME";
 
         // without end (set end as 3 hours after start)
         if(!isset($event['end_time'])){
@@ -79,17 +92,8 @@ class ical {
         }
       }
 
-      // updated time
-      $updated_time = $this->date_string_to_time($event['updated_time']);
-
-      $body .= "BEGIN:VEVENT\r\n";
-      $body .= "DTSTAMP:" . $updated_time . "\r\n";
-      $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
-      $body .= "CREATED:" . $updated_time . "\r\n";
-      $body .= "SEQUENCE:0\r\n";
-      $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
-      $body .= "DTSTART:" . $start_time . "\r\n";
-      $body .= "DTEND:" . $end_time . "\r\n";
+      $body .= "DTSTART;" . $time_type . ":" . $start_time . "\r\n";
+      $body .= "DTEND;" . $time_type . ":" . $end_time . "\r\n";
 
       // if(isset($event["timezone"])){
       //   $body .= "TZID:" . $event["timezone"] . "\r\n";
