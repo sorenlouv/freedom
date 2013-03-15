@@ -79,6 +79,6 @@ $(document).ready(function(){
             }else{
                 $(".alert-error").text('Facebook connect failed').fadeIn();
             }
-        }, {scope: 'offline_access, user_events'});
+        }, {scope: 'user_events'});
     });
 });
