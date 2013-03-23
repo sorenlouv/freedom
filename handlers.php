@@ -39,7 +39,7 @@ function saveAccessToken(){
 // download or fetch Facebook feed
 function downloadFeed(){
     // includes
-    require_once 'Feed.php';
+    require_once 'feed.php';
 
     // headers
     header('Content-type: text/calendar;charset=utf-8');
