@@ -1,10 +1,15 @@
 <?php
+use UnitedPrototype\GoogleAnalytics;
 
 class Feed {
 
   public $calendar_body;
+  private $user_id;
 
   public function __construct($user_id, $secure_hash, $access_token){
+
+    // set user id - only used for analytics
+    $this->user_id = $user_id;
 
     // get access token
     if(is_null($access_token)){
@@ -38,6 +43,22 @@ class Feed {
     return $header . $body . $footer;
   }
 
+  private function track_analytics_event($status, $error_msg = null){
+    require("ServersideAnalytics/autoload.php");
+
+    $user_id = $this->user_id;
+    if($this->user_id === null){
+      $user_id = "Unknown";
+    }
+
+    // Google Analytics: track event
+    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
+    $visitor = new GoogleAnalytics\Visitor();
+    $session = new GoogleAnalytics\Session();
+    $event = new GoogleAnalytics\Event('feedDownload', $status, $user_id, $error_msg);
+    $tracker->trackEvent($event, $session, $visitor);
+  }
+
   private function get_body_by_access_token($access_token){
     include_once 'utils.php';
     $facebook = Utils::get_facebook_object();
@@ -45,7 +66,9 @@ class Feed {
 
     try {
       $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
+      $this->track_analytics_event("success");
     } catch (Exception $e) {
+      $this->track_analytics_event("error", $e->getMessage());
       return $this->get_instructional_dummy_event();
     }
 
