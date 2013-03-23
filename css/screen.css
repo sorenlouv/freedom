@@ -1,0 +1,56 @@
+/* line 16, ../sass/screen.scss */
+body {
+  font-family: Verdana;
+}
+
+/* align center */
+/* line 21, ../sass/screen.scss */
+.header, .sub-header {
+  text-align: center;
+}
+
+/* line 25, ../sass/screen.scss */
+.sub-header {
+  margin-top: -30px;
+  color: #666;
+  line-height: 30px;
+}
+
+/* line 33, ../sass/screen.scss */
+#step-wizard .step {
+  display: inline;
+  float: left;
+  margin-right: 10px;
+  width: 350px;
+  height: 200px;
+}
+/* line 147, ../../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #step-wizard .step {
+  overflow-x: hidden;
+}
+/* line 38, ../sass/screen.scss */
+#step-wizard .step.inactive {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
+  opacity: 0.2;
+}
+/* line 42, ../sass/screen.scss */
+#step-wizard .step.finished {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 350px;
+}
+/* line 147, ../../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #step-wizard .step.finished {
+  overflow-x: hidden;
+}
+/* line 46, ../sass/screen.scss */
+#step-wizard .step .content p {
+  color: #666;
+  font-size: 11px;
+}
+
+/* line 53, ../sass/screen.scss */
+.hide {
+  display: none;
+}
