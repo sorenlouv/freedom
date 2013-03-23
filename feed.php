@@ -90,9 +90,9 @@ class Feed {
       $body .= "DTSTART;" . $time_type . ":" . $start_time . "\r\n";
       $body .= "DTEND;" . $time_type . ":" . $end_time . "\r\n";
 
-      // if(isset($event["timezone"])){
-      //   $body .= "TZID:" . $event["timezone"] . "\r\n";
-      // }
+      if(isset($event["timezone"])){
+        $body .= "TZID:" . $event["timezone"] . "\r\n";
+      }
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
       $body .= "SUMMARY:" . $this->ical_encode_text($event["name"]) . "\r\n";
 
