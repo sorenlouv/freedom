@@ -1,8 +1,9 @@
 <?php
+require("ServersideAnalytics/autoload.php");
+use UnitedPrototype\GoogleAnalytics;
 
 // Disclaimer: fuckly handling of URLs to methods, because I don't wanna setup complete routing framework
 // I know I've sinned...
-
 if(function_exists($_GET['f'])) {
    $_GET['f']();
 }else{
@@ -48,6 +49,12 @@ function downloadFeed(){
     $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
     $user_id = isset($_GET["user_id"]) ? $_GET["user_id"] : null;
     $access_token = isset($_GET["access_token"]) ? $_GET["access_token"] : null;
+
+    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
+    $visitor = new GoogleAnalytics\Visitor();
+    $session = new GoogleAnalytics\Session();
+    $event = new GoogleAnalytics\Event('feedDownload', "success", $user_id);
+    $tracker->trackEvent($event, $session, $visitor);
 
     // output
     $Feed = new Feed($user_id, $secure_hash, $access_token);
