@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="css/global.css" rel="stylesheet" media="screen">
+    <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   </head>
   <body>
@@ -15,26 +15,31 @@
       <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
       <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
 
-      <form id="facebook-feed">
-        <div class="take-action">
-          <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
-
-          <h2>or</h2>
-          <input type="text" placeholder="Insert Facebook feed">
-          <button type="submit" class="btn">Fix my feed</button>
+      <div id="step-wizard">
+        <div class="step step-facebook-connect active">
+          <h2>Step 1</h2>
+          <div class="content">
+            <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
+            <p>This will fetch your events from Facebook</p>
+          </div>
         </div>
-      </form>
-
-
-      <div style="clear: both;" id="clear-div">&nbsp;</div>
-
-      <div class="alert alert-error hide"></div>
-
-      <div class="alert alert-success hide">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Well done!</strong> Your can now <a href="" target="_blank" class="import-feed"><img src="//www.google.com/calendar/images/ext/gc_button6.gif" border=0></a> OR <a href="" class='download-feed'>download the calendar</a>
+        <div class="step add-calendar-feed inactive">
+          <h2>Step 2</h2>
+          <div class="content">
+            <a href="#" target="_blank" class="google-calendar-button"><img src="img/add-to-google-calendar-button.gif"/></a>
+            <p>This will add a new "calendar subscription" to your Google Calendar. You can always remove this subscription again. You can also <a href="" class='download-feed'>download the calendar</a> to your desktop calendar application</p>
+          </div>
+        </div>
+        <div class="step finished inactive">
+          <h2>Step 3</h2>
+          <div class="content">
+            <p>Good job! Your Facebook events should start appearing within a few hours.</p>
+            <p><strong>Remember</strong> You can easily remove this calendar subscription without affecting your existing calendar</p>
+          </div>
+        </div>
       </div>
 
+      <div style="clear: both;" id="clear-div">&nbsp;</div>
 
     <div class="accordion" id="about-freedom">
       <div class="accordion-group">
@@ -43,7 +48,7 @@
             Why this service?
           </a>
         </div>
-        <div id="why" class="accordion-body collapse in">
+        <div id="why" class="accordion-body collapse">
           <div class="accordion-inner">
             <p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p>
             <p>This service filters the events from Facebook and only shows those events you have marked as "attending" and "maybe attending"; removing those you haven't replied to yet. </p>
@@ -59,7 +64,7 @@
         </div>
         <div id="how" class="accordion-body collapse">
           <div class="accordion-inner">
-            <p>1. Connect with Facebook (recommended) OR insert your Facebook feed (advanced, <a target="_blank" href="https://www.facebook.com/help/152652248136178/">instructions</a>)</p>
+            <p>1. Connect with Facebook
             <p>2. Sync with Google Calendar by clicking "Add to Google Calendar" (recommended) OR download and sync with your desktop calendar application</p>
             <p>3. Please note: in some rare instances, it can take several hours before the events start showing up in your calendar. Please be patient :)</p>
             <p>4. To remove the events again, simply remove the calendar subscription called "Facebook Events" </p>

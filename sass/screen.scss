@@ -1,0 +1,55 @@
+//@import "compass/reset";
+@import "compass/css3/box-shadow";
+@import "compass/css3/border-radius";
+@import "compass/css3/opacity";
+@import "compass/css3/transition";
+@import "compass/css3/transform";
+@import "compass/utilities/general/clearfix";
+@import "blueprint/grid";
+
+// Grid
+$layout-container:      1080px;
+$layout-column:         30px;
+$layout-gutter:         15px;
+$layout-colcount:       24;
+
+body {
+    font-family: Verdana;
+}
+
+/* align center */
+.header, .sub-header {
+    text-align:center;
+}
+
+.sub-header {
+    margin-top: -30px;
+    color: #666;
+    line-height: 30px;
+}
+
+#step-wizard {
+
+    .step {
+        @include column(9);
+        //border: 1px solid black;
+        height: 200px;
+
+        &.inactive{
+            @include opacity(0.2);
+        }
+
+        &.finished {
+            @include column(9, true);
+        }
+
+        .content p {
+            color: #666;
+            font-size: 11px;
+        }
+    }
+}
+
+.hide {
+    display:none;
+}
