@@ -41,7 +41,7 @@ class Utils {
 
   public static function get_db_object(){
     include 'config.php';
-    $db = new PDO('mysql:host=' . $DB_HOST . ';dbname=' . $DB_NAME . ';charset=utf8', $DB_USER, $DB_PASSWORD);
+    $db = new PDO('mysql:host=' . $DB_HOST . ';dbname=' . $DB_NAME . ';charset=utf8', $DB_USER, $DB_PASS);
 
     return $db;
   }
