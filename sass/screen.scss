@@ -17,9 +17,8 @@ body {
     font-family: Verdana;
 }
 
-/* align center */
-.header, .sub-header {
-    text-align:center;
+.container {
+    text-align: center;
 }
 
 .sub-header {
@@ -29,10 +28,10 @@ body {
 }
 
 #step-wizard {
+    display: inline-block;
 
     .step {
         @include column(9);
-        //border: 1px solid black;
         height: 200px;
 
         &.inactive{
@@ -48,8 +47,4 @@ body {
             font-size: 11px;
         }
     }
-}
-
-.hide {
-    display:none;
 }
