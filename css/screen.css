@@ -53,3 +53,8 @@ body {
   color: #666;
   font-size: 11px;
 }
+
+/* line 53, ../sass/screen.scss */
+.accordion {
+  text-align: left;
+}
