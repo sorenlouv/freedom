@@ -46,11 +46,19 @@ class Feed {
   private function track_analytics_event($status, $error_msg = null){
     require("ServersideAnalytics/autoload.php");
 
+    // visitor
+    $visitor = new GoogleAnalytics\Visitor();
+    $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
+    $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+
+    // session
+    $session = new GoogleAnalytics\Session();
+
+    // event
+    $event = new GoogleAnalytics\Event('feedDownload', $status, $this->user_id, $error_msg);
+
     // Google Analytics: track event
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
-    $visitor = new GoogleAnalytics\Visitor();
-    $session = new GoogleAnalytics\Session();
-    $event = new GoogleAnalytics\Event('feedDownload', $status, $this->user_id, $error_msg);
     $tracker->trackEvent($event, $session, $visitor);
   }
 
