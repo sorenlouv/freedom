@@ -4,11 +4,15 @@ $(document).ready(function(){
     $('.facebook-connect-button').click(function(e){
         e.preventDefault();
 
+        // remove all alerts
+        $('.alert').remove();
+
         var spinner = new Spinner().spin(document.getElementById('clear-div'));
 
         FB.login(function(response) {
             if (response.authResponse) {
 
+                // set facebook user id
                 var userId = FB.getAuthResponse()['userID'];
 
                 // extend access token
@@ -35,7 +39,15 @@ $(document).ready(function(){
                 });
 
             }else{
-                $(".alert-error").text('Facebook connect failed').fadeIn();
+                $(".alert-error").text('').fadeIn();
+
+                jQuery('<div/>', {
+                    "class": 'alert alert-error',
+                    text: 'Facebook connect failed'
+                }).appendTo('.step-facebook-connect.active .content');
+
+                //stop spinner
+                spinner.stop();
             }
         }, {scope: 'user_events'});
     });
