@@ -29,6 +29,7 @@ body {
 
 #step-wizard {
     display: inline-block;
+    margin: 30px 0;
 
     .step {
         @include column(9);
