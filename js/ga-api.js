@@ -53,7 +53,12 @@ function getActiveUsers() {
     'max-results': '200'
   }).execute(function(response){
     var eventUsers = response.rows;
-    getFacebookUserInfo(eventUsers);
+    if(eventUsers){
+      getFacebookUserInfo(eventUsers);
+    }else{
+      alert(response.message);
+      console.log(response);
+    }
   });
 }
 
