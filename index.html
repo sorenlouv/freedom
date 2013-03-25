@@ -8,7 +8,6 @@
     <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta name="description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up.">
-    <meta name="google-site-verification" content="HBx-9wwyf7HZoxmfZS3yO8t3RZa8gugLDpxU887ILEk" />
 
     <meta property="og:title" content="Freedom - Remove unanswered Facebook events from your calendar"/>
     <meta property="og:url" content="http://freedom.pagodabox.com"/>
@@ -130,6 +129,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/spin.min.js"></script>
     <script src="js/global.js"></script>
+    <script src="js/frontpage.js"></script>
 
     <script type="text/javascript">
       var _gaq = _gaq || [];
@@ -141,26 +141,6 @@
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-    </script>
-    <script>
-      // sdk loaded
-      window.fbAsyncInit = function() {
-        // init
-        FB.init({
-          appId      : '408564152572106', // App ID from the App Dashboard
-          channelUrl : '/channel.php', // Channel File for x-domain communication
-          status     : true, // check the login status upon init?
-          cookie     : true // set sessions cookies to allow your server to access the session?
-        });
-      };
-
-      (function(d, debug){
-         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement('script'); js.id = id; js.async = true;
-         js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
-         ref.parentNode.insertBefore(js, ref);
-       }(document, /*debug*/ false));
     </script>
   </body>
 </html>
