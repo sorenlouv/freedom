@@ -153,9 +153,10 @@ class Feed {
       $body .= "URL:" . $event_url . "/\r\n";
 
       // description
-      if(isset($event["description"])){
-        $body .= "DESCRIPTION:" . $this->ical_encode_text($event["description"] . "\n\nGo to event:\n" . $event_url) . "\r\n";
+      if(!isset($event["description"])){
+        $event["description"] = "";
       }
+      $body .= "DESCRIPTION:" . $this->ical_encode_text($event["description"] . "\n\nGo to event:\n" . $event_url) . "\r\n";
 
       $body .= "CLASS:PUBLIC\r\n";
       $body .= "STATUS:CONFIRMED\r\n";
