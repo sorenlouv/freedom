@@ -6,6 +6,7 @@ class Feed {
   public $calendar_body;
   private $user_id;
   private $access_token;
+  private $isLegacyUser = false;
 
   public function __construct($user_id, $secure_hash, $access_token){
 
@@ -18,7 +19,7 @@ class Feed {
       include_once 'utils.php';
       $access_token = Utils::get_access_token($user_id, $secure_hash);
     }else{
-      //legacy
+      $this->isLegacyUser = true;
     }
 
     $this->calendar_body = $this->get_body();
@@ -48,10 +49,16 @@ class Feed {
   private function track_analytics_event($status){
     require("ServersideAnalytics/autoload.php");
 
+    // get user id
     if($this->user_id === null){
       $user_id = Utils::get_user_id_by_access_token($this->access_token);
     }else{
       $user_id = $this->user_id;
+    }
+
+    // add legacy to $status
+    if($this->isLegacyUser){
+      $status = $status . ' - legacy user';
     }
 
     // visitor
@@ -67,7 +74,7 @@ class Feed {
 
     // Google Analytics: track event
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
-    //$tracker->trackEvent($event, $session, $visitor);
+    $tracker->trackEvent($event, $session, $visitor);
   }
 
   private function get_body(){
