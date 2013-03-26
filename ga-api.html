@@ -8,12 +8,17 @@
 </head>
 <body>
 
+<div class="btn-group analytics-filters">
+  <button class="btn" data-query="activeUsers">Active</button>
+  <button class="btn" data-query="legacyUsers">Legacy</button>
+</div>
+
 <p id="users-count">Antal brugere: <span></span></p>
 <table class="table table-striped">
-<thead>
-  <tr><th>Navn</th><th>By</th></tr>
-</thead>
-<tbody></tbody>
+    <thead>
+      <tr><th>Navn</th><th>By</th></tr>
+    </thead>
+    <tbody></tbody>
 </table>
 
 <div id="fb-root"></div>

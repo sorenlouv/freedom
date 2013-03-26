@@ -48,10 +48,17 @@ class Utils {
 
   public static function get_user_id_by_access_token($user_access_token){
     include 'config.php';
+    $user_id = null;
 
-    $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN;
-    $response = json_decode(file_get_contents($url));
-    $user_id = $response->data->user_id;
+
+    if($user_access_token !== null){
+      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN;
+      $response = json_decode(file_get_contents($url));
+
+        if(isset($response->data->user_id)){
+          $user_id = $response->data->user_id;
+        }
+    }
 
     return $user_id;
   }

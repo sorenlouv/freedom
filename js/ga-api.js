@@ -31,7 +31,7 @@ var checkAuth = function(immediate) {
   }, function(response){
     // logged in
     if (response) {
-      gapi.client.load('analytics', 'v3', getActiveUsers);
+      // enable buttons
 
     // not logged in - attempt to login
     } else {
@@ -40,8 +40,36 @@ var checkAuth = function(immediate) {
   });
 };
 
+
+$('.analytics-filters button').click(function(e){
+  var query;
+  var targetQuery = $(e.target).data("query");
+  if(targetQuery == "activeUsers"){
+    query = queryActiveUsers;
+  }else if(targetQuery == "legacyUsers"){
+    query = queryLegacyUsers;
+  }
+
+  gapi.client.load('analytics', 'v3', query);
+});
+
+
 // get active users from analytics
-function getActiveUsers() {
+function queryLegacyUsers() {
+  gapi.client.analytics.data.ga.get({
+    'ids': 'ga:70063750',
+    'dimensions': 'ga:eventLabel',
+    'metrics': 'ga:totalEvents',
+    'filters': 'ga:eventAction=~legacy',
+    'sort': '-ga:totalEvents',
+    'start-date': lastNDays(2),
+    'end-date': lastNDays(0),
+    'max-results': '200'
+  }).execute(outputFacebookUserInfo);
+}
+
+// get active users from analytics
+function queryActiveUsers() {
   gapi.client.analytics.data.ga.get({
     'ids': 'ga:70063750',
     'dimensions': 'ga:eventLabel',
@@ -51,22 +79,25 @@ function getActiveUsers() {
     'start-date': lastNDays(2),
     'end-date': lastNDays(0),
     'max-results': '200'
-  }).execute(function(response){
-    var eventUsers = response.rows;
-    if(eventUsers){
-      getFacebookUserInfo(eventUsers);
-    }else{
-      alert(response.message);
-      console.log(response);
-    }
-  });
+  }).execute(outputFacebookUserInfo);
 }
 
 // get users info from Facebook
-function getFacebookUserInfo(eventUsers){
+function outputFacebookUserInfo(response){
+  var eventUsers = response.rows;
 
+  if(eventUsers === undefined){
+    alert(response.message);
+    console.log(response);
+    return false;
+  }
+
+  // set user count
   var usersCount = eventUsers.length;
   $('#users-count span').text(usersCount);
+
+  // clear table
+  $('table.table tbody').empty();
 
   // get propert structure for FB query
   var users = $.map(eventUsers, function(values, i) {
@@ -84,7 +115,7 @@ function getFacebookUserInfo(eventUsers){
 
       $('<tr/>', {
         html: Mustache.render('<td><a href="http://www.facebook.com/{{id}}">{{name}}</a></td><td>{{location.name}}</td>', user)
-      }).appendTo('table.table');
+      }).appendTo('table.table tbody');
     });
   });
 }
