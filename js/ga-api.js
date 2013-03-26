@@ -48,13 +48,29 @@ $('.analytics-filters button').click(function(e){
     query = queryActiveUsers;
   }else if(targetQuery == "legacyUsers"){
     query = queryLegacyUsers;
+  }else if(targetQuery == "errorUsers"){
+    query = queryErrorUsers;
   }
 
   gapi.client.load('analytics', 'v3', query);
 });
 
 
-// get active users from analytics
+// get error users from analytics
+function queryErrorUsers() {
+  gapi.client.analytics.data.ga.get({
+    'ids': 'ga:70063750',
+    'dimensions': 'ga:eventLabel',
+    'metrics': 'ga:totalEvents',
+    'filters': 'ga:eventAction=~error;ga:eventLabel=~^\\d+$',
+    'sort': '-ga:totalEvents',
+    'start-date': lastNDays(1),
+    'end-date': lastNDays(0),
+    'max-results': '200'
+  }).execute(outputFacebookUserInfo);
+}
+
+// get legacy users from analytics
 function queryLegacyUsers() {
   gapi.client.analytics.data.ga.get({
     'ids': 'ga:70063750',
@@ -62,7 +78,7 @@ function queryLegacyUsers() {
     'metrics': 'ga:totalEvents',
     'filters': 'ga:eventAction=~legacy',
     'sort': '-ga:totalEvents',
-    'start-date': lastNDays(2),
+    'start-date': lastNDays(1),
     'end-date': lastNDays(0),
     'max-results': '200'
   }).execute(outputFacebookUserInfo);
@@ -76,7 +92,7 @@ function queryActiveUsers() {
     'metrics': 'ga:totalEvents',
     'filters': 'ga:eventLabel=~^\\d+$',
     'sort': '-ga:totalEvents',
-    'start-date': lastNDays(2),
+    'start-date': lastNDays(1),
     'end-date': lastNDays(0),
     'max-results': '200'
   }).execute(outputFacebookUserInfo);
