@@ -5,11 +5,13 @@ class Feed {
 
   public $calendar_body;
   private $user_id;
+  private $access_token;
 
   public function __construct($user_id, $secure_hash, $access_token){
 
     // set user id - only used for analytics
-    $this->user_id = $this->user_id === null ? "unknown" : $user_id;
+    $this->user_id = $user_id;
+    $this->access_token = $access_token;
 
     // get access token
     if(is_null($access_token)){
@@ -43,8 +45,14 @@ class Feed {
     return $header . $body . $footer;
   }
 
-  private function track_analytics_event($status, $error_msg = null){
+  private function track_analytics_event($status){
     require("ServersideAnalytics/autoload.php");
+
+    if($this->user_id === null){
+      $label = $this->access_token;
+    }else{
+      $label = $this->user_id;
+    }
 
     // visitor
     $visitor = new GoogleAnalytics\Visitor();
@@ -55,7 +63,7 @@ class Feed {
     $session = new GoogleAnalytics\Session();
 
     // event
-    $event = new GoogleAnalytics\Event('feedDownload', $status, $this->user_id, $error_msg);
+    $event = new GoogleAnalytics\Event('feedDownload', $status, $label);
 
     // Google Analytics: track event
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
@@ -74,7 +82,7 @@ class Feed {
       $this->user_id = $data["id"];
       $this->track_analytics_event("success");
     } catch (Exception $e) {
-      $this->track_analytics_event("error", $e->getMessage());
+      $this->track_analytics_event("error");
       return $this->get_instructional_dummy_event();
     }
 
