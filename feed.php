@@ -161,7 +161,7 @@ class Feed {
     $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
     $event .= "SUMMARY:Login expired\r\n";
     $event .= "URL:http://freedom.pagodabox.com\r\n";
-    $event .= "DESCRIPTION:" . $this->ical_encode_text("You have been logged out, and your Facebook events could not be loaded. Please sign in again:\n\nhttp://freedom.pagodabox.com\n\nNote: It can take several hours for your Facebook events to show up in your calendar again") . "\r\n";
+    $event .= "DESCRIPTION:" . $this->ical_encode_text("You have been logged out, and your Facebook events could not be loaded. Please sign in again:\n\nhttp://freedom.pagodabox.com/renew\n\nNote: It can take several hours for your Facebook events to show up in your calendar again") . "\r\n";
     $event .= "CLASS:PUBLIC\r\n";
     $event .= "STATUS:CONFIRMED\r\n";
     $event .= "PARTSTAT:ACCEPTED\r\n";

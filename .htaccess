@@ -1,2 +1,9 @@
 RewriteEngine On
+
+# Redirect feed
 RewriteRule feed.ics handlers.php?f=downloadFeed [QSA]
+
+# Rewrite all requests without extensions
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\..+$
+RewriteRule ^(.*)$ /$1.html [L,QSA]

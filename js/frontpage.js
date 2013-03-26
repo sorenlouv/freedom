@@ -7,6 +7,7 @@ $(document).ready(function(){
         // remove all alerts
         $('.alert').remove();
 
+        // start spinner
         var spinner = new Spinner().spin(document.getElementById('clear-div'));
 
         FB.login(function(response) {
@@ -16,26 +17,17 @@ $(document).ready(function(){
                 var userId = FB.getAuthResponse()['userID'];
 
                 // extend access token
-                $.getJSON('/handlers.php?f=saveAccessToken', function(response) {
-                    var secureHash = response.secure_hash;
-
-                    var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash;
-                    var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
-
-                    // Add success event to GA
-                    _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook', userId]);
-
-                    // Update links
-                    $("a.google-calendar-button").attr('href', googleLink);
-                    $("a.download-feed").attr('href', newWebcal);
-
-                    // appear
-                    $(".step.step-facebook-connect").addClass('inactive');
-                    $(".step.add-calendar-feed").removeClass('inactive');
+                $.getJSON('/handlers.php?f=saveAccessToken', function(response){
+                    // set callback method, depending on renewal of feed or new feed submission
+                    if( window.location.pathname == "/renew"){
+                        activateStepFinished();
+                    }else{
+                        var secureHash = response.secure_hash;
+                        activateStepAddCalendarFeeds(secureHash, userId);
+                    }
 
                     //stop spinner
                     spinner.stop();
-
                 });
 
             }else{
@@ -52,9 +44,27 @@ $(document).ready(function(){
         }, {scope: 'user_events'});
     });
 
-    // click add to Google Calendar
-    $('.google-calendar-button, a.download-feed').click(function(e){
-        $(".step.add-calendar-feed").addClass('inactive');
+    var activateStepAddCalendarFeeds = function(secureHash, userId) {
+        var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash;
+        var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
+
+        // Add success event to GA
+        _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook', userId]);
+
+        // Update links
+        $("a.google-calendar-button").attr('href', googleLink);
+        $("a.download-feed").attr('href', newWebcal);
+
+        // appear
+        $(".step").addClass('inactive');
+        $(".step.add-calendar-feed").removeClass('inactive');
+    };
+
+    var activateStepFinished = function(){
+        $(".step").addClass('inactive');
         $(".step.finished").removeClass('inactive');
-    });
+    };
+
+    // click add to Google Calendar
+    $('.google-calendar-button, a.download-feed').click(activateStepFinished);
 });
