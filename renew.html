@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Freedom - Remove unanswered Facebook events when syncing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up.">
+
+    <meta property="og:title" content="Freedom - Remove unanswered Facebook events from your calendar"/>
+    <meta property="og:url" content="http://freedom.pagodabox.com"/>
+    <meta property="og:image" content="http://freedom.pagodabox.com/img/freedom-logo-blue.png"/>
+    <meta property="og:site_name" content="Freedom"/>
+    <meta property="og:type" content="website"/>
+    <meta property="fb:app_id" content="408564152572106"/>
+    <meta property="og:description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up."/>
+  </head>
+  <body>
+    <div class="container">
+      <a href="https://github.com/sqren/freedom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
+      <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
+      <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
+
+      <div id="step-wizard">
+        <div class="step step-facebook-connect active">
+          <h2>Step 1</h2>
+          <div class="content">
+            <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
+            <p>This will re-connect you to Facebook</p>
+          </div>
+        </div>
+        <div class="step finished inactive">
+          <h2>Step 2</h2>
+          <div class="content">
+            <p>Good job! Your Facebook events should start re-appearing into your calendar within a few hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="clear: both;" id="clear-div">&nbsp;</div>
+    <div id="fb-root"></div>
+
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/spin.min.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/frontpage.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39209285-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
