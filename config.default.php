@@ -2,6 +2,7 @@
     // facebook
     $CLIENT_ID = "";
     $CLIENT_SECRET = "";
+    $APP_ACCESS_TOKEN = ""; // https://developers.facebook.com/docs/opengraph/howtos/publishing-with-app-token/
     $SALT = "";
 
     // MySQL

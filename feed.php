@@ -21,7 +21,7 @@ class Feed {
       //legacy
     }
 
-    $this->calendar_body = $this->get_body_by_access_token($access_token);
+    $this->calendar_body = $this->get_body();
   }
 
   public function get_feed(){
@@ -49,9 +49,9 @@ class Feed {
     require("ServersideAnalytics/autoload.php");
 
     if($this->user_id === null){
-      $label = $this->access_token;
+      $user_id = Utils::get_user_id_by_access_token($this->access_token);
     }else{
-      $label = $this->user_id;
+      $user_id = $this->user_id;
     }
 
     // visitor
@@ -63,17 +63,17 @@ class Feed {
     $session = new GoogleAnalytics\Session();
 
     // event
-    $event = new GoogleAnalytics\Event('feedDownload', $status, $label);
+    $event = new GoogleAnalytics\Event('feedDownload', $status, $user_id);
 
     // Google Analytics: track event
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
-    $tracker->trackEvent($event, $session, $visitor);
+    //$tracker->trackEvent($event, $session, $visitor);
   }
 
-  private function get_body_by_access_token($access_token){
+  private function get_body(){
     include_once 'utils.php';
     $facebook = Utils::get_facebook_object();
-    $facebook->setAccessToken($access_token);
+    $facebook->setAccessToken($this->access_token);
 
     try {
       $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
