@@ -56,6 +56,8 @@ class Feed {
       $user_id = $this->user_id;
     }
 
+    echo $user_id . "TESTETSTES";
+
     // add legacy to $status
     if($this->isLegacyUser){
       $status = $status . ' - legacy user';
@@ -174,9 +176,16 @@ class Feed {
     $event .= "SEQUENCE:0\r\n";
     $event .= "DTSTART;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+24 hours") . "\r\n";
     $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
-    $event .= "SUMMARY:Login expired\r\n";
     $event .= "URL:http://freedom.pagodabox.com\r\n";
-    $event .= "DESCRIPTION:" . $this->ical_encode_text("You have been logged out, and your Facebook events could not be loaded. Please sign in again:\n\nhttp://freedom.pagodabox.com/renew\n\nNote: It can take several hours for your Facebook events to show up in your calendar again") . "\r\n";
+
+    if($this->isLegacyUser){
+      $event .= "SUMMARY:Login invalid - go to freedom.pagodabox.com\r\n";
+      $event .= "DESCRIPTION:" . $this->ical_encode_text("The Freedom app is still in beta, and have been changed since you started using it. I need you to remove this calendar subscription, and redo the steps outlined at:\n\nhttp://freedom.pagodabox.com/\n\n I hope you will continue enjoying this service, Søren!") . "\r\n";
+    }else{
+      $event .= "SUMMARY:Login expired - go to freedom.pagodabox.com/renew\r\n";
+      $event .= "DESCRIPTION:" . $this->ical_encode_text("You have been logged out, and your Facebook events could not be loaded. Please sign in again:\n\nhttp://freedom.pagodabox.com/renew\n\nNote: It can take several hours for your Facebook events to show up in your calendar again") . "\r\n";
+    }
+
     $event .= "CLASS:PUBLIC\r\n";
     $event .= "STATUS:CONFIRMED\r\n";
     $event .= "PARTSTAT:ACCEPTED\r\n";
