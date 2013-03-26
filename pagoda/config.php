@@ -2,6 +2,7 @@
     // Facebook
     $CLIENT_ID = $_SERVER["CLIENT_ID"];
     $CLIENT_SECRET = $_SERVER["CLIENT_SECRET"];
+    $APP_ACCESS_TOKEN = $_SERVER["APP_ACCESS_TOKEN"];
     $SALT = $_SERVER["SALT"];
 
     // MYSQL
