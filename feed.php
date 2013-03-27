@@ -6,21 +6,21 @@ class Feed {
   public $calendar_body;
   private $user_id;
   private $access_token;
-  private $isLegacyUser = false;
+  private $is_legacy_user = false;
 
   public function __construct($user_id, $secure_hash, $access_token){
-
-    // set user id - only used for analytics
-    $this->user_id = $user_id;
-    $this->access_token = $access_token;
 
     // get access token
     if(is_null($access_token)){
       include_once 'utils.php';
       $access_token = Utils::get_access_token($user_id, $secure_hash);
     }else{
-      $this->isLegacyUser = true;
+      $this->is_legacy_user = true;
     }
+
+    // set user_id, access_token
+    $this->user_id = $user_id;
+    $this->access_token = $access_token;
 
     $this->calendar_body = $this->get_body();
   }
@@ -46,7 +46,7 @@ class Feed {
     return $header . $body . $footer;
   }
 
-  private function track_analytics_event($status){
+  private function track_download_feed_event($status, $error_msg = null){
     require("ServersideAnalytics/autoload.php");
 
     // get user id
@@ -56,12 +56,27 @@ class Feed {
       $user_id = $this->user_id;
     }
 
-    echo $user_id . "TESTETSTES";
-
-    // add legacy to $status
-    if($this->isLegacyUser){
-      $status = $status . ' - legacy user';
+    // legacy string
+    if($this->is_legacy_user){
+      $is_legacy_string = 'legacy';
+    }else{
+      $is_legacy_string = "up-to-date";
     }
+
+    // error message
+    if($error_msg !== null){
+      $error_msg = " - " . $error_msg;
+    }
+
+    // category
+    $category = 'feedDownload - '  . $status;
+
+    // action
+    $action = $is_legacy_string  . $error_msg;
+
+    // label
+    $label = $user_id;
+
 
     // visitor
     $visitor = new GoogleAnalytics\Visitor();
@@ -72,10 +87,17 @@ class Feed {
     $session = new GoogleAnalytics\Session();
 
     // event
-    $event = new GoogleAnalytics\Event('feedDownload', $status, $user_id);
+    $event = new GoogleAnalytics\Event($category, $action, $label);
 
     // Google Analytics: track event
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
+
+    // echo $category;
+    // echo " | ";
+    // echo $action;
+    // echo " | ";
+    // echo $label;
+
     $tracker->trackEvent($event, $session, $visitor);
   }
 
@@ -89,9 +111,10 @@ class Feed {
 
       // set user_id
       $this->user_id = $data["id"];
-      $this->track_analytics_event("success");
+      $this->track_download_feed_event("success");
     } catch (Exception $e) {
-      $this->track_analytics_event("error");
+      $this->track_download_feed_event("error", $e->getMessage());
+
       return $this->get_instructional_dummy_event();
     }
 
@@ -179,8 +202,8 @@ class Feed {
     $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
     $event .= "URL:http://freedom.pagodabox.com\r\n";
 
-    if($this->isLegacyUser){
-      $event .= "SUMMARY:Login invalid - go to freedom.pagodabox.com\r\n";
+    if($this->is_legacy_user || $this->access_token == ""){
+      $event .= "SUMMARY:Calendar invalid - go to freedom.pagodabox.com\r\n";
       $event .= "DESCRIPTION:" . $this->ical_encode_text("The Freedom app is still in beta, and have been changed since you started using it. I need you to remove this calendar subscription, and redo the steps outlined at:\n\nhttp://freedom.pagodabox.com/\n\n I hope you will continue enjoying this service, Søren!") . "\r\n";
     }else{
       $event .= "SUMMARY:Login expired - go to freedom.pagodabox.com/renew\r\n";
