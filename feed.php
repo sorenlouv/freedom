@@ -214,7 +214,6 @@ class Feed {
 
     $event .= "CLASS:PUBLIC\r\n";
     $event .= "STATUS:CONFIRMED\r\n";
-    $event .= "PARTSTAT:ACCEPTED\r\n";
     $event .= "END:VEVENT\r\n";
 
     return $event;
