@@ -51,7 +51,7 @@ class Utils {
     $user_id = null;
 
 
-    if($user_access_token !== null){
+    if($user_access_token !== null && strlen($user_access_token) > 0){
       $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN;
       $response = json_decode(file_get_contents($url));
 
