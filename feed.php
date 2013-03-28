@@ -81,7 +81,9 @@ class Feed {
     // visitor
     $visitor = new GoogleAnalytics\Visitor();
     $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
-    $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    if(isset($_SERVER['HTTP_USER_AGENT'])){
+      $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    }
 
     // session
     $session = new GoogleAnalytics\Session();
