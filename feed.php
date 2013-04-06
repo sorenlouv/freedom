@@ -31,7 +31,7 @@ class Feed {
     $header = "BEGIN:VCALENDAR\r\n";
     $header .= "VERSION:2.0\r\n";
     $header .= "PRODID:-//Facebook//NONSGML Facebook Events V1.0//EN\r\n";
-    $header .= "X-WR-CALNAME:Facebook Events\r\n";
+    $header .= "X-WR-CALNAME:FB Freedom\r\n";
     $header .= "X-PUBLISHED-TTL:PT12H\r\n";
     $header .= "X-ORIGINAL-URL:https://www.facebook.com/events/\r\n";
     $header .= "CALSCALE:GREGORIAN\r\n";
