@@ -41,7 +41,7 @@ $(document).ready(function(){
                 //stop spinner
                 spinner.stop();
             }
-        }, {scope: 'user_events'});
+        }, {scope: 'user_events, user_groups'});
     });
 
     var activateStepAddCalendarFeeds = function(secureHash, userId) {
