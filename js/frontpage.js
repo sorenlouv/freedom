@@ -45,7 +45,11 @@ $(document).ready(function(){
     });
 
     var activateStepAddCalendarFeeds = function(secureHash, userId) {
-        var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash;
+        // to avoid Google Calendar caching an old feed
+        var dummy = Math.floor(Math.random() * 1000);
+
+        // setup links
+        var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
         var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
         // Add success event to GA
