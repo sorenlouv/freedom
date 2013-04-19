@@ -115,24 +115,25 @@ function outputFacebookUserInfo(response){
   // clear table
   $('table.table tbody').empty();
 
-  // get propert structure for FB query
-  var users = $.map(eventUsers, function(values, i) {
+
+  // loop over analytics users
+  $.each(eventUsers, function(i, values){
     var facebookId = values[0];
     var totalEvents = values[1];
-    return { relative_url: facebookId + '?fields=name,location'};
-  });
 
-  // get users from Graph API
-  FB.api('/', 'POST', {
-      batch: users
-  }, function (responses) {
-    $.each(responses, function(i, response){
-      var user = jQuery.parseJSON(response["body"]);
+    // get names from facebook by ID
+    FB.api('/' + facebookId + '?fields=name,location,devices', function (user) {
+      if(user.devices && user.devices[0].os == "Android"){
+        user.deviceIcon = "/img/android.jpeg";
+      }else if(user.devices && user.devices[0].os == "iOS"){
+        user.deviceIcon = "/img/apple.jpeg";
+      }
 
       $('<tr/>', {
-        html: Mustache.render('<td><a href="http://www.facebook.com/{{id}}">{{name}}</a></td><td>{{location.name}}</td>', user)
+        html: Mustache.render('<td><img src="http://graph.facebook.com/{{id}}/picture"></td><td><a href="http://www.facebook.com/{{id}}">{{name}}</a></td><td>{{location.name}}</td><td><img src="{{deviceIcon}}" width="30"></td>', user)
       }).appendTo('table.table tbody');
     });
+
   });
 }
 
