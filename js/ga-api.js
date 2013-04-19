@@ -31,7 +31,8 @@ var checkAuth = function(immediate) {
   }, function(response){
     // logged in
     if (response) {
-      // enable buttons
+      // show active users
+      gapi.client.load('analytics', 'v3', queryActiveUsers);
 
     // not logged in - attempt to login
     } else {
