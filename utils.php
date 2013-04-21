@@ -30,7 +30,7 @@ class Utils {
     $stmt->execute(array(':id' => $facebook_id, ':access_token' => $access_token, ':secure_hash'=> $secure_hash));
   }
 
-  public static function get_access_token($facebook_id, $secure_hash){
+  public static function get_access_token_by_user_id($facebook_id, $secure_hash){
     $db = Utils::get_db_object();
 
     $stmt = $db->prepare("SELECT access_token FROM users WHERE id=? AND secure_hash=?");

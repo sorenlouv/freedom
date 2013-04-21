@@ -1,31 +1,22 @@
 <?php
 use UnitedPrototype\GoogleAnalytics;
+include_once 'utils.php';
 
 class Feed {
 
-  public $calendar_body;
-  private $user_id;
-  private $access_token;
   private $is_legacy_user = false;
 
-  public function __construct($user_id, $secure_hash, $access_token){
+  public function get_feed($user_id, $secure_hash, $access_token){
 
-    // get access token
-    if(is_null($access_token)){
-      include_once 'utils.php';
-      $access_token = Utils::get_access_token($user_id, $secure_hash);
-    }else{
+    // get userid by access token
+    if(is_null($user_id)){
+      $user_id = Utils::get_user_id_by_access_token($access_token);
       $this->is_legacy_user = true;
+
+    // get access token by user id
+    }else{
+      $access_token = Utils::get_access_token_by_user_id($user_id, $secure_hash);
     }
-
-    // set user_id, access_token
-    $this->user_id = $user_id;
-    $this->access_token = $access_token;
-
-    $this->calendar_body = $this->get_body();
-  }
-
-  public function get_feed(){
 
     // header
     $header = "BEGIN:VCALENDAR\r\n";
@@ -38,7 +29,7 @@ class Feed {
     $header .= "METHOD:PUBLISH\r\n";
 
     // body
-    $body = $this->calendar_body;
+    $body = $this->get_calendar_body($user_id, $access_token);
 
     // footer
     $footer = "END:VCALENDAR\r\n";
@@ -46,37 +37,60 @@ class Feed {
     return $header . $body . $footer;
   }
 
-  private function track_download_feed_event($status, $error_msg = null){
+  private function get_calendar_body($user_id, $access_token){
+
+    // get events
+    $events = $this->get_events($user_id, $access_token);
+    $this->track_download_feed_event($user_id, $events["error_message"]);
+
+    // return body
+    if(is_null($events["error_message"])){
+      return $this->get_normal_body($events["events"]);
+    }else{
+      return $this->get_instructional_body();
+    }
+  }
+
+  private function get_events($user_id, $access_token){
+    $facebook = Utils::get_facebook_object();
+    $facebook->setAccessToken($access_token);
+
+    try {
+      $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
+      $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+      return array(
+        "error_message" => null,
+        "events" => $events
+      );
+    } catch (Exception $e) {
+      return array(
+        "error_message" => $e->getMessage()
+      );
+    }
+  }
+
+  private function track_download_feed_event($user_id, $error_message){
     require("ServersideAnalytics/autoload.php");
 
-    // get user id
-    if($this->user_id === null){
-      $user_id = Utils::get_user_id_by_access_token($this->access_token);
-    }else{
-      $user_id = $this->user_id;
-    }
-
     // legacy string
-    if($this->is_legacy_user){
-      $is_legacy_string = 'legacy';
-    }else{
-      $is_legacy_string = "up-to-date";
-    }
+    $is_legacy_string = $this->is_legacy_user ? 'legacy' : "up-to-date";
 
     // error message
-    if($error_msg !== null){
-      $error_msg = " - " . $error_msg;
+    if(!is_null($error_message)){
+      $error_message = " - " . $error_message;
+      $status = "error";
+    }else{
+      $status = "success";
     }
 
     // category
     $category = 'feedDownload - '  . $status;
 
     // action
-    $action = $is_legacy_string  . $error_msg;
+    $action = $is_legacy_string  . $error_message;
 
     // label
     $label = $user_id;
-
 
     // visitor
     $visitor = new GoogleAnalytics\Visitor();
@@ -85,43 +99,43 @@ class Feed {
       $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
     }
 
-    // session
-    $session = new GoogleAnalytics\Session();
-
-    // event
-    $event = new GoogleAnalytics\Event($category, $action, $label);
-
     // Google Analytics: track event
+    $session = new GoogleAnalytics\Session();
+    $event = new GoogleAnalytics\Event($category, $action, $label);
     $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
-
-    // echo $category;
-    // echo " | ";
-    // echo $action;
-    // echo " | ";
-    // echo $label;
-
     $tracker->trackEvent($event, $session, $visitor);
   }
 
-  private function get_body(){
-    include_once 'utils.php';
-    $facebook = Utils::get_facebook_object();
-    $facebook->setAccessToken($this->access_token);
+  private function get_event_dt($event){
+    // all day event without time and end
+    if($event["is_date_only"]){
+      $start_time = $this->date_string_to_time($event['start_time']);
+      $end_time = $this->date_string_to_time($event['start_time'], "+1 day");
+      $time_type = "VALUE=DATE";
 
-    try {
-      $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
+    // specific time
+    }else{
+      $time_type = "VALUE=DATE-TIME";
 
-      // set user_id
-      $this->user_id = $data["id"];
-      $this->track_download_feed_event("success");
-    } catch (Exception $e) {
-      $this->track_download_feed_event("error", $e->getMessage());
+      // without end (set end as 3 hours after start)
+      if(!isset($event['end_time'])){
+        $start_time = $this->date_string_to_time($event['start_time']);
+        $end_time = $this->date_string_to_time($event['start_time'], "+3 hours");
 
-      return $this->get_instructional_dummy_event();
+      // specific start and end time
+      }else{
+        $start_time = $this->date_string_to_time($event['start_time']);
+        $end_time = $this->date_string_to_time($event['end_time']);
+      }
     }
 
-    // make sure at least one event is available
-    $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+    return array(
+      "start" => $time_type . ":" . $start_time,
+      "end"   => $time_type . ":" . $end_time
+    );
+  }
+
+  private function get_normal_body($events){
     $body = "";
     foreach($events as $event){
 
@@ -135,31 +149,9 @@ class Feed {
       $body .= "SEQUENCE:0\r\n";
       $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
 
-
-      // all day event without time and end
-      if($event["is_date_only"]){
-        $start_time = $this->date_string_to_time($event['start_time']);
-        $end_time = $this->date_string_to_time($event['start_time'], "+1 day");
-        $time_type = "VALUE=DATE";
-
-      // specific time
-      }else{
-        $time_type = "VALUE=DATE-TIME";
-
-        // without end (set end as 3 hours after start)
-        if(!isset($event['end_time'])){
-          $start_time = $this->date_string_to_time($event['start_time']);
-          $end_time = $this->date_string_to_time($event['start_time'], "+3 hours");
-
-        // specific start and end time
-        }else{
-          $start_time = $this->date_string_to_time($event['start_time']);
-          $end_time = $this->date_string_to_time($event['end_time']);
-        }
-      }
-
-      $body .= "DTSTART;" . $time_type . ":" . $start_time . "\r\n";
-      $body .= "DTEND;" . $time_type . ":" . $end_time . "\r\n";
+      $event_dt = $this->get_event_dt($event);
+      $body .= "DTSTART;" . $event_dt["start"] . "\r\n";
+      $body .= "DTEND;" . $event_dt["end"] . "\r\n";
 
       // if(isset($event["timezone"])){
       //   $body .= "TZID:" . $event["timezone"] . "\r\n";
@@ -193,7 +185,7 @@ class Feed {
   }
 
   // login expired. Add dummy event to calendar, which describes how to re-enable calendar (re-login)
-  private function get_instructional_dummy_event(){
+  private function get_instructional_body(){
     $event = "";
     $event .= "BEGIN:VEVENT\r\n";
     $event .= "DTSTAMP:" . $this->date_string_to_time() . "\r\n";
@@ -204,7 +196,7 @@ class Feed {
     $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
     $event .= "URL:http://freedom.pagodabox.com\r\n";
 
-    if($this->is_legacy_user || $this->access_token == ""){
+    if($this->is_legacy_user){
       $event .= "SUMMARY:Calendar invalid - go to freedom.pagodabox.com\r\n";
       $event .= "DESCRIPTION:" . $this->ical_encode_text("The Freedom app is still in beta, and have been changed since you started using it. I need you to remove this calendar subscription, and redo the steps outlined at:\n\nhttp://freedom.pagodabox.com/\n\n I hope you will continue enjoying this service, Søren!") . "\r\n";
     }else{
