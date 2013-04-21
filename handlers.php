@@ -44,11 +44,11 @@ function downloadFeed(){
     header('Content-Disposition: attachment; filename=feed.ics');
 
     // arguments
-    $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
     $user_id = isset($_GET["user_id"]) ? $_GET["user_id"] : null;
+    $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
     $access_token = isset($_GET["access_token"]) ? $_GET["access_token"] : null;
 
     // output
-    $Feed = new Feed($user_id, $secure_hash, $access_token);
-    echo $Feed->get_feed();
+    $Feed = new Feed();
+    echo $Feed->get_feed($user_id, $secure_hash, $access_token);
 }
