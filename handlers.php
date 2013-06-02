@@ -1,9 +1,21 @@
 <?php
+use UnitedPrototype\GoogleAnalytics;
+require("ServersideAnalytics/autoload.php");
 
 // Disclaimer: fuckly handling of URLs to methods, because I don't wanna setup complete routing framework
 // I know I've sinned...
 if(function_exists($_GET['f'])) {
    $_GET['f']();
+
+    // Initilize GA Tracker
+    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
+    $visitor = new GoogleAnalytics\Visitor();
+    $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
+    $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    $session = new GoogleAnalytics\Session();
+    $page = new GoogleAnalytics\Page($_SERVER["REQUEST_URI"]);
+    $tracker->trackPageview($page, $session, $visitor);
+
 }else{
     header('HTTP/1.0 501 Not Found');
 }
