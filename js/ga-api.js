@@ -32,7 +32,9 @@ var checkAuth = function(immediate) {
     // logged in
     if (response) {
       // show active users
-      gapi.client.load('analytics', 'v3', queryActiveUsers);
+      //queryAnalyticsApi('activeUsers');
+      queryAnalyticsApi('errorUsers');
+
 
     // not logged in - attempt to login
     } else {
@@ -45,95 +47,148 @@ var checkAuth = function(immediate) {
 $('.analytics-filters button').click(function(e){
   var query;
   var targetQuery = $(e.target).data("query");
-  if(targetQuery == "activeUsers"){
-    query = queryActiveUsers;
-  }else if(targetQuery == "legacyUsers"){
-    query = queryLegacyUsers;
-  }else if(targetQuery == "errorUsers"){
-    query = queryErrorUsers;
-  }
-
-  gapi.client.load('analytics', 'v3', query);
+  queryAnalyticsApi(targetQuery);
 });
 
+var queryAnalyticsApi = function(targetQuery){
 
-// get error users from analytics
-function queryErrorUsers() {
-  gapi.client.analytics.data.ga.get({
+  var options = {
     'ids': 'ga:70063750',
     'dimensions': 'ga:eventLabel',
     'metrics': 'ga:totalEvents',
-    'filters': 'ga:eventAction=~error;ga:eventLabel=~^\\d+$',
     'sort': '-ga:totalEvents',
-    'start-date': lastNDays(1),
+    'start-date': lastNDays(2),
     'end-date': lastNDays(0),
     'max-results': '200'
-  }).execute(outputFacebookUserInfo);
-}
+  };
 
-// get legacy users from analytics
-function queryLegacyUsers() {
-  gapi.client.analytics.data.ga.get({
-    'ids': 'ga:70063750',
-    'dimensions': 'ga:eventLabel',
-    'metrics': 'ga:totalEvents',
-    'filters': 'ga:eventAction=~legacy',
-    'sort': '-ga:totalEvents',
-    'start-date': lastNDays(1),
-    'end-date': lastNDays(0),
-    'max-results': '200'
-  }).execute(outputFacebookUserInfo);
-}
+  if(targetQuery == "activeUsers"){
+    options.filters = 'ga:eventLabel=~^\\d+$';
 
-// get active users from analytics
-function queryActiveUsers() {
-  gapi.client.analytics.data.ga.get({
-    'ids': 'ga:70063750',
-    'dimensions': 'ga:eventLabel',
-    'metrics': 'ga:totalEvents',
-    'filters': 'ga:eventLabel=~^\\d+$',
-    'sort': '-ga:totalEvents',
-    'start-date': lastNDays(1),
-    'end-date': lastNDays(0),
-    'max-results': '200'
-  }).execute(outputFacebookUserInfo);
+  }else if(targetQuery == "legacyUsers"){
+    options.filters = 'ga:eventAction=~legacy';
+
+  }else if(targetQuery == "errorUsers"){
+    options.filters = 'ga:eventCategory=~error;ga:eventLabel=~^\\d+$';
+  }
+
+  // load api and fetch data in callback
+  gapi.client.load('analytics', 'v3', function(){
+    gapi.client.analytics.data.ga.get(options).execute(function(response){
+      var users = [];
+
+      getFacebookUsers(response.rows, function(users){
+        // if target query is errorUsers, we must subtract successful users first
+        if(targetQuery == "errorUsers"){
+          options.filters = 'ga:eventCategory=~success;ga:eventLabel=~^\\d+$';
+          gapi.client.analytics.data.ga.get(options).execute(function(response){
+            var errorUsers = users;
+            var successUsers = response.rows;
+
+            $.each(errorUsers, function(i, errorUser){
+              $.each(successUsers, function(j, successUser){
+
+                // add number of successful events to errorUser
+                if(errorUser.id == successUser[0]){
+                  errorUsers[i]["successfulEvents"] = successUser[1];
+                }
+              });
+            });
+
+            outputErrorUsers(errorUsers);
+          });
+
+        // for other queryTargets just output the result
+        }else{
+          outputUsers(users);
+        }
+      });
+    });
+  });
+};
+
+// get facebook data
+var getFacebookUsers = function(eventUsers, callback){
+  var users = [];
+  $.each(eventUsers, function(i, user){
+    var facebookId = user[0];
+    var totalEvents = user[1];
+
+    // get names from facebook by ID
+    FB.api('/' + facebookId + '?fields=name,location,devices', function (user) {
+      user.totalEvents = totalEvents;
+      users.push(user);
+
+      // end of each
+      if(users.length == eventUsers.length){
+        callback(users);
+      }
+    });
+  });
+};
+
+// get users info from Facebook
+function outputErrorUsers(users){
+  var successfulUsers = 0;
+
+  // clear table
+  $('table.table tbody').empty();
+
+  // loop over analytics users
+  $.each(users, function(i, user){
+    if(user.successfulEvents !== undefined){
+      successfulUsers++;
+    }
+
+    // add deviceIcon
+    if(user.devices && user.devices[0].os == "Android"){
+      user.deviceIcon = "/img/android.jpeg";
+    }else if(user.devices && user.devices[0].os == "iOS"){
+      user.deviceIcon = "/img/apple.jpeg";
+    }
+
+    $('<tr/>', {
+      html: Mustache.render('<td><img src="http://graph.facebook.com/{{id}}/picture"></td><td><a href="http://www.facebook.com/{{id}}">{{name}} (<span style="color: red">{{totalEvents}}</span>, <span style="color: green">{{successfulEvents}}</span>)</a></td><td>{{location.name}}</td><td><img src="{{deviceIcon}}" width="30"></td>', user)
+    }).appendTo('table.table tbody');
+
+  });
+
+  // set user count
+  var usersCount = users.length;
+  var usersCountExcludingSuccessful = users.length - successfulUsers;
+  $('#users-count span').text(usersCountExcludingSuccessful + " (" + usersCount + ")");
+
 }
 
 // get users info from Facebook
-function outputFacebookUserInfo(response){
-  var eventUsers = response.rows;
+function outputUsers(users){
 
-  if(eventUsers === undefined){
+  if(users === undefined){
     alert(response.message);
     console.log(response);
     return false;
   }
 
   // set user count
-  var usersCount = eventUsers.length;
+  var usersCount = users.length;
   $('#users-count span').text(usersCount);
 
   // clear table
   $('table.table tbody').empty();
 
-
   // loop over analytics users
-  $.each(eventUsers, function(i, values){
-    var facebookId = values[0];
-    var totalEvents = values[1];
+  $.each(users, function(i, user){
 
-    // get names from facebook by ID
-    FB.api('/' + facebookId + '?fields=name,location,devices', function (user) {
-      if(user.devices && user.devices[0].os == "Android"){
-        user.deviceIcon = "/img/android.jpeg";
-      }else if(user.devices && user.devices[0].os == "iOS"){
-        user.deviceIcon = "/img/apple.jpeg";
-      }
+    // add deviceIcon
+    if(user.devices && user.devices[0].os == "Android"){
+      user.deviceIcon = "/img/android.jpeg";
+    }else if(user.devices && user.devices[0].os == "iOS"){
+      user.deviceIcon = "/img/apple.jpeg";
+    }
 
-      $('<tr/>', {
-        html: Mustache.render('<td><img src="http://graph.facebook.com/{{id}}/picture"></td><td><a href="http://www.facebook.com/{{id}}">{{name}}</a></td><td>{{location.name}}</td><td><img src="{{deviceIcon}}" width="30"></td>', user)
-      }).appendTo('table.table tbody');
-    });
+    $('<tr/>', {
+      html: Mustache.render('<td><img src="http://graph.facebook.com/{{id}}/picture"></td><td><a href="http://www.facebook.com/{{id}}">{{name}}</a></td><td>{{location.name}}</td><td><img src="{{deviceIcon}}" width="30"></td>', user)
+    }).appendTo('table.table tbody');
 
   });
 }
