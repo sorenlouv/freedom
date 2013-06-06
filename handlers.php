@@ -8,7 +8,7 @@ if(function_exists($_GET['f'])) {
    $_GET['f']();
 
     // Initilize GA Tracker
-    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.pagodabox.com');
+    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.konscript.com');
     $visitor = new GoogleAnalytics\Visitor();
     $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
     $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);

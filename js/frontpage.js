@@ -12,7 +12,7 @@ var activateStepAddCalendarFeeds = function(secureHash, userId) {
     var dummy = Math.floor(Math.random() * 1000);
 
     // setup links
-    var newWebcal = "webcal://freedom.pagodabox.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
+    var newWebcal = "webcal://freedom.konscript.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
     var googleLink = "http://www.google.com/calendar/render?cid=" + encodeURIComponent(newWebcal);
 
     // Add success event to GA
