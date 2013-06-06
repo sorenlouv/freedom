@@ -7,3 +7,7 @@ RewriteRule feed.ics handlers.php?f=downloadFeed [QSA]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !\..+$
 RewriteRule ^(.*)$ /$1.html [L,QSA]
+
+# Rewrite old domain to new domain
+RewriteCond %{HTTP_HOST} ^freedom.pagodabox.com$ [NC]
+RewriteRule ^(.*)$ http://freedom.konscript.com/$1 [R=301,L]
