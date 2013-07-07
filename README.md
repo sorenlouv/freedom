@@ -5,7 +5,7 @@ If you are like me, you have been overloaded by annoying events from friends you
 This service will filter your events, so only the events you are attending, or maybe attending will show up.
 
 ### Try it now
-Find the service [here](http://freedom.pagodabox.com)
+Find the service [here](http://freedom.konscript.com)
 
 ### Roadmap
  - Make a better UI
