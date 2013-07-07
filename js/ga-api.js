@@ -64,9 +64,6 @@ var queryAnalyticsApi = function(targetQuery){
   if(targetQuery == "activeUsers"){
     options.filters = 'ga:eventLabel=~^\\d+$';
 
-  }else if(targetQuery == "legacyUsers"){
-    options.filters = 'ga:eventAction=~legacy';
-
   }else if(targetQuery == "errorUsers"){
     // options.dimensions = 'ga:eventLabel,ga:eventAction';
     options.filters = 'ga:eventCategory=~error;ga:eventLabel=~^\\d+$';
