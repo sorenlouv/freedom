@@ -58,8 +58,7 @@ var queryAnalyticsApi = function(targetQuery){
     'metrics': 'ga:totalEvents',
     'sort': '-ga:totalEvents',
     'start-date': lastNDays(2),
-    'end-date': lastNDays(0),
-    'max-results': '200'
+    'end-date': lastNDays(0)
   };
 
   if(targetQuery == "activeUsers"){
@@ -69,6 +68,7 @@ var queryAnalyticsApi = function(targetQuery){
     options.filters = 'ga:eventAction=~legacy';
 
   }else if(targetQuery == "errorUsers"){
+    options.dimensions = 'ga:eventLabel,ga:eventAction';
     options.filters = 'ga:eventCategory=~error;ga:eventLabel=~^\\d+$';
   }
 
