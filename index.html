@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="freedomApp">
   <head>
     <title>Freedom - Remove unanswered Facebook events when syncing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
     <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta name="description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up.">
@@ -18,118 +18,126 @@
     <meta property="og:description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up."/>
   </head>
   <body>
-    <div class="container">
+
+    <facebook data-app-id='408564152572106'></facebook>
+    <div ng-show="facebook.sdkLoaded"></div>
+
+    <!-- Container -->
+    <div class="container" ng-controller="AppCtrl">
       <a href="https://github.com/sqren/freedom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
       <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
       <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
 
       <div id="step-wizard">
-        <div class="step step-facebook-connect active">
-          <h2>Step 1</h2>
+        <div class="step step-facebook-connect" ng-class="{active: step == '1'}">
+          <h3>Step 1</h3>
           <div class="content">
-            <a href="#" class="facebook-connect-button"><img src="img/facebook-connect-button.png"/></a>
-            <p>This will fetch your events from Facebook</p>
+            <a href="#" ng-click="connectWithFacebook()" class="btn btn-primary">Get Facebook Events</a>
+            <p>I won't post anything to your wall</p>
+          </div>
+          <div class="alert alert-error" ng-show="errorMessage">{{errorMessage}}</div>
+        </div>
+        <div class="step add-calendar-feed" ng-class="{active: step == '2'}">
+          <h3>Step 2</h3>
+          <div class="content">
+            <a ng-href="{{googleButtonHref}}" target="_blank" ng-click="step = step + 1" class="btn btn-primary">Add to Google Calendar</a>
+            <p>or <a ng-href="{{downloadFeedHref}}" ng-click="step = step + 1">download</a> to iCalendar/Outlook</p>
           </div>
         </div>
-        <div class="step add-calendar-feed inactive">
-          <h2>Step 2</h2>
-          <div class="content">
-            <a href="#" target="_blank" class="google-calendar-button"><img src="img/add-to-google-calendar-button.gif"/></a>
-            <p>This will add a new "calendar subscription" to your Google Calendar. You can always remove this subscription again. You can also <a href="" class='download-feed'>download the calendar</a> to your desktop calendar application</p>
-          </div>
-        </div>
-        <div class="step finished inactive">
-          <h2>Step 3</h2>
+        <div class="step finished" ng-class="{active: step == '3'}">
+          <h3>Step 3</h3>
           <div class="content">
             <p>Good job! Your Facebook events should start appearing within a few hours.</p>
-            <p><strong>Remember</strong> You can easily remove this calendar subscription without affecting your existing calendar</p>
           </div>
         </div>
-      </div>
+      </div> <!-- End of step wizard -->
 
       <div style="clear: both;" id="clear-div">&nbsp;</div>
+      <img src="img/spinner.gif" ng-show="loading">
 
-    <div class="accordion" id="about-freedom">
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#why">
-            Why this service?
-          </a>
-        </div>
-        <div id="why" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p>
-            <p>This service filters the events from Facebook and only shows those events you have marked as "attending" and "maybe attending"; removing those you haven't replied to yet. </p>
-            <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>
+      <!-- Accordion  -->
+      <div class="accordion" id="about-freedom">
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#why">
+              Why this service?
+            </a>
           </div>
-        </div>
-      </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#how">
-             How to use
-          </a>
-        </div>
-        <div id="how" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <p>1. Connect with Facebook
-            <p>2. Sync with Google Calendar by clicking "Add to Google Calendar" (recommended) OR download and sync with your desktop calendar application</p>
-            <p>3. Please note: in some rare instances, it can take several hours before the events start showing up in your calendar. Please be patient :)</p>
-            <p>4. To remove the events again, simply remove the calendar subscription called "Facebook Events" </p>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#privacy">
-             Privacy
-          </a>
-        </div>
-        <div id="privacy" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <p> To keep a persistent connection to Facebook, an access token is stored. However: I don't store any of your personal data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc. on my behalf. If you don't believe me, you can always check out the source code on <a href="https://github.com/sqren/freedom">GitHub</a> :)
-          </div>
-        </div>
-      </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#who">
-             Who am I?
-          </a>
-        </div>
-        <div id="who" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <p>I am a 25-year old tech-happy, hope-to-be-entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href="https://twitter.com/sqrendk" target="_blank">Twitter</a>, <a href="https://github.com/sqren" target="_blank">GitHub</a>, <a href="https://www.facebook.com/sorenlouv" target="_blank">Facebook</a>, <a href="http://dk.linkedin.com/in/sorenlouv/" target="_blank">LinkedIn</a>.</p>
-
-            Co-founder of <a href="http://konscript.com" target="_blank">Konscript</a>, developer in <a href="http://www.kobstaden.dk" target="_blank">Købstaden</a> and part of <a href="http://www.creativedestruction.dk" target="_blank">Creative Destruction</a>
-
-          </div>
-        </div>
-      </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#facebook-rant">
-             A little note about Facebook
-          </a>
-        </div>
-        <div id="facebook-rant" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less usable and more buggy. Not adhering to the <a target="_blank" href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar specification</a> makes it unusable on some devices, <a href="http://forums.macrumors.com/showthread.php?t=1470436">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p>
-            <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br>
-              I asked myself: How was I able to do a better job than the highly skilled developers @ Palo Alto? The answer is: they don't wan't to do a good job at exporting precious data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. <a href="http://iamnumberfourfans.com/wp-content/uploads/2012/10/Joaquin-Phoenix-source_IGN.com_.jpg">We'll see.</a> </p>
+          <div id="why" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p>
+              <p>This service filters the events from Facebook and only shows those events you have marked as "attending" and "maybe attending"; removing those you haven't replied to yet. </p>
+              <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div id="fb-root"></div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#how">How to use</a>
+          </div>
+          <div id="how" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <p>1. Connect with Facebook</p>
+              <p>2. Sync with Google Calendar by clicking "Add to Google Calendar" (recommended) OR download and sync with your desktop calendar application</p>
+              <p>3. Please note: in some rare instances, it can take several hours before the events start showing up in your calendar. Please be patient :)</p>
+              <p>4. To remove the events again, simply remove the calendar subscription called "Facebook Events" </p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#privacy">
+               Privacy
+            </a>
+          </div>
+          <div id="privacy" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <p>
+                To keep a persistent connection to Facebook, an access token is stored. However: I don't store any of your personal data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc. on my behalf. If you don't believe me, you can always check out the source code on <a href="https://github.com/sqren/freedom">GitHub</a> :)
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#who">Who am I?</a>
+          </div>
+          <div id="who" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <p>I am a 25-year old tech-happy, hope-to-be-entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href="https://twitter.com/sqrendk" target="_blank">Twitter</a>, <a href="https://github.com/sqren" target="_blank">GitHub</a>, <a href="https://www.facebook.com/sorenlouv" target="_blank">Facebook</a>, <a href="http://dk.linkedin.com/in/sorenlouv/" target="_blank">LinkedIn</a>.
+              </p>
 
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/spin.min.js"></script>
-    <script src="js/global.js"></script>
-    <script src="js/frontpage.js"></script>
+              <p>
+                Co-founder of <a href="http://konscript.com" target="_blank">Konscript</a>, developer in <a href="http://www.kobstaden.dk" target="_blank">Købstaden</a> and part of <a href="http://www.creativedestruction.dk" target="_blank">Creative Destruction</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#about-freedom" href="#facebook-rant">A little note about Facebook</a>
+          </div>
+          <div id="facebook-rant" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less usable and more buggy. Not adhering to the <a target="_blank" href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar specification</a> makes it unusable on some devices, <a href="http://forums.macrumors.com/showthread.php?t=1470436">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p>
+              <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br>
+                I asked myself: How was I able to do a better job than the highly skilled developers @ Palo Alto? The answer is: they don't wan't to do a good job at exporting precious data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. <a href="http://iamnumberfourfans.com/wp-content/uploads/2012/10/Joaquin-Phoenix-source_IGN.com_.jpg">We'll see.</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End of accordion #about-freedom -->
+    </div>
+
+    <script src="/js/libs/jquery-1.9.1.min.js"></script>
+    <script src="/js/libs/bootstrap.min.js"></script>
+    <script src="/js/libs/angular.min.js"></script>
+    <!-- // <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+    <!-- // <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script> -->
+    <!-- // <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->
+    <script src="js/app.js"></script>
+    <script src="js/facebookDirective.js"></script>
 
     <script type="text/javascript">
       var _gaq = _gaq || [];

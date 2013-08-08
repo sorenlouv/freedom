@@ -2,47 +2,6 @@ var clientId = '979068059612.apps.googleusercontent.com';
 var apiKey = 'AIzaSyC1-OxcreTX25yak92YXljHjTY-hy36Alo';
 var scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
-/**
- * Callback executed once the Google APIs Javascript client library has loaded.
- * The function name is specified in the onload query parameter of URL to load
- * this library. After 1 millisecond, checkAuth is called.
- */
-function onGAReady() {
-  gapi.client.setApiKey(apiKey);
-  window.setTimeout(checkAuth, 1);
-}
-
-var checkAuth = function(immediate) {
-
-  // immediate:
-  // true = check if logged in
-  // false = attempt to login
-  if(immediate === undefined){
-    immediate = true;
-  }
-
-  // request login status
-  gapi.auth.authorize({
-    client_id: clientId,
-    scope: scopes,
-    immediate: immediate
-
-  // receive login status response
-  }, function(response){
-    // logged in
-    if (response) {
-      // show active users
-      //queryAnalyticsApi('activeUsers');
-      queryAnalyticsApi('errorUsers');
-
-
-    // not logged in - attempt to login
-    } else {
-      checkAuth(false);
-    }
-  });
-};
-
 
 $('.analytics-filters button').click(function(e){
   var query;
@@ -104,25 +63,7 @@ var queryAnalyticsApi = function(targetQuery){
   });
 };
 
-// get facebook data
-var getFacebookUsers = function(eventUsers, callback){
-  var users = [];
-  $.each(eventUsers, function(i, user){
-    var facebookId = user[0];
-    var totalEvents = user[1];
 
-    // get names from facebook by ID
-    FB.api('/' + facebookId + '?fields=name,location,devices', function (user) {
-      user.totalEvents = totalEvents;
-      users.push(user);
-
-      // end of each
-      if(users.length == eventUsers.length){
-        callback(users);
-      }
-    });
-  });
-};
 
 // get users info from Facebook
 function outputErrorUsers(users){
