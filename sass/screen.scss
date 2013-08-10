@@ -16,7 +16,7 @@ $layout-column:         30px;
 $layout-gutter:         15px;
 $layout-colcount:       24;
 
-@include sticky-footer(54px);
+//@include sticky-footer(54px);
 
 body {
     font-family: Verdana;
@@ -44,6 +44,7 @@ body {
 }
 
 #step-wizard {
+    width: 100%;
     display: inline-block;
     margin: 10px 0;
 
