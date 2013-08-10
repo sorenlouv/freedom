@@ -1,11 +1,11 @@
-var app = angular.module('freedomApp', ['facebookDirective']);
+var freedomApp = angular.module('freedomApp', ['facebookDirective']);
 
 // add URL protocols to Angular's whitelist
-app.config(function($compileProvider){
+freedomApp.config(function($compileProvider){
   $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|webcal):/);
 });
 
-app.controller("AppCtrl", function ($scope, $rootScope) {
+freedomApp.controller("AppCtrl", function ($scope, $rootScope) {
   $scope.step = 1;
   console.log("Controller ready to rock and roll!!");
 

@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html ng-app="analyticsApp">
+<html ng-app="statisticsApp">
 <head>
   <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <title>Active users</title>
+  <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <title>Freedom stats</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 </head>
 <body ng-controller="AppCtrl">
 
-  <div>
-    <chart value='basicAreaChart' type="line" height="400">
-    </chart>
-  </div>
+  <chart value='chartData' type="line" height="400"></chart>
+  <progress id='p' max='{{progress.max.fb + 100*progress.max.gapi}}' value='{{progress.value}}' ng-hide="chartData"></progress>
 
   <facebook data-app-id='408564152572106'></facebook>
 
   <script src="/js/libs/jquery-1.9.1.min.js"></script>
   <script src="/js/libs/angular.min.js"></script>
 
-  <script src="/js/analyticsApp.js"></script>
-  <script src="/js/gapiService.js"></script>
+  <script src="/js/statistics/statisticsApp.js"></script>
+  <script src="/js/statistics/chartService.js"></script>
+  <script src="/js/statistics/gapiService.js"></script>
+  <script src="/js/statistics/helperService.js"></script>
+  <script src="js/statistics/highchartDirective.js"></script>
+  <script src="/js/statistics/safeApplyFactory.js"></script>
   <script src="/js/facebookDirective.js"></script>
 
   <!-- Highcharts -->
   <script src="http://code.highcharts.com/highcharts.js"></script>
-  <script src="js/highchartDirective.js"></script>
   <script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
   <script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
   <link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css" />

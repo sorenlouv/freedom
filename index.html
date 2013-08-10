@@ -20,7 +20,6 @@
   <body>
 
     <facebook data-app-id='408564152572106'></facebook>
-    <div ng-show="facebook.sdkLoaded"></div>
 
     <!-- Container -->
     <div class="container" ng-controller="AppCtrl">
@@ -33,7 +32,7 @@
         <div class="step step-facebook-connect" ng-class="{active: step == '1'}">
           <h3>Step 1</h3>
           <div class="content">
-            <a href="#" ng-click="connectWithFacebook()" class="btn btn-primary">Get Facebook Events</a>
+            <a href ng-click="connectWithFacebook()" class="btn btn-primary">Get Facebook Events</a>
             <p>I won't post anything to your wall</p>
           </div>
           <div class="alert alert-error" ng-show="errorMessage">{{errorMessage}}</div>
@@ -136,7 +135,7 @@
     <!-- // <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
     <!-- // <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script> -->
     <!-- // <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->
-    <script src="js/app.js"></script>
+    <script src="js/freedomApp.js"></script>
     <script src="js/facebookDirective.js"></script>
 
     <script type="text/javascript">
