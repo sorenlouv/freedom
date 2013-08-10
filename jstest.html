@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <title>Freedom stats</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <script type="text/javascript">
+
+    function DataClass(){
+
+      this.chartStructure = {
+        "title": {
+          "text": "Visitors per day"
+        },
+        "xAxis": {
+          type: "datetime",
+        },
+        "yAxis": {
+          title: {
+            text: "Visitors"
+          }
+        }
+      };
+
+      this.setTitle = function(title){
+        this.chartStructure.title.text = title.split('').reverse().join('');
+      }
+    } // end of DataClass
+
+    var data1 = new DataClass();
+    data1.setTitle("Abe");
+
+    var data2 = new DataClass();
+    data2.setTitle("Torsten");
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ angular.module('higchartDirective',[])
         }
       };
 
-        //Update when charts data changes
+        // Update when charts data changes
         scope.$watch(function() { return scope.chartData; }, function(value) {
           if(!value) return;
             // We need deep copy in order to NOT override original chart object.
@@ -30,7 +30,7 @@ angular.module('higchartDirective',[])
             var newSettings = {};
             $.extend(deepCopy, newSettings, chartsDefaults, scope.chartData);
             var chart = new Highcharts.Chart(newSettings);
-        });
+        }, true);
       }
     };
 

@@ -8,16 +8,35 @@ if(function_exists($_GET['f'])) {
    $_GET['f']();
 
     // Initilize GA Tracker
-    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.konscript.com');
-    $visitor = new GoogleAnalytics\Visitor();
-    $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
-    $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
-    $session = new GoogleAnalytics\Session();
-    $page = new GoogleAnalytics\Page($_SERVER["REQUEST_URI"]);
-    $tracker->trackPageview($page, $session, $visitor);
+    // $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.konscript.com');
+    // $visitor = new GoogleAnalytics\Visitor();
+    // $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
+    // $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    // $session = new GoogleAnalytics\Session();
+    // $page = new GoogleAnalytics\Page($_SERVER["REQUEST_URI"]);
+    // $tracker->trackPageview($page, $session, $visitor);
 
 }else{
-    header('HTTP/1.0 501 Not Found');
+
+    // Track event in Google Analytics
+    $category = 'feedDownload - error';
+    $action = "Function '" . $_GET['f'] . "' does not exist";
+    $label = isset($_GET["user_id"]) ? $_GET["user_id"] : "Unknown"; // userid
+
+    // visitor
+    $visitor = new GoogleAnalytics\Visitor();
+    $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
+    if(isset($_SERVER['HTTP_USER_AGENT'])){
+      $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+    }
+
+    // Google Analytics: track event
+    $session = new GoogleAnalytics\Session();
+    $event = new GoogleAnalytics\Event($category, $action, $label);
+    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.konscript.com');
+    $tracker->trackEvent($event, $session, $visitor);
+
+    header('HTTP/1.0 501 Not Implemented');
 }
 
 // extend facebook access token

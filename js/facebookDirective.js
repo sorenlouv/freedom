@@ -6,7 +6,6 @@ angular.module('facebookDirective', [])
 
     // Controller
     controller: function($scope, $attrs, $rootScope, $q) {
-      console.log("Facebook directive ready");
       var deferred = $q.defer();
       $rootScope.facebookPromise = deferred.promise;
 
