@@ -8,12 +8,15 @@
 @import "compass/css3/user-interface";
 @import "compass/utilities/general/clearfix";
 @import "blueprint/grid";
+@import "compass/layout/sticky-footer";
 
 // Grid
 $layout-container:      1080px;
 $layout-column:         30px;
 $layout-gutter:         15px;
 $layout-colcount:       24;
+
+@include sticky-footer(54px);
 
 body {
     font-family: Verdana;
@@ -66,6 +69,7 @@ body {
             font-size: 11px;
         }
     }
+    @include clearfix();
 }
 
 .accordion {
@@ -80,7 +84,7 @@ body {
 
 // HighCharts popup
 .person {
-    clear: both;
+    @include clearfix();
 
     .profile-image {
         float: left;
