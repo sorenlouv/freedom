@@ -493,56 +493,13 @@ body {
   -moz-user-select: none;
   user-select: none;
 }
-/* line 54, ../sass/_freedom.scss */
-.container .step-wizard li h3 {
-  height: 50px;
-  margin-bottom: 5px;
-}
-/* line 57, ../sass/_freedom.scss */
-.container .step-wizard li h3 span {
-  margin-top: 15px;
-  display: inline-block;
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
-  -webkit-border-radius: 22.5px;
-  -moz-border-radius: 22.5px;
-  -ms-border-radius: 22.5px;
-  -o-border-radius: 22.5px;
-  border-radius: 22.5px;
-  color: black;
-  border: 1px solid #666;
-  text-align: center;
-  font-size: 15px;
-  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -moz-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -o-transition-property: font-size, height, width, border-radius, line-height, margin;
-  transition-property: font-size, height, width, border-radius, line-height, margin;
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-}
-/* line 63, ../sass/_freedom.scss */
-.container .step-wizard li .button {
-  background-color: #428bca;
-  border: none;
-  border-radius: 3px;
-  height: 45px;
-  line-height: 45px;
-  padding: 0 15px;
-}
-/* line 71, ../sass/_freedom.scss */
-.container .step-wizard li .button:hover {
-  background-color: #3276b1;
-}
-/* line 82, ../sass/_freedom.scss */
+/* line 62, ../sass/_freedom.scss */
 .container .step-wizard li.active {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   pointer-events: auto;
 }
-/* line 87, ../sass/_freedom.scss */
+/* line 67, ../sass/_freedom.scss */
 .container .step-wizard li.active h3 span {
   margin-top: 0px;
   display: inline-block;
@@ -567,51 +524,98 @@ body {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-/* line 94, ../sass/_freedom.scss */
+/* line 74, ../sass/_freedom.scss */
+.container .step-wizard li h3 {
+  height: 50px;
+  margin-bottom: 5px;
+}
+/* line 77, ../sass/_freedom.scss */
+.container .step-wizard li h3 span {
+  margin-top: 15px;
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  -webkit-border-radius: 22.5px;
+  -moz-border-radius: 22.5px;
+  -ms-border-radius: 22.5px;
+  -o-border-radius: 22.5px;
+  border-radius: 22.5px;
+  color: black;
+  border: 1px solid #666;
+  text-align: center;
+  font-size: 15px;
+  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin;
+  -moz-transition-property: font-size, height, width, border-radius, line-height, margin;
+  -o-transition-property: font-size, height, width, border-radius, line-height, margin;
+  transition-property: font-size, height, width, border-radius, line-height, margin;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+/* line 83, ../sass/_freedom.scss */
+.container .step-wizard li .button {
+  background-color: #428bca;
+  border: none;
+  border-radius: 3px;
+  height: 45px;
+  line-height: 45px;
+  padding: 0 15px;
+  margin-bottom: 0;
+}
+/* line 92, ../sass/_freedom.scss */
+.container .step-wizard li .button:hover {
+  background-color: #3276b1;
+}
+/* line 98, ../sass/_freedom.scss */
 .container .step-wizard li .content p {
   color: #666;
   font-size: 11px;
-  margin-top: -17px;
 }
-/* line 100, ../sass/_freedom.scss */
-.container .step-wizard li:last-child .content p {
-  margin-top: inherit;
+/* line 104, ../sass/_freedom.scss */
+.container .step-wizard li .fb-like {
+  height: 45px;
+}
+/* line 106, ../sass/_freedom.scss */
+.container .step-wizard li .fb-like img {
+  height: 40px;
 }
 
-/* line 108, ../sass/_freedom.scss */
+/* line 114, ../sass/_freedom.scss */
 #pages {
   display: block;
 }
-/* line 111, ../sass/_freedom.scss */
+/* line 117, ../sass/_freedom.scss */
 #pages h2 {
   text-align: left;
   font-size: 1em;
 }
-/* line 116, ../sass/_freedom.scss */
+/* line 122, ../sass/_freedom.scss */
 #pages .page-content {
   font-size: 0.8em;
   text-align: justify;
 }
 
-/* line 123, ../sass/_freedom.scss */
+/* line 129, ../sass/_freedom.scss */
 #footer li {
   text-align: center;
 }
-/* line 127, ../sass/_freedom.scss */
+/* line 133, ../sass/_freedom.scss */
 #footer a {
   color: #666;
   font-size: 0.8em;
 }
-/* line 131, ../sass/_freedom.scss */
+/* line 137, ../sass/_freedom.scss */
 #footer a .symbol {
   font-weight: bold;
 }
-/* line 136, ../sass/_freedom.scss */
+/* line 142, ../sass/_freedom.scss */
 #footer a:hover {
   color: #333333;
 }
 
-/* line 142, ../sass/_freedom.scss */
+/* line 148, ../sass/_freedom.scss */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none;
 }
