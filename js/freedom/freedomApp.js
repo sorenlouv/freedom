@@ -8,7 +8,7 @@ freedomApp.config(function($compileProvider){
 freedomApp.config(function ($routeProvider) {
     $routeProvider.
         when('/what', {templateUrl: 'js/freedom/partials/page.html', controller: 'pageCtrl'}).
-        when('/privacy', {templateUrl: 'js/freedom/partials/page.html', controller: 'pageCtrl'}).
+        when('/privacy', {templateUrl: 'js/freedom/partials/page2.html', controller: 'pageCtrl'}).
         when('/author', {templateUrl: 'js/freedom/partials/page.html', controller: 'pageCtrl'}).
         when('/facebook', {templateUrl: 'js/freedom/partials/page.html', controller: 'pageCtrl'}).
         otherwise({redirectTo: '/home'});

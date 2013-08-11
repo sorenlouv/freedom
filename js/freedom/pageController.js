@@ -6,4 +6,5 @@ freedomApp.controller("pageCtrl", function ($scope, $http, $location, safeApply)
       $scope.data = data[currentPath];
     });
   });
+
 });

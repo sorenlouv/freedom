@@ -138,3 +138,25 @@ body {
     }
   }
 }
+
+
+
+
+.animate-enter,
+.animate-leave
+{
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
+
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    position: absolute;
+}
+
+.animate-enter.animate-enter-active,
+.animate-leave {
+    opacity: 1;
+}
