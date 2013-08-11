@@ -17,10 +17,9 @@
   </head>
   <body>
 
-    <facebook data-app-id='408564152572106'></facebook>
     <!-- Container -->
-    <div class="container row" ng-controller="AppCtrl">
-      <div class="small-11 small-centered columns">
+    <div id="root" class="container row">
+      <div class="small-11 small-centered columns" ng-controller="WizardController">
         <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom Calendar"></h1>
         <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
 
@@ -49,18 +48,34 @@
         </div> <!-- End of step wizard -->
 
         <img src="img/spinner.gif" ng-show="loading">
+      </div> <!-- End of WizardController -->
 
-        <!-- Accordion  -->
-      </div>
+      <ng-view id="pages" class="large-10 large-centered columns"></ng-view>
+
+      <facebook data-app-id='408564152572106'></facebook>
+      <div id="root_footer"></div>
     </div> <!-- End of container -->
 
-    <script src="/js/libs/jquery-1.9.1.min.js"></script>
-    <script src="/js/libs/angular.min.js"></script>
+    <div id="footer" class="row">
+      <div class="large-10 large-centered columns">
+        <div class="small-block-grid-4 large-block-grid-4">
+          <li><a href="/#/what"><span class="symbol">?</span>What</a></li>
+          <li><a href="/#/privacy"><span class="symbol">!</span>Privacy</a></li>
+          <li><a href="/#/author"><span class="symbol">@</span>Author</a></li>
+          <li><a href="/#/facebook"><span class="symbol">#</span>Facebook</a></li>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="/js/vendor/angular.min.js"></script>
     <!-- // <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
     <!-- // <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->
-    <script src="js/freedomApp.js"></script>
+    <script src="js/freedom/freedomApp.js"></script>
+    <script src="js/freedom/wizardController.js"></script>
+    <script src="js/freedom/pageController.js"></script>
+    <script src="/js/safeApplyFactory.js"></script>
     <script src="js/facebookDirective.js"></script>
-    <script src="js/routes.js"></script>
 
     <script type="text/javascript">
       var _gaq = _gaq || [];

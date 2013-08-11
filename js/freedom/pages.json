@@ -1,0 +1,18 @@
+{
+  "what": {
+    "title": "What is this?",
+    "content": "<p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p> <p>This service filters the events from Facebook and only shows those events you have marked as \"attending\" and \"maybe attending\"; removing those you haven't replied to yet. </p> <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "content": "<p>To keep a persistent connection to Facebook, an access token is stored. However: I don't store any of your personal data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc. on my behalf. If you don't believe me, you can always check out the source code on <a href=\"https://github.com/sqren/freedom\">GitHub</a> :) </p>"
+  },
+  "author": {
+    "title": "Who wasted their time building this?",
+    "content": "<p>I am a 25-year old tech-happy, entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href=\"https://twitter.com/sqrendk\" target=\"_blank\">Twitter</a>, <a href=\"https://github.com/sqren\" target=\"_blank\">GitHub</a>, <a href=\"https://www.facebook.com/sorenlouv\" target=\"_blank\">Facebook</a>, <a href=\"http://dk.linkedin.com/in/sorenlouv/\" target=\"_blank\">LinkedIn</a>. </p> <p> Frontender at <a href=\"http://tradeshift.com/\">Tradeshift</a>, Co-founder of <a href=\"http://konscript.com\" target=\"_blank\">Konscript</a>, developer in <a href=\"http://www.kobstaden.dk\" target=\"_blank\">Købstaden</a> and part of <a href=\"http://www.creativedestruction.dk\" target=\"_blank\">Creative Destruction</a>.</p>"
+  },
+  "facebook": {
+    "title": "The compulsory conspiracy theory",
+    "content": "<p>During development of this service, I found several weird things in Facebook's implementation, which makes their export feature less appealing. Not adhering to the <a target=\"_blank\" href=\"http://www.ietf.org/rfc/rfc2445.txt\">iCalendar specification</a> makes it unusable on some devices, <a href=\"http://forums.macrumors.com/showthread.php?t=1470436\">all-day events are broken</a> and shown a day early, and lastly: they allow the feed to be filled with unwanted spammy events.</p> <p>I have tried to address all of these issues, and believe I have created a better, less buggy, and more useful export feature than Facebook did.<br> The developers @ Palo Alto seem to be making a deliberately bad job in this area, thus hampering people from exporting data out of the closed ecosystem Facebook has become.<br> Facebook may soon close their own feed-export feature and shutdown this service, to strengten the garden walls further. <a href=\"http://iamnumberfourfans.com/wp-\"content\"/uploads/2012/10/Joaquin-Phoenix-source_IGN.com_.jpg\">We'll see.</a>"
+  }
+}

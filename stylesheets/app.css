@@ -412,51 +412,76 @@ table {
   border-spacing: 0;
 }
 
-/* line 21, ../sass/_freedom.scss */
+/* line 10, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 12, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#root {
+  clear: both;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin-bottom: -54px;
+}
+/* line 18, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#root #root_footer {
+  height: 54px;
+}
+
+/* line 20, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#footer {
+  clear: both;
+  position: relative;
+  height: 54px;
+}
+
+/* line 24, ../sass/_freedom.scss */
 body {
   font-family: Verdana;
 }
 
-/* line 25, ../sass/_freedom.scss */
+/* line 28, ../sass/_freedom.scss */
 .container {
   text-align: center;
 }
 
-/* line 29, ../sass/_freedom.scss */
+/* line 32, ../sass/_freedom.scss */
 .header {
   margin-bottom: 0;
 }
 
-/* line 33, ../sass/_freedom.scss */
+/* line 36, ../sass/_freedom.scss */
 .sub-header {
   color: #666;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 200;
   font-size: 1.4em;
   margin-top: -22px;
-  margin-bottom: 40px;
 }
 @media only screen and (max-width: 320px) {
-  /* line 33, ../sass/_freedom.scss */
+  /* line 36, ../sass/_freedom.scss */
   .sub-header {
     font-size: 0.82em;
     margin-top: -10px;
   }
 }
 @media only screen and (max-width: 480px) and (min-width: 321px) {
-  /* line 33, ../sass/_freedom.scss */
+  /* line 36, ../sass/_freedom.scss */
   .sub-header {
     font-size: 1.1em;
   }
 }
 
-/* line 47, ../sass/_freedom.scss */
-.step-wizard {
+/* line 50, ../sass/_freedom.scss */
+.container .step-wizard {
+  margin: 60px 0;
   overflow: hidden;
   *zoom: 1;
 }
-/* line 49, ../sass/_freedom.scss */
-.step-wizard li {
+/* line 53, ../sass/_freedom.scss */
+.container .step-wizard li {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
   opacity: 0.2;
   pointer-events: none;
@@ -468,13 +493,13 @@ body {
   -moz-user-select: none;
   user-select: none;
 }
-/* line 51, ../sass/_freedom.scss */
-.step-wizard li h3 {
+/* line 54, ../sass/_freedom.scss */
+.container .step-wizard li h3 {
   height: 50px;
   margin-bottom: 5px;
 }
-/* line 54, ../sass/_freedom.scss */
-.step-wizard li h3 span {
+/* line 57, ../sass/_freedom.scss */
+.container .step-wizard li h3 span {
   margin-top: 15px;
   display: inline-block;
   height: 30px;
@@ -498,8 +523,8 @@ body {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-/* line 60, ../sass/_freedom.scss */
-.step-wizard li .button {
+/* line 63, ../sass/_freedom.scss */
+.container .step-wizard li .button {
   background-color: #428bca;
   border: none;
   border-radius: 3px;
@@ -507,18 +532,18 @@ body {
   line-height: 45px;
   padding: 0 15px;
 }
-/* line 68, ../sass/_freedom.scss */
-.step-wizard li .button:hover {
+/* line 71, ../sass/_freedom.scss */
+.container .step-wizard li .button:hover {
   background-color: #3276b1;
 }
-/* line 79, ../sass/_freedom.scss */
-.step-wizard li.active {
+/* line 82, ../sass/_freedom.scss */
+.container .step-wizard li.active {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   pointer-events: auto;
 }
-/* line 84, ../sass/_freedom.scss */
-.step-wizard li.active h3 span {
+/* line 87, ../sass/_freedom.scss */
+.container .step-wizard li.active h3 span {
   margin-top: 0px;
   display: inline-block;
   height: 50px;
@@ -542,15 +567,48 @@ body {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-/* line 91, ../sass/_freedom.scss */
-.step-wizard li .content p {
+/* line 94, ../sass/_freedom.scss */
+.container .step-wizard li .content p {
   color: #666;
   font-size: 11px;
   margin-top: -17px;
 }
-/* line 97, ../sass/_freedom.scss */
-.step-wizard li:last-child .content p {
+/* line 100, ../sass/_freedom.scss */
+.container .step-wizard li:last-child .content p {
   margin-top: inherit;
+}
+
+/* line 108, ../sass/_freedom.scss */
+#pages {
+  display: block;
+}
+/* line 111, ../sass/_freedom.scss */
+#pages h2 {
+  text-align: left;
+  font-size: 1em;
+}
+/* line 116, ../sass/_freedom.scss */
+#pages .page-content {
+  font-size: 0.8em;
+  text-align: justify;
+}
+
+/* line 123, ../sass/_freedom.scss */
+#footer li {
+  text-align: center;
+}
+/* line 127, ../sass/_freedom.scss */
+#footer a {
+  color: #666;
+  font-size: 0.8em;
+}
+/* line 131, ../sass/_freedom.scss */
+#footer a .symbol {
+  font-weight: bold;
+}
+/* line 136, ../sass/_freedom.scss */
+#footer a:hover {
+  color: #333333;
 }
 
 /* line 264, ../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.1/scss/foundation/components/_global.scss */

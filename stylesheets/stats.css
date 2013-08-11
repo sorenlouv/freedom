@@ -1,0 +1,17 @@
+/* line 2, ../sass/stats.scss */
+.person {
+  clear: both;
+}
+/* line 5, ../sass/stats.scss */
+.person .profile-image {
+  float: left;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  width: 50px;
+}
+/* line 12, ../sass/stats.scss */
+.person .location {
+  font-size: 0.7em;
+  top: -10px;
+  position: relative;
+}
