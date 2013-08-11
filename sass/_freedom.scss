@@ -51,6 +51,26 @@ body {
   margin: 60px 0;
 
   li {
+
+    // non-active: opaque
+    @include opacity(0.2);
+    pointer-events: none;
+    @include single-transition(opacity);
+    @include user-select(none);
+
+    // active: visible
+    &.active{
+      @include opacity(1);
+      pointer-events: auto;
+
+      h3 {
+        span {
+          margin-top: 0px;
+          @include circle(50px);
+        }
+      }
+    }
+
     h3 {
       height: 50px;
       margin-bottom: 5px;
@@ -67,40 +87,26 @@ body {
       height: 45px;
       line-height: 45px;
       padding: 0 15px;
+      margin-bottom: 0;
 
       &:hover {
         background-color: darken(#428bca, 8%);
       }
     }
 
-    // height: 200px;
-    @include opacity(0.2);
-    pointer-events: none;
-    @include single-transition(opacity);
-    @include user-select(none);
-
-    &.active{
-      @include opacity(1);
-      pointer-events: auto;
-
-      h3 {
-        span {
-          margin-top: 0px;
-          @include circle(50px);
-        }
-      }
-    }
-
+    // text below buttons
     .content p {
       color: #666;
       font-size: 11px;
-      margin-top: -17px;
     }
 
-    &:last-child .content p{
-      margin-top: inherit;
+    // like button in step 3
+    .fb-like {
+      height: 45px;
+      img {
+        height: 40px;
+      }
     }
-
   }
   @include clearfix();
 }
