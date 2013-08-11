@@ -611,27 +611,6 @@ body {
   color: #333333;
 }
 
-/* line 147, ../sass/_freedom.scss */
-.animate-enter,
-.animate-leave {
-  transition: opacity .25s ease-in-out;
-  -moz-transition: opacity .25s ease-in-out;
-  -webkit-transition: opacity .25s ease-in-out;
-}
-
-/* line 154, ../sass/_freedom.scss */
-.animate-leave.animate-leave-active,
-.animate-enter {
-  opacity: 0;
-  position: absolute;
-}
-
-/* line 160, ../sass/_freedom.scss */
-.animate-enter.animate-enter-active,
-.animate-leave {
-  opacity: 1;
-}
-
 /* line 264, ../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.1/scss/foundation/components/_global.scss */
 *,
 *:before,
