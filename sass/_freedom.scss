@@ -3,6 +3,7 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/transition";
 @import "compass/utilities/general/clearfix";
+@import "compass/layout/sticky-footer";
 
 @mixin circle($radius: 40px) {
   display: inline-block;
@@ -17,6 +18,8 @@
   @include transition-property(font-size, height, width, border-radius, line-height, margin);
   @include transition-duration(0.3s);
 }
+
+@include sticky-footer(54px);
 
 body {
   font-family: Verdana;
@@ -36,7 +39,7 @@ body {
   font-weight: 200;
   font-size: 1.4em;
   margin-top: -22px;
-  margin-bottom: 40px;
+  // margin-bottom: 40px;
   // line-height: 20px;
 
   // iPhone Portrait and landscape modes
@@ -44,10 +47,10 @@ body {
   @media only screen and (max-width: 480px) and (min-width: 321px) { font-size: 1.1em;}
 }
 
-.step-wizard {
+.container .step-wizard {
+  margin: 60px 0;
 
   li {
-
     h3 {
       height: 50px;
       margin-bottom: 5px;
@@ -66,7 +69,7 @@ body {
       padding: 0 15px;
 
       &:hover {
-        background-color: darken(#428bca, 8%);;
+        background-color: darken(#428bca, 8%);
       }
     }
 
@@ -100,4 +103,38 @@ body {
 
   }
   @include clearfix();
+}
+
+#pages {
+  display: block;
+
+  h2 {
+    text-align: left;
+    font-size: 1em;
+  }
+
+  .page-content {
+    font-size: 0.8em;
+    text-align: justify;
+  }
+}
+
+#footer {
+  li {
+    text-align: center;
+  }
+
+  a {
+    color: #666;
+    font-size: 0.8em;
+
+    .symbol {
+      // @include circle(20px);
+      font-weight:bold;
+    }
+
+    &:hover {
+      color: darken(#666, 20%);
+    }
+  }
 }
