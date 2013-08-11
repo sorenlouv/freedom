@@ -46,6 +46,7 @@ angular.module('gapiService', [])
       'dimensions': 'ga:eventLabel',
       'metrics': 'ga:totalEvents',
       'sort': '-ga:totalEvents',
+      'filters': 'ga:eventLabel=~^\\d+$',
       "start-date": helpers.lastNDays(day + 1),
       "end-date": helpers.lastNDays(day + 1)
     };
