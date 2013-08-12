@@ -57,7 +57,7 @@
       <div id="root_footer"></div>
     </div> <!-- End of container -->
 
-    <div id="footer" class="row" ng-controller="footerCtrl">
+    <div id="footer" class="row ng-cloak" ng-controller="footerCtrl">
       <div class="large-10 large-centered columns">
         <div class="small-block-grid-4 large-block-grid-4">
           <li ng-repeat="item in menuItems"><a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}"><span class="symbol">{{item.symbol}}</span>{{item.label}}</a></li>
