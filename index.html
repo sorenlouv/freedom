@@ -57,13 +57,10 @@
       <div id="root_footer"></div>
     </div> <!-- End of container -->
 
-    <div id="footer" class="row">
+    <div id="footer" class="row" ng-controller="footerCtrl">
       <div class="large-10 large-centered columns">
         <div class="small-block-grid-4 large-block-grid-4">
-          <li><a href="/#/what"><span class="symbol">?</span>What</a></li>
-          <li><a href="/#/privacy"><span class="symbol">!</span>Privacy</a></li>
-          <li><a href="/#/author"><span class="symbol">@</span>Author</a></li>
-          <li><a href="/#/facebook"><span class="symbol">#</span>Facebook</a></li>
+          <li ng-repeat="item in menuItems"><a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}"><span class="symbol">{{item.symbol}}</span>{{item.label}}</a></li>
         </div>
       </div>
     </div>
@@ -75,6 +72,7 @@
     <script src="js/freedom/freedomApp.js"></script>
     <script src="js/freedom/wizardController.js"></script>
     <script src="js/freedom/pageController.js"></script>
+    <script src="js/freedom/footerController.js"></script>
     <script src="/js/safeApplyFactory.js"></script>
     <script src="js/facebookDirective.js"></script>
 

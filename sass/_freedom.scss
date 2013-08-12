@@ -5,21 +5,16 @@
 @import "compass/utilities/general/clearfix";
 @import "compass/layout/sticky-footer";
 
-@mixin circle($radius: 40px) {
+@mixin circle($radius: 40px, $duration: 0.5s) {
   display: inline-block;
   height: $radius;
   width: $radius;
   line-height: $radius;
   @include border-radius($radius * 3/4);
-  color: black;
-  border: 1px solid #666;
   text-align: center;
-  font-size: $radius/2;
-  @include transition-property(font-size, height, width, border-radius, line-height, margin);
-  @include transition-duration(0.3s);
+  @include transition-property(font-size, height, width, border-radius, line-height, margin, color, border);
+  @include transition-duration($duration);
 }
-
-@include sticky-footer(54px);
 
 body {
   font-family: Verdana;
@@ -67,6 +62,9 @@ body {
         span {
           margin-top: 0px;
           @include circle(50px);
+          color: #000;
+          border: 1px solid #666;
+          font-size: 25px;
         }
       }
     }
@@ -77,6 +75,9 @@ body {
       span {
         margin-top: 15px;
         @include circle(30px);
+        color: #000;
+        border: 1px solid #666;
+        font-size: 15px;
       }
     }
 
@@ -125,23 +126,31 @@ body {
   }
 }
 
+@include sticky-footer(85px);
 #footer {
   li {
     text-align: center;
-  }
+    a {
+      color: #666;
+      font-size: 0.8em;
+      text-decoration: none;
+      border-bottom: 2px solid #fff;
+      @include transition-property(color, border-bottom);
+      @include transition-duration(0.5s);
 
-  a {
-    color: #666;
-    font-size: 0.8em;
+      .symbol {
+        font-weight:bold;
+      }
 
-    .symbol {
-      // @include circle(20px);
-      font-weight:bold;
+      &:hover {
+        color: darken(#666, 20%);
+      }
+
+      &.active {
+        border-bottom: 2px solid #000;
+      }
     }
 
-    &:hover {
-      color: darken(#666, 20%);
-    }
   }
 }
 
