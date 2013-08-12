@@ -18,7 +18,7 @@ angular.module('gapiService', [])
 
     // GA ready
     window.onGAReady = function() {
-      console.log("Gapi: SDK ready");
+      //console.log("Gapi: SDK ready");
       var options = {
         client_id: clientId,
         scope: scopes,
@@ -28,7 +28,7 @@ angular.module('gapiService', [])
       // request login status
       gapi.client.setApiKey(apiKey);
       gapi.auth.authorize(options, function(response){
-        console.log("Gapi: Authorized");
+        //console.log("Gapi: Authorized");
         deferred.resolve(gapi);
         $rootScope.$digest();
       });
