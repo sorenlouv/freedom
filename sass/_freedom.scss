@@ -126,7 +126,7 @@ body {
   }
 }
 
-@include sticky-footer(85px);
+@include sticky-footer(40px);
 #footer {
   li {
     text-align: center;

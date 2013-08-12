@@ -583,18 +583,18 @@ html, body {
   min-height: 100%;
   height: auto !important;
   height: 100%;
-  margin-bottom: -85px;
+  margin-bottom: -40px;
 }
 /* line 18, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
 #root #root_footer {
-  height: 85px;
+  height: 40px;
 }
 
 /* line 20, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
 #footer {
   clear: both;
   position: relative;
-  height: 85px;
+  height: 40px;
 }
 
 /* line 131, ../sass/_freedom.scss */
