@@ -412,47 +412,22 @@ table {
   border-spacing: 0;
 }
 
-/* line 10, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
-html, body {
-  height: 100%;
-}
-
-/* line 12, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
-#root {
-  clear: both;
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin-bottom: -54px;
-}
-/* line 18, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
-#root #root_footer {
-  height: 54px;
-}
-
-/* line 20, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
-#footer {
-  clear: both;
-  position: relative;
-  height: 54px;
-}
-
-/* line 24, ../sass/_freedom.scss */
+/* line 19, ../sass/_freedom.scss */
 body {
   font-family: Verdana;
 }
 
-/* line 28, ../sass/_freedom.scss */
+/* line 23, ../sass/_freedom.scss */
 .container {
   text-align: center;
 }
 
-/* line 32, ../sass/_freedom.scss */
+/* line 27, ../sass/_freedom.scss */
 .header {
   margin-bottom: 0;
 }
 
-/* line 36, ../sass/_freedom.scss */
+/* line 31, ../sass/_freedom.scss */
 .sub-header {
   color: #666;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -461,26 +436,26 @@ body {
   margin-top: -22px;
 }
 @media only screen and (max-width: 320px) {
-  /* line 36, ../sass/_freedom.scss */
+  /* line 31, ../sass/_freedom.scss */
   .sub-header {
     font-size: 0.82em;
     margin-top: -10px;
   }
 }
 @media only screen and (max-width: 480px) and (min-width: 321px) {
-  /* line 36, ../sass/_freedom.scss */
+  /* line 31, ../sass/_freedom.scss */
   .sub-header {
     font-size: 1.1em;
   }
 }
 
-/* line 50, ../sass/_freedom.scss */
+/* line 45, ../sass/_freedom.scss */
 .container .step-wizard {
   margin: 60px 0;
   overflow: hidden;
   *zoom: 1;
 }
-/* line 53, ../sass/_freedom.scss */
+/* line 48, ../sass/_freedom.scss */
 .container .step-wizard li {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
   opacity: 0.2;
@@ -493,13 +468,13 @@ body {
   -moz-user-select: none;
   user-select: none;
 }
-/* line 62, ../sass/_freedom.scss */
+/* line 57, ../sass/_freedom.scss */
 .container .step-wizard li.active {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   pointer-events: auto;
 }
-/* line 67, ../sass/_freedom.scss */
+/* line 62, ../sass/_freedom.scss */
 .container .step-wizard li.active h3 span {
   margin-top: 0px;
   display: inline-block;
@@ -511,25 +486,25 @@ body {
   -ms-border-radius: 37.5px;
   -o-border-radius: 37.5px;
   border-radius: 37.5px;
-  color: black;
-  border: 1px solid #666;
   text-align: center;
+  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -moz-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -o-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  color: #000;
+  border: 1px solid #666;
   font-size: 25px;
-  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -moz-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -o-transition-property: font-size, height, width, border-radius, line-height, margin;
-  transition-property: font-size, height, width, border-radius, line-height, margin;
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
 }
-/* line 74, ../sass/_freedom.scss */
+/* line 72, ../sass/_freedom.scss */
 .container .step-wizard li h3 {
   height: 50px;
   margin-bottom: 5px;
 }
-/* line 77, ../sass/_freedom.scss */
+/* line 75, ../sass/_freedom.scss */
 .container .step-wizard li h3 span {
   margin-top: 15px;
   display: inline-block;
@@ -541,20 +516,20 @@ body {
   -ms-border-radius: 22.5px;
   -o-border-radius: 22.5px;
   border-radius: 22.5px;
-  color: black;
-  border: 1px solid #666;
   text-align: center;
+  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -moz-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -o-transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  transition-property: font-size, height, width, border-radius, line-height, margin, color, border;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  color: #000;
+  border: 1px solid #666;
   font-size: 15px;
-  -webkit-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -moz-transition-property: font-size, height, width, border-radius, line-height, margin;
-  -o-transition-property: font-size, height, width, border-radius, line-height, margin;
-  transition-property: font-size, height, width, border-radius, line-height, margin;
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
 }
-/* line 83, ../sass/_freedom.scss */
+/* line 84, ../sass/_freedom.scss */
 .container .step-wizard li .button {
   background-color: #428bca;
   border: none;
@@ -564,58 +539,97 @@ body {
   padding: 0 15px;
   margin-bottom: 0;
 }
-/* line 92, ../sass/_freedom.scss */
+/* line 93, ../sass/_freedom.scss */
 .container .step-wizard li .button:hover {
   background-color: #3276b1;
 }
-/* line 98, ../sass/_freedom.scss */
+/* line 99, ../sass/_freedom.scss */
 .container .step-wizard li .content p {
   color: #666;
   font-size: 11px;
 }
-/* line 104, ../sass/_freedom.scss */
+/* line 105, ../sass/_freedom.scss */
 .container .step-wizard li .fb-like {
   height: 45px;
 }
-/* line 106, ../sass/_freedom.scss */
+/* line 107, ../sass/_freedom.scss */
 .container .step-wizard li .fb-like img {
   height: 40px;
 }
 
-/* line 114, ../sass/_freedom.scss */
+/* line 115, ../sass/_freedom.scss */
 #pages {
   display: block;
 }
-/* line 117, ../sass/_freedom.scss */
+/* line 118, ../sass/_freedom.scss */
 #pages h2 {
   text-align: left;
   font-size: 1em;
 }
-/* line 122, ../sass/_freedom.scss */
+/* line 123, ../sass/_freedom.scss */
 #pages .page-content {
   font-size: 0.8em;
   text-align: justify;
 }
 
-/* line 129, ../sass/_freedom.scss */
+/* line 10, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 12, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#root {
+  clear: both;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin-bottom: -85px;
+}
+/* line 18, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#root #root_footer {
+  height: 85px;
+}
+
+/* line 20, ../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/layout/_sticky-footer.scss */
+#footer {
+  clear: both;
+  position: relative;
+  height: 85px;
+}
+
+/* line 131, ../sass/_freedom.scss */
 #footer li {
   text-align: center;
 }
 /* line 133, ../sass/_freedom.scss */
-#footer a {
+#footer li a {
   color: #666;
   font-size: 0.8em;
+  text-decoration: none;
+  border-bottom: 2px solid #fff;
+  -webkit-transition-property: color, border-bottom;
+  -moz-transition-property: color, border-bottom;
+  -o-transition-property: color, border-bottom;
+  transition-property: color, border-bottom;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
 }
-/* line 137, ../sass/_freedom.scss */
-#footer a .symbol {
+/* line 141, ../sass/_freedom.scss */
+#footer li a .symbol {
   font-weight: bold;
 }
-/* line 142, ../sass/_freedom.scss */
-#footer a:hover {
+/* line 145, ../sass/_freedom.scss */
+#footer li a:hover {
   color: #333333;
 }
+/* line 149, ../sass/_freedom.scss */
+#footer li a.active {
+  border-bottom: 2px solid #000;
+}
 
-/* line 148, ../sass/_freedom.scss */
+/* line 157, ../sass/_freedom.scss */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none;
 }
