@@ -8,7 +8,7 @@ statisticsApp.service("chartService", function($rootScope, $q, $location, $route
     this.totalDays = parseInt(window.location.search.match(/\d+/)[0], 10);
 
     this.addSeries = function (customSerie) {
-      console.log("adding new series");
+      // console.log("adding new series");
       var pointStart = new Date();
       pointStart.setDate(pointStart.getDate() - this.totalDays);
       pointStart.setHours(12,0,0,0);
