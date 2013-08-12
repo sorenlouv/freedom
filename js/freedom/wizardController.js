@@ -20,7 +20,7 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
             var secureHash = response.secure_hash;
 
             // Add success event to GA
-            _gaq.push(['_trackEvent', 'feedSubmitted', 'success', 'facebook', userId]);
+            _gaq.push(['_trackEvent', 'feedSubmitted', 'success', userId]);
 
             // to avoid Google Calendar caching an old feed
             var dummy = Math.floor(Math.random() * 1000);
