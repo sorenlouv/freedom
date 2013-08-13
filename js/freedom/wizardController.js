@@ -16,11 +16,11 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
           // extend access token
           $.getJSON('/handlers.php?f=saveAccessToken', function (response) {
 
-            var userId = FB.getAuthResponse()['userID'];
+            $scope.userId = FB.getAuthResponse()['userID'];
             var secureHash = response.secure_hash;
 
             // Add success event to GA
-            _gaq.push(['_trackEvent', 'feedSubmitted', 'success', userId]);
+            _gaq.push(['_trackEvent', 'facebookLogin', 'success', $scope.userId]);
 
             // to avoid Google Calendar caching an old feed
             var dummy = Math.floor(Math.random() * 1000);
@@ -28,7 +28,7 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
             // update DOM
             $scope.$apply(function(){
               // setup links
-              $scope.downloadFeedHref = "webcal://freedom.konscript.com/feed.ics?user_id=" + userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
+              $scope.downloadFeedHref = "webcal://freedom.konscript.com/feed.ics?user_id=" + $scope.userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
               $scope.googleButtonHref = "http://www.google.com/calendar/render?cid=" + encodeURIComponent($scope.downloadFeedHref);
 
               // next step
@@ -40,6 +40,8 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
 
           // unsuccessful login
         } else {
+          _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
+
           $scope.$apply(function(){
             $scope.errorMessage = "Facebook connect failed";
             $scope.loading = false;
@@ -52,5 +54,15 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
       });
     });
   }; // End of connectWithFacebook function
+
+  $scope.addToCalendarGoogle = function(){
+    $scope.step = 3;
+    _gaq.push(['_trackEvent', 'addToCalendar', 'google', $scope.userId]);
+  };
+
+  $scope.addToCalendarDownload = function(){
+    $scope.step = 3;
+    _gaq.push(['_trackEvent', 'addToCalendar', 'download', $scope.userId]);
+  };
 
 }); // end of WizardController
