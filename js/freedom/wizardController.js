@@ -42,6 +42,7 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
         } else {
           $scope.$apply(function(){
             $scope.errorMessage = "Facebook connect failed";
+            $scope.loading = false;
           });
 
           $scope.loading = false;
