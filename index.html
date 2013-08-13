@@ -36,7 +36,7 @@
             <h3><span>2</span></h3>
             <div class="content">
               <a ng-href="{{googleButtonHref}}" target="_blank" ng-click="addToCalendarGoogle()" class="button">Add to Google Calendar</a>
-              <p>or <a ng-href="{{downloadFeedHref}}" ng-click="addToCalendarDownload()">download</a> to iCalendar/Outlook</p>
+              <p ng-hide="isAndroid()">or <a ng-href="{{downloadFeedHref}}" ng-click="addToCalendarDownload()">download</a> to iCalendar/Outlook</p>
             </div>
           </li>
           <li class="step" ng-class="{active: step == '3'}">

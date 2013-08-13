@@ -1,6 +1,11 @@
 freedomApp.controller("WizardController", function ($scope, $rootScope) {
   $scope.step = 1;
 
+  $scope.isAndroid = function(){
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+  };
+
   $scope.connectWithFacebook = function () {
     // remove all alerts
     $scope.errorMessage = "";
