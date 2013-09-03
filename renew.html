@@ -3,8 +3,7 @@
   <head>
     <title>Freedom - Remove unanswered Facebook events when syncing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/app.css" media="screen, projection" rel="stylesheet" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta name="description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up.">
 
@@ -18,38 +17,48 @@
   </head>
   <body>
 
-    <div class="container" ng-controller="WizardController">
-      <a href="https://github.com/sqren/freedom"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+    <!-- Container -->
+    <div id="root" class="container row">
+      <div class="small-11 small-centered columns ng-cloak" ng-controller="WizardController">
+        <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom Calendar"></h1>
+        <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
 
-      <h1 class="header"><img src="img/freedom-logo-blue.png" alt="Freedom App"></h1>
-      <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
+        <div class="step-wizard small-block-grid-1 large-block-grid-3">
+          <li class="step" ng-class="{active: step == '1'}">
+            <h3><span>1</span></h3>
+            <div class="content">
+              <a href ng-click="connectWithFacebook()" class="button">Get Facebook Events</a>
+              <p>I won't post anything to your wall</p>
+            </div>
+            <div class="alert-box secondary" ng-show="errorMessage">{{errorMessage}}</div>
+          </li>
+          <li class="step" ng-class="{active: step == '2'}">
+            <h3><span>3</span></h3>
+            <div class="content">
+              <div class="fb-like"><img src="img/fb_like.png" alt="Success!"></div>
+              <p>Good job! Your Facebook events will appear within a few hours.</p>
+            </div>
+          </li>
+        </div> <!-- End of step wizard -->
 
-      <div id="step-wizard">
-        <div class="step step-facebook-connect" ng-class="{active: step == '1'}">
-          <h3>Step 1</h3>
-          <div class="content">
-            <a href ng-click="connectWithFacebook()" class="btn btn-primary">Get Facebook Events</a>
-            <p>I won't post anything to your wall</p>
-          </div>
-          <div class="alert alert-error" ng-show="errorMessage">{{errorMessage}}</div>
-        </div>
-        <div class="step finished" ng-class="{active: step == '2'}">
-          <h3>Step 2</h3>
-          <div class="content">
-            <p>Good job! Your Facebook events should start re-appearing into your calendar within a few hours.</p>
-          </div>
-        </div>
-      </div> <!-- End of step wizard -->
+        <img src="img/spinner.gif" ng-show="loading">
+      </div> <!-- End of WizardController -->
 
-    <facebook data-app-id='408564152572106'></facebook>
+      <ng-view id="pages" class="large-10 large-centered columns"></ng-view>
 
-    <script src="/js/libs/jquery-1.9.1.min.js"></script>
-    <script src="/js/libs/bootstrap.min.js"></script>
-    <script src="/js/libs/angular.min.js"></script>
-    <!-- // <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-    <!-- // <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script> -->
-    <!-- // <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->
-    <script src="js/freedomApp.js"></script>
+      <facebook data-app-id='408564152572106'></facebook>
+      <div id="root_footer"></div>
+    </div> <!-- End of container -->
+
+    <!-- // <script src="/js/vendor/jquery-1.9.1.min.js"></script> -->
+    <!-- // <script src="/js/vendor/angular.min.js"></script> -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="js/freedom/freedomApp.js"></script>
+    <script src="js/freedom/wizardController.js"></script>
+    <script src="js/freedom/pageController.js"></script>
+    <script src="js/freedom/footerController.js"></script>
+    <script src="js/safeApplyFactory.js"></script>
     <script src="js/facebookDirective.js"></script>
 
     <script type="text/javascript">
