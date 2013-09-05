@@ -1,6 +1,7 @@
 <?php
+		$dummy = isset($_GET["dummy"]) ? $_GET["dummy"] : "";
     header('Content-type: text/calendar;charset=utf-8');
-    header('Content-Disposition: attachment; filename=feed.ics');
+    header('Content-Disposition: attachment; filename=feed'.$dummy.'.ics');
 ?>
 BEGIN:VCALENDAR
 VERSION:2.0
