@@ -2,8 +2,8 @@
 		$dummy = isset($_GET["dummy"]) ? $_GET["dummy"] : "";
     header('Content-type: text/calendar;charset=utf-8');
     header('Content-Disposition: attachment; filename=feed'.$dummy.'.ics');
-?>
-BEGIN:VCALENDAR
+
+$cal = "BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Facebook//NONSGML Facebook Events V1.0//EN
 X-WR-CALNAME:FB Freedom
@@ -408,4 +408,10 @@ CLASS:PUBLIC
 STATUS:CONFIRMED
 PARTSTAT:ACCEPTED
 END:VEVENT
-END:VCALENDAR<?php echo PHP_EOL?>
+END:VCALENDAR
+";
+
+$string = preg_replace('~\R~u', "\r\n", $string);
+
+echo $string;
+?>
