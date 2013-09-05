@@ -147,7 +147,7 @@ class Feed {
       $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
       $body .= "CREATED:" . $updated_time . "\r\n";
       $body .= "SEQUENCE:0\r\n";
-      $body .= "ORGANIZER;CN=" . $event["owner"]["name"] . ":MAILTO:noreply@facebookmail.com\r\n";
+      $body .= "ORGANIZER;CN=" . $this->ical_encode_text($event["owner"]["name"]) . ":MAILTO:noreply@facebookmail.com\r\n";
 
       $event_dt = $this->get_event_dt($event);
       $body .= "DTSTART;" . $event_dt["start"] . "\r\n";
