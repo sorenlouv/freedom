@@ -2,7 +2,6 @@ RewriteEngine On
 
 # Redirect feed
 RewriteRule feed.ics handlers.php?f=downloadFeed [QSA]
-RewriteRule test-cal.ics test-cal.php [QSA]
 
 # Rewrite all requests without extensions
 RewriteCond %{REQUEST_FILENAME} !-d
