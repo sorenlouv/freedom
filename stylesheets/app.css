@@ -432,8 +432,8 @@ body {
   color: #666;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 200;
-  font-size: 1.4em;
-  margin-top: -22px;
+  font-size: 1.45em;
+  margin-top: -5px;
 }
 @media only screen and (max-width: 320px) {
   /* line 31, ../sass/_freedom.scss */
