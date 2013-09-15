@@ -1,2 +1,3 @@
 /config.php
 .sass-cache/
+.DS_Store

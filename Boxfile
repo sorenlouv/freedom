@@ -5,6 +5,9 @@ web1:
     - mbstring
     - mcrypt
     - pdo_mysql
+    - redis
+  php_session_save_handler: redis
+  php_session_save_path: "tcp://tunnel.pagodabox.com:6379"
   after_build:
     - "mv pagoda/config.php config.php"
     - "rm -R pagoda"
