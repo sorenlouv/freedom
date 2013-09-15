@@ -136,6 +136,16 @@ class Feed {
   }
 
   private function get_normal_body($events){
+
+    // add question mark to event title if rsvp is "unsure"
+    function get_event_name($event){
+      if($event["rsvp_status"] === "unsure"){
+        return $event["name"] . " [?]";
+      }else{
+        return $event["name"];
+      }
+    }
+
     $body = "";
     foreach($events as $event){
 
@@ -158,7 +168,7 @@ class Feed {
       // }
 
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
-      $body .= "SUMMARY:" . $this->ical_encode_text($event["name"]) . "\r\n";
+      $body .= "SUMMARY:" . $this->ical_encode_text(get_event_name($event)) . "\r\n";
 
       // location
       if(isset($event["location"])){
