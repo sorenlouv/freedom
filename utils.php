@@ -51,7 +51,7 @@ class Utils {
 
 
     if($user_access_token !== null && strlen($user_access_token) > 0){
-      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN;
+      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . urldecode($APP_ACCESS_TOKEN);
       $APP_ACCESS_TOKEN = str_replace("\|", "|", $APP_ACCESS_TOKEN); // HACK: Pagodabox apparently escapes certain characters. Not cool!
       $response = json_decode(file_get_contents($url));
 
