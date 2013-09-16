@@ -41,16 +41,8 @@ class Utils {
 
   public static function get_db_object(){
     include 'config.php';
-
-    try{
-      $db = new PDO('mysql:host=' . $DB_HOST . ';dbname=' . $DB_NAME . ';charset=utf8', $DB_USER, $DB_PASS);
-      return $db;
-    }catch( PDOException $Exception ) {
-      echo "Could not connect to DB";
-      echo $Exception;
-    }
-
-
+    $db = new PDO('mysql:host=' . $DB_HOST . ';dbname=' . $DB_NAME . ';charset=utf8', $DB_USER, $DB_PASS);
+    return $db;
   }
 
   public static function get_user_id_by_access_token($user_access_token){
