@@ -173,8 +173,12 @@ class Feed {
       $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
       $body .= "CREATED:" . $updated_time . "\r\n";
       $body .= "SEQUENCE:0\r\n";
-      $body .= "ORGANIZER;CN=" . $this->ical_encode_text($event["owner"]["name"]) . ":MAILTO:noreply@facebookmail.com\r\n";
 
+      // Owner
+      $owner = isset($event["owner"]["name"]) ? $event["owner"]["name"] : "Freedom Calendar";
+      $body .= "ORGANIZER;CN=" . $this->ical_encode_text($owner) . ":MAILTO:noreply@facebookmail.com\r\n";
+
+      // Datetime start/end
       $event_dt = $this->get_event_dt($event);
       $body .= "DTSTART;" . $event_dt["start"] . "\r\n";
       $body .= "DTEND;" . $event_dt["end"] . "\r\n";
@@ -184,6 +188,8 @@ class Feed {
       // }
 
       $body .= "UID:e" . $event['id'] . "@facebook.com\r\n";
+
+      // Title
       $body .= "SUMMARY:" . $this->ical_encode_text(get_event_name($event)) . "\r\n";
 
       // location
