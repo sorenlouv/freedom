@@ -139,10 +139,26 @@ class Feed {
 
     // add question mark to event title if rsvp is "unsure"
     function get_event_name($event){
-      if($event["rsvp_status"] === "unsure"){
+      if($event["rsvp_status"] === "unsure" || $event["rsvp_status"] === "not_replied"){
         return $event["name"] . " [?]";
       }else{
         return $event["name"];
+      }
+    }
+
+    function get_event_url($event){
+      return "http://www.facebook.com/" . $event['id'];
+    }
+
+    function get_event_description($event){
+      if($event["rsvp_status"] == "birthday"){
+        return "Say congratulation:\n" . get_event_url($event);
+      }else{
+        // description
+        if(!isset($event["description"])){
+          $event["description"] = "";
+        }
+        return $event["description"] . "\n\nGo to event:\n" . get_event_url($event);
       }
     }
 
@@ -176,14 +192,10 @@ class Feed {
       }
 
       // URL
-      $event_url = "http://www.facebook.com/events/" . $event['id'];
-      $body .= "URL:" . $event_url . "/\r\n";
+      $body .= "URL:" . get_event_url($event) . "/\r\n";
 
-      // description
-      if(!isset($event["description"])){
-        $event["description"] = "";
-      }
-      $body .= "DESCRIPTION:" . $this->ical_encode_text($event["description"] . "\n\nGo to event:\n" . $event_url) . "\r\n";
+      // Description
+      $body .= "DESCRIPTION:" . $this->ical_encode_text(get_event_description($event)) . "\r\n";
 
       $body .= "CLASS:PUBLIC\r\n";
       $body .= "STATUS:CONFIRMED\r\n";
