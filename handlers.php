@@ -49,9 +49,6 @@ function saveAccessToken(){
     $access_token_short = $facebook->getAccessToken();
     $facebook_id = $facebook->getUser();
 
-    // headers
-    header("Content-type: application/json");
-
     // extend access token
     $access_token = Utils::extend_access_token($facebook, $access_token_short);
 
@@ -60,6 +57,9 @@ function saveAccessToken(){
 
     // save access token
     Utils::save_access_token($facebook_id, $access_token, $secure_hash);
+
+    // headers
+    header("Content-type: application/json");
 
     // output
     echo json_encode(array("secure_hash" => $secure_hash));
