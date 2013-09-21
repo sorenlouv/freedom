@@ -1,24 +1,19 @@
-// Global Foundation Settings
 @import "settings";
 @import "custom_settings";
-
-// Comment out this import if you don't want to use normalize
 @import "normalize";
-
-// Comment out this import if you are customizing you imports below
-// @import "foundation";
-
-// My app!
 @import "freedom";
 
 
+// Foundation
 @import "foundation/components/global"; // *always required
 @import "foundation/components/grid";
 @import "foundation/components/block-grid";
 @import "foundation/components/type";
 @import "foundation/components/buttons";
+@import "foundation/components/switch";
+@import "foundation/variables";
 
-
+// @import "foundation"; // Everything!!
 // @import "foundation/components/visibility";
 // @import "foundation/components/forms"; // *requires components/buttons
 // @import "foundation/components/custom-forms"; // *requires components/buttons, components/forms
@@ -43,7 +38,6 @@
 // @import "foundation/components/progress-bars";
 // @import "foundation/components/side-nav";
 // @import "foundation/components/sub-nav";
-// @import "foundation/components/switch";
 // @import "foundation/components/magellan";
 // @import "foundation/components/tables";
 // @import "foundation/components/thumbs";

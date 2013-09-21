@@ -5,6 +5,10 @@
 @import "compass/utilities/general/clearfix";
 @import "compass/layout/sticky-footer";
 
+@import "foundation/variables";
+@import "foundation/components/global";
+@import "foundation/components/buttons";
+
 @mixin circle($radius: 40px, $duration: 0.5s) {
   display: inline-block;
   height: $radius;
@@ -17,7 +21,7 @@
 }
 
 body {
-  font-family: Verdana;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;;
 }
 
 .container {
@@ -30,7 +34,7 @@ body {
 
 .sub-header {
   color: #666;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;;
   font-weight: 200;
   font-size: 1.45em;
   margin-top: -5px;
@@ -123,6 +127,177 @@ body {
   .page-content {
     font-size: 0.8em;
     text-align: justify;
+
+    /**********************
+     * Customize Page
+     *********************/
+
+    &.customize {
+
+      .settings-container {
+
+        .sidebar {
+          margin-top: 25px;
+          padding-right: 10%;
+
+          .header {
+            font-size: 1.2em;
+            font-weight: bold;
+          }
+        }
+
+        // sidebar
+        .content {
+          margin-top: 25px;
+
+          // add "edit" link
+          .not_replied_events, .birthday_events {
+            .title {
+              float: left;
+            }
+
+            .edit {
+              line-height: 20px;
+              margin-left: 10px;
+
+              &.disabled {
+                // display: none;
+                pointer-events: none;
+                color: #aaa;
+              }
+            }
+          }
+
+          // the actual switch UI
+          .setting {
+            clear: both;
+
+            .switch {
+              height: 24px;
+            }
+          }
+        }
+      }
+
+      button.save {
+        @include button(1em, #4c66a4);
+        font-size: 1em;
+      }
+    } // end of customize
+
+  }
+}
+
+
+
+/*
+ * Directives
+ */
+
+.ui-autocomplete.ui-front {
+  z-index: 101;
+}
+
+ // Dialog with autocompleter
+.ui-dialog.ui-widget {
+  margin-top: 100px;
+  padding: 0;
+  box-shadow: 0 0 10px 2px #888;
+
+  .ui-menu-item {
+    clear: both;
+    margin-bottom: 5px;
+
+    a {
+      line-height: 50px;
+      padding: 2px;
+
+      .picture {
+        float: left;
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+      }
+
+      .name {
+        height: 50px;
+        overflow: hidden;
+      }
+
+    }
+  }
+
+  .ui-dialog-title {
+    height: 25px;
+    font-size: 0.9em;
+    line-height: 25px;
+  }
+}
+dialog#dialog-not-replied, dialog#dialog-birthday {
+  padding: 0;
+
+  .dialog-search-bar {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background-color: #f2f2f2;
+    text-align: right;
+    font-size: 0.7em;
+    input {
+      font-family: Helvetica;
+      height: 20px;
+      width: 50%;
+      margin: 5px;
+    }
+  }
+
+
+  .dialog-selected-friends {
+    min-height: 300px;
+
+    .loading-spinner, .empty-selected-friends-text {
+      top: 50%;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      color: #888;
+      font-size: 0.8em;
+    }
+
+    .dialog-selected-friend {
+      float: left;
+      text-align: center;
+      width: 125px;
+      margin: 10px 10px 0 10px;
+      height: 135px;
+      overflow: hidden;
+      font-size: 0.8em;
+    }
+
+    .picture {
+      position: relative;
+      margin-bottom: 5px;
+      cursor: pointer;
+
+      p.remove {
+        position: absolute;
+        font-weight: bold;
+        top: 40px;
+        font-size: 1.3em;
+        width: 125px;
+        color: #333;
+        display: none;
+      }
+
+      &:hover {
+        img {
+          opacity: 0.6;
+        }
+
+        p.remove {
+          display: block;
+        }
+      }
+    }
   }
 }
 
