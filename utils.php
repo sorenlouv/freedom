@@ -1,5 +1,6 @@
 <?php
 class Utils {
+
   public static function extend_access_token($facebook, $access_token_short){
     // set short lived access token
     $facebook->setAccessToken($access_token_short);
@@ -49,7 +50,6 @@ class Utils {
     include 'config.php';
     $user_id = null;
 
-
     if($user_access_token !== null && strlen($user_access_token) > 0){
       $APP_ACCESS_TOKEN = str_replace("\|", "|", $APP_ACCESS_TOKEN); // HACK: Pagodabox apparently escapes certain characters. Not cool!
       $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN;
@@ -73,6 +73,23 @@ class Utils {
     ));
 
     return $facebook;
+  }
+
+  public static function get_user_settings($facebook_id){
+    $db = Utils::get_db_object();
+
+    $stmt = $db->prepare("SELECT attending_events, maybe_attending_events, declined_events, not_replied_events, birthday_events FROM users WHERE id=?");
+    $stmt->execute(array($facebook_id));
+    $settings = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $settings;
+  }
+
+  public static function update_user_settings($data, $facebook_id){
+    $db = Utils::get_db_object();
+
+    $stmt = $db->prepare("UPDATE users SET attending_events=?, maybe_attending_events=?, declined_events=?, not_replied_events=?, birthday_events=? WHERE id=?");
+    $stmt->execute(array($data["attending_events"], $data["maybe_attending_events"], $data["declined_events"], $data["not_replied_events"], $data["birthday_events"], $facebook_id));
   }
 }
 ?>

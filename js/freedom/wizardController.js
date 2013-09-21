@@ -1,4 +1,4 @@
-freedomApp.controller("WizardController", function ($scope, $rootScope) {
+freedomApp.controller("WizardController", function ($scope, $rootScope, facebookService) {
   $scope.step = 1;
 
   $scope.isAndroid = function(){
@@ -11,51 +11,40 @@ freedomApp.controller("WizardController", function ($scope, $rootScope) {
     $scope.errorMessage = "";
     $scope.loading = true;
 
-    // login with Facebook
-    $rootScope.facebookPromise.then(function(data){
-      FB.login(function (response) {
+    // get token with access to user_events and user_groups
+    facebookService.requestPermissions(['user_events', 'user_groups'], function(){
+      // extend access token
+      $.getJSON('/handlers.php?f=saveAccessToken', function (response) {
 
-        // successful login
-        if (response.authResponse) {
+        $scope.userId = FB.getAuthResponse()['userID'];
+        var secureHash = response.secure_hash;
 
-          // extend access token
-          $.getJSON('/handlers.php?f=saveAccessToken', function (response) {
+        // Add success event to GA
+        _gaq.push(['_trackEvent', 'facebookLogin', 'success', $scope.userId]);
 
-            $scope.userId = FB.getAuthResponse()['userID'];
-            var secureHash = response.secure_hash;
+        // to avoid Google Calendar caching an old feed
+        var dummy = Math.floor(Math.random() * 1000);
 
-            // Add success event to GA
-            _gaq.push(['_trackEvent', 'facebookLogin', 'success', $scope.userId]);
+        // update DOM
+        $scope.$apply(function(){
+          // setup links
+          $scope.downloadFeedHref = "webcal://freedom.konscript.com/feed.ics?user_id=" + $scope.userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
+          $scope.googleButtonHref = "http://www.google.com/calendar/render?cid=" + encodeURIComponent($scope.downloadFeedHref);
 
-            // to avoid Google Calendar caching an old feed
-            var dummy = Math.floor(Math.random() * 1000);
-
-            // update DOM
-            $scope.$apply(function(){
-              // setup links
-              $scope.downloadFeedHref = "webcal://freedom.konscript.com/feed.ics?user_id=" + $scope.userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
-              $scope.googleButtonHref = "http://www.google.com/calendar/render?cid=" + encodeURIComponent($scope.downloadFeedHref);
-
-              // next step
-              $scope.step = 2;
-
-              $scope.loading = false;
-            });
-          });
-
-          // unsuccessful login
-        } else {
-          _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
-
-          $scope.$apply(function(){
-            $scope.errorMessage = "Facebook connect failed";
-            $scope.loading = false;
-          });
+          // next step
+          $scope.step = 2;
 
           $scope.loading = false;
-        }
-      }, {
-        scope: 'user_events, user_groups'
+        });
+      });
+
+    // unsuccessful login
+    }, function(){
+      _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
+
+      $scope.$apply(function(){
+        $scope.errorMessage = "Facebook connect failed";
+        $scope.loading = false;
       });
     });
   }; // End of connectWithFacebook function

@@ -1,3 +1,90 @@
+/**
+*  Wrapper service to login to facebook (take care of promise stuff)
+*/
+angular.module('facebookService', []).factory('facebookService', function($rootScope) {
+
+  var cachedResponses = {};
+
+  var getMissingPermissions = function(permissionsRequired, successCallback, errorCallback){
+    // FB ready
+    $rootScope.facebookPromise.then(function(data){
+      // get current permissions
+      FB.api('/me/permissions', function(response) {
+        var currentPermissions = response.data[0];
+        var missingPermissions = [];
+
+        // Check if there are any required permissions we don't have
+        for (var i in permissionsRequired) {
+          if (currentPermissions[permissionsRequired[i]] !== 1) {
+            missingPermissions.push(permissionsRequired[i]);
+          }
+        }
+
+        // additional permissions required
+        if(missingPermissions.length > 0){
+          console.log("Missing permissions: ", missingPermissions);
+          $rootScope.$apply(function(){
+            requestPermissions(missingPermissions, successCallback, errorCallback);
+          });
+
+        // no more permissions required
+        }else{
+          console.log("No permissions missing");
+          successCallback();
+        }
+      }); // end of FB.api
+    }); // end of facebookPromise
+  };
+
+  // Request permissions
+  var requestPermissions = function(permissionsRequested, successCallback, errorCallback){
+    // login with Facebook
+    $rootScope.facebookPromise.then(function(data){
+      FB.login(function (response) {
+
+        // successful login (permissions obtained)
+        if (response.authResponse) {
+          console.log("Permissions (maybe) obtained!");
+          successCallback(response);
+
+        // unsuccessful login (permissions could not be obtained)
+        } else {
+          console.log("Permissions could not be obtained:", permissionsRequested);
+          if(errorCallback){ errorCallback(response); }
+        }
+      }, { scope: permissionsRequested.join(',') });
+    });
+  };
+
+  // Wrapper for FB.api - will cache and get permissions if missing
+  var api = function(permissionsRequired, query, successCallback, errorCallback){
+    var facebookService = this;
+
+    // Check cache to see if it contains the response
+    if(query in cachedResponses){
+      console.log("Query was cached", query);
+      successCallback(cachedResponses[query]);
+      return true;
+    }
+
+    // check if any permissions are missing and request them if needed. Then fetch data
+    getMissingPermissions(permissionsRequired, function(){
+      console.log("Query not cached. Fetching", query);
+      FB.api(query, function(response){
+        cachedResponses[query] = response;
+        successCallback(response);
+      });
+    }, errorCallback);
+
+  };
+
+  // public methods
+  return {
+    requestPermissions: requestPermissions,
+    api: api
+  };
+});
+
 angular.module('facebookDirective', [])
 .directive('facebook', function() {
   return {
@@ -20,7 +107,14 @@ angular.module('facebookDirective', [])
 
       $scope.$watch('facebook.sdkLoaded', function(sdkLoaded){
         if(sdkLoaded){
-          deferred.resolve($scope.facebook);
+          // Additional init code here
+          FB.getLoginStatus(function(response) {
+            console.log("FB: Authorized");
+
+            $rootScope.$apply(function(){
+              deferred.resolve($scope.facebook);
+            });
+          });
         }
       });
     }, // controller end
@@ -46,9 +140,6 @@ angular.module('facebookDirective', [])
 
       // fbAsyncInit is run as soon as the SDK is loaded
       window.fbAsyncInit = function() {
-        console.log("FB: SDK ready");
-        scope.facebook.sdkLoaded = true;
-
         FB.init({
           appId      : attrs.appId, // App ID
           channelUrl : attrs.channelUrl, // Channel File
@@ -56,12 +147,9 @@ angular.module('facebookDirective', [])
           cookie     : attrs.cookie // enable cookies to allow the server to access the session
         });
 
-        // Additional init code here
-        FB.getLoginStatus(function(response) {
-          console.log("FB: Authorized");
-          scope.facebook.status = response.status;
-          scope.$apply();
-        });
+        console.log("FB: SDK ready");
+        scope.facebook.sdkLoaded = true;
+        scope.$digest();
       }; // end of fbAsyncInit
 
       // add fb-root
