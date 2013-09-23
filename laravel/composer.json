@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.0.*",
-    "facebook/php-sdk": "dev-master"
+    "facebook/php-sdk": "dev-master",
+    "unitedprototype/php-ga": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
