@@ -1,24 +1,43 @@
 <?php
-use UnitedPrototype\GoogleAnalytics;
-include_once 'utils.php';
 
-class Feed {
+class FeedController extends BaseController {
 
-  private $is_legacy_user = false;
+  // download or fetch Facebook feed
+  public function getDownloadFeed(){
 
-  public function get_feed($user_id, $secure_hash, $access_token){
+    // headers
+    // header('Content-type: text/calendar;charset=utf-8');
+    // header('Content-Disposition: attachment; filename=feed.ics');
 
-    // get userid by access token
-    if(is_null($user_id)){
-      $user_id = Utils::get_user_id_by_access_token($access_token);
-      $this->is_legacy_user = true;
+    // arguments
+    $user_id = isset($_GET["user_id"]) ? $_GET["user_id"] : null;
+    $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
+    $access_token = isset($_GET["access_token"]) ? $_GET["access_token"] : null;
 
-    // get access token by user id
-    }else{
-      $access_token = Utils::get_access_token_by_user_id($user_id, $secure_hash);
-    }
+    // // get user id by access token
+    // if(is_null($user_id) && isset($access_token)){
+    //   $user_id = $this->get_user_id_by_access_token($access_token);
 
-    // header
+    // // get access token by user id
+    // }elseif(isset($user_id) && isset($secure_hash)){
+    //   $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
+
+    // // TODO: log with analytics
+    // }else{
+    //   throw new Exception('Access token not found');
+    // }
+
+    // set access token
+    $this->facebook->setAccessToken($access_token);
+
+    // Output
+    $header = $this->get_calendar_header();
+    $body = $this->get_calendar_body($user_id);
+    $footer = "END:VCALENDAR\r\n";
+    return $header . $body . $footer;
+  }
+
+  private function get_calendar_header(){
     $header = "BEGIN:VCALENDAR\r\n";
     $header .= "VERSION:2.0\r\n";
     $header .= "PRODID:-//Facebook//NONSGML Facebook Events V1.0//EN\r\n";
@@ -28,20 +47,13 @@ class Feed {
     $header .= "CALSCALE:GREGORIAN\r\n";
     $header .= "METHOD:PUBLISH\r\n";
 
-    // body
-    $body = $this->get_calendar_body($user_id, $access_token);
-
-    // footer
-    $footer = "END:VCALENDAR\r\n";
-
-    return $header . $body . $footer;
+    return $header;
   }
 
-  private function get_calendar_body($user_id, $access_token){
+  private function get_calendar_body($user_id){
 
     // get events
-    $events = $this->get_events($user_id, $access_token);
-    $this->track_download_feed_event($user_id, $events["error_message"]);
+    $events = $this->get_events($user_id);
 
     // return body
     if(is_null($events["error_message"])){
@@ -51,43 +63,35 @@ class Feed {
     }
   }
 
-  private function get_events($user_id, $access_token){
-    $facebook = Utils::get_facebook_object();
-    $facebook->setAccessToken($access_token);
+  private function get_events($user_id){
+    $events = null;
+    $error_message = null;
 
     try {
-      $data = $facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
+      $data = $this->facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
       $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
-      return array(
-        "error_message" => null,
-        "events" => $events
-      );
+
     } catch (Exception $e) {
-      return array(
-        "error_message" => $e->getMessage()
-      );
+      $error_message = $e->getMessage();
     }
+
+    // Track in GA
+    $this->track_download_feed_event($user_id, $error_message);
+
+    return $events;
   }
 
   private function track_download_feed_event($user_id, $error_message){
-    require("ServersideAnalytics/autoload.php");
-
-    // legacy string
-    $is_legacy_string = $this->is_legacy_user ? 'legacy' : "up-to-date";
+    // require("ServersideAnalytics/autoload.php");
 
     // error message
-    if(!is_null($error_message)){
-      $error_message = " - " . $error_message;
-      $status = "error";
-    }else{
-      $status = "success";
-    }
+    $status = !is_null($error_message) ? "error: " . $error_message : "success";
 
     // category
-    $category = 'feedDownload - '  . $status;
+    $category = $status;
 
     // action
-    $action = $is_legacy_string  . $error_message;
+    $action = "feedDownload";
 
     // label
     $label = $user_id;
@@ -150,6 +154,7 @@ class Feed {
       return "http://www.facebook.com/" . $event['id'];
     }
 
+    // event description is dependent on context: whether the "events" is a birthday or a regular event
     function get_event_description($event){
       if($event["rsvp_status"] == "birthday"){
         return "Say congratulation:\n" . get_event_url($event);
@@ -223,15 +228,8 @@ class Feed {
     $event .= "DTSTART;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+24 hours") . "\r\n";
     $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
     $event .= "URL:http://freedom.konscript.com\r\n";
-
-    if($this->is_legacy_user){
-      $event .= "SUMMARY:Calendar invalid - go to freedom.konscript.com\r\n";
-      $event .= "DESCRIPTION:" . $this->ical_encode_text("The Freedom app is still in beta, and have been changed since you started using it. I need you to remove this calendar subscription, and redo the steps outlined at:\n\nhttp://freedom.konscript.com/\n\n I hope you will continue enjoying this service, Søren!") . "\r\n";
-    }else{
-      $event .= "SUMMARY:Login expired - go to freedom.konscript.com/renew\r\n";
-      $event .= "DESCRIPTION:" . $this->ical_encode_text("You have been logged out, and your Facebook events could not be loaded. Please sign in again:\n\nhttp://freedom.konscript.com/renew\n\nNote: It can take several hours for your Facebook events to show up in your calendar again") . "\r\n";
-    }
-
+    $event .= "SUMMARY:Login expired - go to freedom.konscript.com/renew\r\n";
+    $event .= "DESCRIPTION:" . $this->ical_encode_text("Sorry for the inconvenience! Facebook has logged you out, therefore your Facebook events could not be loaded. Please login again here:\n\nhttp://freedom.konscript.com/renew\n\nNote: It can take several hours for your Facebook events to re-appear in your calendar") . "\r\n";
     $event .= "CLASS:PUBLIC\r\n";
     $event .= "STATUS:CONFIRMED\r\n";
     $event .= "END:VEVENT\r\n";
@@ -261,6 +259,7 @@ class Feed {
     return $value;
   }
 
+  // convert timestamp from FB format to iCalendar format
   private function date_string_to_time($date_string = null, $offset = ""){
     $date_obj = new DateTime($date_string);
 
@@ -281,4 +280,5 @@ class Feed {
 
     return $date;
   }
+
 }
