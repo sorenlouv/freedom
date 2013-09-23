@@ -11,15 +11,6 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
 
-
-// Route::get('user/{id}', 'UserController@showProfile');
-// Route::get('users', 'UserController@getIndex');
-
-// Rest
 Route::controller('users', 'UserController');
-
+Route::controller('feeds', 'FeedController');
