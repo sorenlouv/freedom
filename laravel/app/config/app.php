@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://localhost',
+	'url' => 'http://freedom.konscript.local',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return array(
 	|
 	*/
 
-	'key' => 'zY3aGczaDpY0V0XiMrNPLZGARiwN6BRR',
+	'key' => 'kasdJKHkjdanmasdIUywbnasnJaxmeUb',
 
 	/*
 	|--------------------------------------------------------------------------

@@ -2,13 +2,13 @@
 
 class UserController extends BaseController {
 
-  public function getUserSettings(){
+  public function getSettings(){
     $user_id = $this->facebook->getUser();
     $user = User::find($user_id);
     return $user;
   }
 
-  public function postUserSettings(){
+  public function postSettings(){
     $user_id = $this->facebook->getUser();
     $user = User::find($user_id);
 
@@ -71,22 +71,6 @@ class UserController extends BaseController {
    *
    **************************************************/
 
-  private function get_user_id_by_access_token($user_access_token){
-    $user_id = null;
-
-    if($user_access_token !== null && strlen($user_access_token) > 0){
-      $APP_ACCESS_TOKEN_converted = str_replace("\|", "|", $APP_ACCESS_TOKEN); // HACK: Pagodabox apparently escapes certain characters. Not cool!
-      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN_converted;
-      $response = json_decode(file_get_contents($url));
-
-      if(isset($response->data->user_id)){
-        $user_id = $response->data->user_id;
-      }
-    }
-
-    return $user_id;
-  }
-
   private function extend_access_token($access_token_short){
     // set short lived access token
     $this->facebook->setAccessToken($access_token_short);
@@ -99,12 +83,6 @@ class UserController extends BaseController {
   }
 
   private function get_secure_hash($user_id){
-    include 'config.php';
-    return sha1($user_id . $SALT);
-  }
-
-  private function get_access_token_by_user_id($user_id, $secure_hash){
-    $user = User::find($user_id).where('secure_hash', $secure_hash).get('access_token');
-    return $user["access_token"];
+    return sha1($user_id . Config::get('freedom.salt'));
   }
 }

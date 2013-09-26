@@ -1,5 +1,10 @@
 <?php
 
+use UnitedPrototype\GoogleAnalytics\Visitor as GAVisitor;
+use UnitedPrototype\GoogleAnalytics\Session as GASession;
+use UnitedPrototype\GoogleAnalytics\Event as GAEvent;
+use UnitedPrototype\GoogleAnalytics\Tracker as GATracker;
+
 class FeedController extends BaseController {
 
   // download or fetch Facebook feed
@@ -14,18 +19,16 @@ class FeedController extends BaseController {
     $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
     $access_token = isset($_GET["access_token"]) ? $_GET["access_token"] : null;
 
-    // // get user id by access token
-    // if(is_null($user_id) && isset($access_token)){
-    //   $user_id = $this->get_user_id_by_access_token($access_token);
+    // get user id by access token
+    if(is_null($user_id) && isset($access_token)){
+      $user_id = $this->get_user_id_by_access_token($access_token);
 
-    // // get access token by user id
-    // }elseif(isset($user_id) && isset($secure_hash)){
-    //   $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
+    // get access token by user id
+    }elseif(isset($user_id) && isset($secure_hash)){
+      $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
 
-    // // TODO: log with analytics
-    // }else{
-    //   throw new Exception('Access token not found');
-    // }
+    // TODO: log with analytics
+    }
 
     // set access token
     $this->facebook->setAccessToken($access_token);
@@ -53,19 +56,19 @@ class FeedController extends BaseController {
   private function get_calendar_body($user_id){
 
     // get events
-    $events = $this->get_events($user_id);
+    list($events, $failed) = $this->get_events($user_id);
 
-    // return body
-    if(is_null($events["error_message"])){
-      return $this->get_normal_body($events["events"]);
-    }else{
+    if($failed){
       return $this->get_instructional_body();
+    }else{
+      return $this->get_normal_body($events);
     }
   }
 
   private function get_events($user_id){
     $events = null;
     $error_message = null;
+    $failed = false;
 
     try {
       $data = $this->facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
@@ -73,40 +76,37 @@ class FeedController extends BaseController {
 
     } catch (Exception $e) {
       $error_message = $e->getMessage();
+      $failed = true;
     }
 
     // Track in GA
     $this->track_download_feed_event($user_id, $error_message);
 
-    return $events;
+    return array($events, $failed);
   }
 
   private function track_download_feed_event($user_id, $error_message){
-    // require("ServersideAnalytics/autoload.php");
-
-    // error message
-    $status = !is_null($error_message) ? "error: " . $error_message : "success";
 
     // category
-    $category = $status;
+    $category = !is_null($error_message) ? "feedDownload - error" : "feedDownload - success";
 
     // action
-    $action = "feedDownload";
+    $action = !is_null($error_message) ? "error: " . $error_message : "success";
 
     // label
     $label = $user_id;
 
     // visitor
-    $visitor = new GoogleAnalytics\Visitor();
+    $visitor = new GAVisitor();
     $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
     if(isset($_SERVER['HTTP_USER_AGENT'])){
       $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
     }
 
     // Google Analytics: track event
-    $session = new GoogleAnalytics\Session();
-    $event = new GoogleAnalytics\Event($category, $action, $label);
-    $tracker = new GoogleAnalytics\Tracker('UA-39209285-1', 'freedom.konscript.com');
+    $session = new GASession();
+    $event = new GAEvent($category, $action, $label);
+    $tracker = new GATracker('UA-39209285-1', 'freedom.konscript.com');
     $tracker->trackEvent($event, $session, $visitor);
   }
 
@@ -279,6 +279,29 @@ class FeedController extends BaseController {
     $date = date($icalendar_format, $timestamp);
 
     return $date;
+  }
+
+  private function get_access_token_by_user_id($user_id, $secure_hash){
+    $user = User::where('secure_hash', $secure_hash)->select(array('access_token'))->find($user_id);
+    if($user){
+      return $user->access_token;
+    }
+  }
+
+  private function get_user_id_by_access_token($user_access_token){
+    $user_id = null;
+
+    if($user_access_token !== null && strlen($user_access_token) > 0){
+      $APP_ACCESS_TOKEN_converted = str_replace("\|", "|", Config::get('facebook.appAccessToken')); // HACK: Pagodabox apparently escapes certain characters. Not cool!
+      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN_converted;
+      $response = json_decode(file_get_contents($url));
+
+      if(isset($response->data->user_id)){
+        $user_id = $response->data->user_id;
+      }
+    }
+
+    return $user_id;
   }
 
 }
