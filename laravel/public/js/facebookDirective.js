@@ -7,7 +7,7 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
 
   var getMissingPermissions = function(permissionsRequired, successCallback, errorCallback){
     // FB ready
-    $rootScope.facebookPromise.then(function(data){
+    $rootScope.facebookReady.then(function(data){
       // get current permissions
       FB.api('/me/permissions', function(response) {
         var currentPermissions = response.data[0];
@@ -33,13 +33,13 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
           successCallback();
         }
       }); // end of FB.api
-    }); // end of facebookPromise
+    }); // end of facebookReady
   };
 
   // Request permissions
   var requestPermissions = function(permissionsRequested, successCallback, errorCallback){
     // login with Facebook
-    $rootScope.facebookPromise.then(function(data){
+    $rootScope.facebookReady.then(function(data){
       FB.login(function (response) {
 
         // successful login (permissions obtained)
@@ -94,7 +94,7 @@ angular.module('facebookDirective', [])
     // Controller
     controller: function($scope, $attrs, $rootScope, $q) {
       var deferred = $q.defer();
-      $rootScope.facebookPromise = deferred.promise;
+      $rootScope.facebookReady = deferred.promise;
 
       // Load the SDK Asynchronously
       (function(d, s, id){

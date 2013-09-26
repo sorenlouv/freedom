@@ -6,7 +6,7 @@ freedomApp.controller("customizeCtrl", function($scope, $http, $location, safeAp
   };
 
   // get data
-  $http.get('settings.php').success(function(data, status) {
+  $http.get('/users/settings').success(function(data, status) {
     $scope.data = data;
   });
 });
@@ -50,7 +50,7 @@ freedomApp.directive('dialog', function() {
             selectedFriends: $scope.selectedFacebookFriends
           };
           $.ajax({
-              url: 'settings.php',
+              url: '/users/settings',
               type: 'POST',
               data: JSON.stringify(data),
               contentType: 'application/json; charset=utf-8',
@@ -106,7 +106,7 @@ freedomApp.directive('autoComplete', function(safeApply) {
       };
 
       // FB ready and dialog opened
-      $q.all([$scope.dialogOpened]).then(function(results) {
+      $q.all([$scope.dialogOpened, $rootScope.facebookReady]).then(function(results) {
 
         // Get friends, groups and friendlists from facebook
         facebookService.api(
@@ -173,7 +173,7 @@ freedomApp.directive('formSwitch', function() {
     restrict: 'E',
     link: function(scope, element, attrs, ctrl) {
       element.find('input').bind('click', function() {
-        $.post("settings.php", $('.customize form').serialize(), function() {
+        $.post("/users/settings", $('.customize form').serialize(), function() {
           console.log("saved");
         });
       });

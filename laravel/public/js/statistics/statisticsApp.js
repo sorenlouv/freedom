@@ -6,10 +6,10 @@ function ($rootScope, $timeout, $scope, $q, gapiService, chartService, safeApply
   // HACK: work-around to wait for facebook promise
   $timeout(function(){
       var gapiPromise = gapiService.loadSdk();
-      var facebookPromise = $rootScope.facebookPromise;
+      var facebookReady = $rootScope.facebookReady;
 
       // both facebook and google APIs are ready
-      $q.all([gapiPromise, facebookPromise]).then(function(){
+      $q.all([gapiPromise, facebookReady]).then(function(){
 
         // Default values
         $scope.progress = {

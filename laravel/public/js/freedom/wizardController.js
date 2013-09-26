@@ -14,7 +14,7 @@ freedomApp.controller("WizardController", function ($scope, $rootScope, facebook
     // get token with access to user_events and user_groups
     facebookService.requestPermissions(['user_events', 'user_groups'], function(){
       // extend access token
-      $.getJSON('/handlers.php?f=saveAccessToken', function (response) {
+      $.post('/laravel/public/users/save-access-token', function (response) {
 
         $scope.userId = FB.getAuthResponse()['userID'];
         var secureHash = response.secure_hash;
