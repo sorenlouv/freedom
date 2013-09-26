@@ -1,5 +1,16 @@
-/config.php
+# Compass Sass
 .sass-cache/
-.DS_Store
-/test-cal.php
 
+# Mac
+.DS_Store
+
+# Config files
+laravel/app/config/facebook.php
+laravel/app/config/freedom.php
+laravel/app/config/database.php
+
+# Laravel
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock

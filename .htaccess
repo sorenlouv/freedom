@@ -1,13 +1,20 @@
 RewriteEngine On
 
 # Redirect feed
-RewriteRule feed.ics handlers.php?f=downloadFeed [QSA]
+# RewriteRule feed.ics laravel/public/feeds/download-feed [R]
+# RewriteRule feeds.ics /feeds/download-feed [L]
 
-# Rewrite all requests without extensions
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !\..+$
-RewriteRule ^(.*)$ /$1.html [L,QSA]
+# Redirect to laravel/public
+RewriteCond %{HTTP_HOST} ^freedom.konscript.local$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^freedom.konscript.com$
+RewriteCond %{REQUEST_URI} !public/
+RewriteRule ^(.*)$ laravel/public/$1 [L]
 
-# Rewrite old domain to new domain
-RewriteCond %{HTTP_HOST} ^freedom.gopagoda.com$ [NC]
-RewriteRule ^(.*)$ http://freedom.konscript.com/$1 [R=301,L]
+# # Rewrite all requests without extensions
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_URI} !\..+$
+# RewriteRule ^(.*)$ /$1.html [L,QSA]
+
+# # Rewrite old domain to new domain
+# RewriteCond %{HTTP_HOST} ^freedom.gopagoda.com$ [NC]
+# RewriteRule ^(.*)$ http://freedom.konscript.com/$1 [R=301,L]
