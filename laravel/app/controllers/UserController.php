@@ -12,15 +12,17 @@ class UserController extends BaseController {
     $user_id = $this->facebook->getUser();
     $user = User::find($user_id);
 
-    // something like this...
-    $data = $_POST;
+    if(!$user){
+      echo "User not found";
+      exit();
+    }
 
     // update
-    $user->attending_events = $data["attending_events"];
-    $user->maybe_attending_events = $data["maybe_attending_events"];
-    $user->declined_events = $data["declined_events"];
-    $user->not_replied_events = $data["not_replied_events"];
-    $user->birthday_events = $data["birthday_events"];
+    $user->attending_events = $_POST["attending_events"];
+    $user->maybe_attending_events = $_POST["maybe_attending_events"];
+    $user->declined_events = $_POST["declined_events"];
+    $user->not_replied_events = $_POST["not_replied_events"];
+    $user->birthday_events = $_POST["birthday_events"];
 
     // save
     $user->save();
