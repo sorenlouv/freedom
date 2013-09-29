@@ -1,13 +1,16 @@
-freedomApp.controller("customizeCtrl", function($scope, $http, $location, safeApply) {
+freedomApp.controller("customizeCtrl", function($scope, $rootScope, $http, $location, safeApply, facebookService) {
+  facebookService.login([], function(){
+    // open a dialog
+    $scope.openDialog = function(dialog) {
+      $('#' + dialog).dialog("open");
+    };
 
-  // open a dialog
-  $scope.openDialog = function(dialog) {
-    $('#' + dialog).dialog("open");
-  };
-
-  // get data
-  $http.get('/users/settings').success(function(data, status) {
-    $scope.data = data;
+    // get data
+    $http.get('/users/settings').success(function(data, status) {
+      safeApply($scope, function(){
+        $scope.data = data;
+      });
+    });
   });
 });
 

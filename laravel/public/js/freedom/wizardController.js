@@ -12,7 +12,7 @@ freedomApp.controller("WizardController", function ($scope, $rootScope, facebook
     $scope.loading = true;
 
     // get token with access to user_events and user_groups
-    facebookService.requestPermissions(['user_events', 'user_groups'], function(){
+    facebookService.login(['user_events', 'user_groups'], function(){
       // extend access token
       $.post('/laravel/public/users/save-access-token', function (response) {
 

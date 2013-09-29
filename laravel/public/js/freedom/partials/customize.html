@@ -1,7 +1,8 @@
 
 <div class="page-content customize">
+  <img src="img/spinner.gif" class="loading-spinner" ng-hide="facebookAuthenticated">
 
-  <form action="settings.php" method="post" class="row settings-container">
+  <form action="settings.php" method="post" class="row settings-container"  ng-show="facebookAuthenticated">
     <div class="large-4 small-12 columns rsvp sidebar">
       <p class="header">RSVP</p>
       <p class="help-text">Decide which type of events you want in your calendar</p>

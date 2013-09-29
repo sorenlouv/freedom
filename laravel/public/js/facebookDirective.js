@@ -1,8 +1,9 @@
 /**
 *  Wrapper service to login to facebook (take care of promise stuff)
 */
-angular.module('facebookService', []).factory('facebookService', function($rootScope) {
+angular.module('facebookService', []).factory('facebookService', function($rootScope, safeApply) {
 
+  $rootScope.facebookAuthenticated = false;
   var cachedResponses = {};
 
   var getMissingPermissions = function(permissionsRequired, successCallback, errorCallback){
@@ -20,15 +21,19 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
           }
         }
 
-        // additional permissions required
-        if(missingPermissions.length > 0){
+        // additional permissions required or just a need to login
+        if(missingPermissions.length > 0 || permissionsRequired.length === 0){
           console.log("Missing permissions: ", missingPermissions);
-          $rootScope.$apply(function(){
-            requestPermissions(missingPermissions, successCallback, errorCallback);
+          safeApply($rootScope, function(){
+            login(missingPermissions, successCallback, errorCallback);
           });
 
         // no more permissions required
         }else{
+          safeApply($rootScope, function(){
+            $rootScope.facebookAuthenticated = true;
+          });
+
           console.log("No permissions missing");
           successCallback();
         }
@@ -36,23 +41,43 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
     }); // end of facebookReady
   };
 
-  // Request permissions
-  var requestPermissions = function(permissionsRequested, successCallback, errorCallback){
-    // login with Facebook
-    $rootScope.facebookReady.then(function(data){
-      FB.login(function (response) {
+  // Request permissions and login
+  var login = function(permissionsRequested, successCallback, errorCallback){
 
-        // successful login (permissions obtained)
-        if (response.authResponse) {
-          console.log("Permissions (maybe) obtained!");
+    // Load SDK
+    $rootScope.facebookReady.then(function(data){
+      FB.getLoginStatus(function(response){
+
+        // already logged in and no specific permissions requested
+        if(response.status === "connected" && permissionsRequested.length === 0){
           successCallback(response);
 
-        // unsuccessful login (permissions could not be obtained)
-        } else {
-          console.log("Permissions could not be obtained:", permissionsRequested);
-          if(errorCallback){ errorCallback(response); }
+          safeApply($rootScope, function(){
+            $rootScope.facebookAuthenticated = true;
+          });
+
+        // Not logged in or permissions requested
+        }else{
+          FB.login(function (response) {
+
+            // successful login (permissions obtained)
+            if (response.authResponse) {
+              successCallback(response);
+
+              safeApply($rootScope, function(){
+                $rootScope.facebookAuthenticated = true;
+              });
+
+              console.log("Permissions (maybe) obtained!");
+
+            // unsuccessful login (permissions could not be obtained)
+            } else {
+              console.log("Permissions could not be obtained:", permissionsRequested);
+              if(errorCallback){ errorCallback(response); }
+            }
+          }, { scope: permissionsRequested.join(',') });
         }
-      }, { scope: permissionsRequested.join(',') });
+      });
     });
   };
 
@@ -80,13 +105,13 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
 
   // public methods
   return {
-    requestPermissions: requestPermissions,
-    api: api
+    login: login, // get permissions and login
+    api: api // getting date (will make sure that user has/gets suffiecient permissions and is already logged in)
   };
 });
 
 angular.module('facebookDirective', [])
-.directive('facebook', function() {
+.directive('facebook', function(safeApply) {
   return {
     restrict: 'E',
     // scope: true,
@@ -111,7 +136,7 @@ angular.module('facebookDirective', [])
           FB.getLoginStatus(function(response) {
             console.log("FB: Authorized");
 
-            $rootScope.$apply(function(){
+            safeApply($rootScope, function(){
               deferred.resolve($scope.facebook);
             });
           });
@@ -148,8 +173,9 @@ angular.module('facebookDirective', [])
         });
 
         console.log("FB: SDK ready");
-        scope.facebook.sdkLoaded = true;
-        scope.$digest();
+        safeApply(scope, function(){
+          scope.facebook.sdkLoaded = true;
+        });
       }; // end of fbAsyncInit
 
       // add fb-root
