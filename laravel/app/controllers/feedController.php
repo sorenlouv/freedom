@@ -65,22 +65,154 @@ class FeedController extends BaseController {
     }
   }
 
+  // private function get_events($user_id){
+  //   $events = null;
+  //   $error_message = null;
+  //   $failed = false;
+
+  //   try {
+  //     $data = $this->facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
+  //     $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+
+  //   } catch (Exception $e) {
+  //     $error_message = $e->getMessage();
+  //     $failed = true;
+  //   }
+
+  //   // Track in GA
+  //   $this->track_download_feed_event($user_id, $error_message);
+
+  //   return array($events, $failed);
+  // }
+
   private function get_events($user_id){
     $events = null;
     $error_message = null;
     $failed = false;
 
-    try {
-      $data = $this->facebook->api('me?fields=events.limit(100000).fields(description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only)','GET');
-      $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+    $event_type_choices = array(
+        "attending" => true,
+        "maybe" => true,
+        "not_replied" => false,
+        "birthday" => false
+    );
 
+
+    // helper
+    function get_event_by_type($event_type){
+      return array('method' => 'GET', 'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only');
+    }
+
+    // prepare batch request
+    $event_queries = array();
+    if($event_type_choices["attending"]){
+        $event_index["attending"] = count($event_queries);
+        $event_queries[] = get_event_by_type("attending");
+    }
+
+    if($event_type_choices["maybe"]){
+        $event_index["maybe"] = count($event_queries);
+        $event_queries[] = get_event_by_type("maybe");
+    }
+
+    if($event_type_choices["not_replied"]){
+        $event_index["not_replied"] = count($event_queries);
+        $event_queries[] = get_event_by_type("not_replied");
+    }
+
+    if($event_type_choices["birthday"]){
+        $event_index["birthday"] = count($event_queries);
+        $event_queries[] = array('method' => 'GET', 'relative_url' => '/me/friends?fields=id,name,birthday&limit=2000');
+    }
+
+    // get events from Facebook
+    try {
+      $batch_response = $this->facebook->api('?batch='.urlencode(json_encode($event_queries)), 'POST');
+      $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
     } catch (Exception $e) {
       $error_message = $e->getMessage();
       $failed = true;
     }
 
     // Track in GA
-    $this->track_download_feed_event($user_id, $error_message);
+    // $this->track_download_feed_event($user_id, $error_message);
+
+    // prepare batch response
+    $events = array();
+    if($event_type_choices["attending"]){
+        $attending_events = json_decode($batch_response[$event_index["attending"]]["body"], true);
+        // echo json_encode($attending_events);
+        // echo json_encode($batch_response);
+        // exit();
+        if(isset($attending_events["data"])) {
+          $attending_events = $attending_events["data"];
+          $events = array_merge($events, $attending_events);
+        } else {
+          $error_message = $attending_events['error']['message'];
+          $failed = true;
+        }
+    }
+
+    if($event_type_choices["maybe"]){
+        $maybe_events = json_decode($batch_response[$event_index["maybe"]]["body"], true);
+        if(isset($maybe_events["data"])) {
+          $maybe_events = $maybe_events["data"];
+          $events = array_merge($events, $maybe_events);
+        } else {
+          $error_message = $maybe_events['error']['message'];
+          $failed = true;
+        }
+    }
+
+    if($event_type_choices["not_replied"]){
+        $not_replied_events = json_decode($batch_response[$event_index["not_replied"]]["body"], true);
+        if(isset($not_replied_events["data"])) {
+          $not_replied_events = $not_replied_events["data"];
+          $events = array_merge($events, $not_replied_events);
+        } else {
+          $error_message = $not_replied_events['error']['message'];
+          $failed = true;
+        }
+    }
+
+    if($event_type_choices["birthday"]){
+        $birthday_events = json_decode($batch_response[$event_index["birthday"]]["body"], true);
+        $birthday_events = $birthday_events["data"];
+
+        foreach($birthday_events as $event_key => $event){
+
+            // remove event if no birthday
+            if(!isset($event["birthday"])){
+                unset($birthday_events[$event_key]);
+
+            }else{
+                $birthday = explode("/", $event["birthday"]);
+                $month = $birthday[0];
+                $day = $birthday[1];
+                $year = date('Y');
+                $next_birthday_timestamp = mktime(0,0,0, $month, $day, $year);
+
+                // make sure birthday is not in the past
+                if($next_birthday_timestamp < time()){
+                    $next_birthday_timestamp = mktime(0,0,0, $month, $day, $year+1);
+                }
+
+                // add fields to event
+                $birthday_events[$event_key]["start_time"] = date("c", $next_birthday_timestamp);
+                $birthday_events[$event_key]["is_date_only"] = true;
+                $birthday_events[$event_key]["rsvp_status"] = "birthday";
+                $birthday_events[$event_key]["owner"]["name"] = $event["name"];
+            }
+        }
+
+        $events = array_merge($events, $birthday_events);
+    }
+
+    // sort events by start date
+    function sort_cb($a, $b) {
+        return strcmp($a["start_time"], $b["start_time"]);
+    }
+    usort($events, 'sort_cb');
 
     return array($events, $failed);
   }
@@ -303,5 +435,4 @@ class FeedController extends BaseController {
 
     return $user_id;
   }
-
 }
