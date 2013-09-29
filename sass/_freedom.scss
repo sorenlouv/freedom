@@ -134,6 +134,12 @@ body {
 
     &.customize {
 
+      .loading-spinner {
+        left: 50%;
+        position: relative;
+        margin-left: -16px;
+      }
+
       .settings-container {
 
         .sidebar {
