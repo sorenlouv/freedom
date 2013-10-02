@@ -1138,11 +1138,15 @@ dialog#dialog-not-replied .dialog-selected-friends .picture p.remove, dialog#dia
   color: #333;
   display: none;
 }
-/* line 298, ../../../sass/_freedom.scss */
+/* line 297, ../../../sass/_freedom.scss */
+dialog#dialog-not-replied .dialog-selected-friends .picture img, dialog#dialog-birthday .dialog-selected-friends .picture img {
+  max-height: 101px;
+}
+/* line 302, ../../../sass/_freedom.scss */
 dialog#dialog-not-replied .dialog-selected-friends .picture:hover img, dialog#dialog-birthday .dialog-selected-friends .picture:hover img {
   opacity: 0.6;
 }
-/* line 302, ../../../sass/_freedom.scss */
+/* line 306, ../../../sass/_freedom.scss */
 dialog#dialog-not-replied .dialog-selected-friends .picture:hover p.remove, dialog#dialog-birthday .dialog-selected-friends .picture:hover p.remove {
   display: block;
 }
@@ -1172,11 +1176,11 @@ html, body {
   height: 40px;
 }
 
-/* line 312, ../../../sass/_freedom.scss */
+/* line 316, ../../../sass/_freedom.scss */
 #footer li {
   text-align: center;
 }
-/* line 314, ../../../sass/_freedom.scss */
+/* line 318, ../../../sass/_freedom.scss */
 #footer li a {
   color: #666;
   font-size: 0.8em;
@@ -1191,21 +1195,21 @@ html, body {
   -o-transition-duration: 0.5s;
   transition-duration: 0.5s;
 }
-/* line 322, ../../../sass/_freedom.scss */
+/* line 326, ../../../sass/_freedom.scss */
 #footer li a .symbol {
   font-weight: bold;
 }
-/* line 326, ../../../sass/_freedom.scss */
+/* line 330, ../../../sass/_freedom.scss */
 #footer li a:hover {
   color: #333333;
 }
-/* line 330, ../../../sass/_freedom.scss */
+/* line 334, ../../../sass/_freedom.scss */
 #footer li a.active {
   border-bottom: 2px solid #444;
   color: #333;
 }
 
-/* line 339, ../../../sass/_freedom.scss */
+/* line 343, ../../../sass/_freedom.scss */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none;
 }

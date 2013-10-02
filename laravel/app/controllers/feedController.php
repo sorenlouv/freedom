@@ -37,7 +37,7 @@ class FeedController extends BaseController
 
     // Output
     $header = $this->get_calendar_header();
-    $body = $this->get_calendar_body($user_id);
+    $body = $this->get_calendar_body();
     $footer = "END:VCALENDAR\r\n";
     return $header . $body . $footer;
   }
@@ -56,11 +56,14 @@ class FeedController extends BaseController
     return $header;
   }
 
-  private function get_calendar_body($user_id)
+  private function get_calendar_body()
   {
 
     // get events
-    list($events, $failed) = $this->get_events($user_id);
+    list($events, $failed) = $this->get_events();
+
+    echo json_encode($events);
+    exit();
 
     if ($failed) {
       return $this->get_instructional_body();
@@ -69,26 +72,37 @@ class FeedController extends BaseController
     }
   }
 
-  private function get_events($user_id)
+  private function getUser(){
+    $user_id = $this->facebook->getUser();
+    $user = User::find($user_id);
+    return $user;
+  }
+
+  private function filter_by_user($events, $user){
+    return $events;
+  }
+
+  private function get_events()
   {
     $events = null;
     $error_message = null;
     $failed = false;
 
-    $event_type_choices = array(
-      "attending" => true,
-      "maybe" => true,
-      "not_replied" => false,
-      "birthday" => false
-    );
+    $user = $this->getUser();
 
+    $event_type_choices = array(
+      "attending" => $user["attending_events"],
+      "maybe" => $user["maybe_events"],
+      "not_replied" => $user["not_replied_events"],
+      "birthday" => $user["birthday_events"]
+    );
 
     // helper
     function get_event_by_type($event_type)
     {
       return array(
         'method' => 'GET',
-        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only'
+        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only,owner,admins'
       );
     }
 
@@ -128,7 +142,7 @@ class FeedController extends BaseController
     }
 
     // Track in GA
-    // $this->track_download_feed_event($user_id, $error_message);
+    // $this->track_download_feed_event($error_message);
     // TODO: uncomment line
 
     // prepare batch response
@@ -158,7 +172,7 @@ class FeedController extends BaseController
     if ($event_type_choices["not_replied"]) {
       $not_replied_events = json_decode($batch_response[$event_index["not_replied"]]["body"], true);
       if (isset($not_replied_events["data"])) {
-        $not_replied_events = $not_replied_events["data"];
+        $not_replied_events = $this->filter_by_user($not_replied_events["data"], $user);
         $events = array_merge($events, $not_replied_events);
       } else {
         $error_message = $not_replied_events['error']['message'];
@@ -212,7 +226,7 @@ class FeedController extends BaseController
     );
   }
 
-  private function track_download_feed_event($user_id, $error_message)
+  private function track_download_feed_event($error_message)
   {
 
     // category
@@ -222,7 +236,7 @@ class FeedController extends BaseController
     $action = !is_null($error_message) ? "error: " . $error_message : "success";
 
     // label
-    $label = $user_id;
+    $label = $user_id = $this->facebook->getUser();
 
     // visitor
     $visitor = new GAVisitor();
@@ -419,9 +433,7 @@ class FeedController extends BaseController
 
   private function get_access_token_by_user_id($user_id, $secure_hash)
   {
-    $user = User::where('secure_hash', $secure_hash)->select(array(
-      'access_token'
-    ))->find($user_id);
+    $user = User::where('secure_hash', $secure_hash)->select(array('access_token'))->find($user_id);
     if ($user) {
       return $user->access_token;
     }

@@ -294,6 +294,10 @@ dialog#dialog-not-replied, dialog#dialog-birthday {
         display: none;
       }
 
+      img {
+        max-height: 101px;
+      }
+
       &:hover {
         img {
           opacity: 0.6;

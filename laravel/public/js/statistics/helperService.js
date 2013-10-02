@@ -28,6 +28,7 @@ angular.module('helpers', [])
     });
   };
 
+  // TODO: Duplicate method
   var arrayUnique = function(array) {
     var a = array.concat();
     for(var i=0; i<a.length; ++i) {

@@ -84,27 +84,53 @@ freedomApp.directive('dialog', function() {
   };
 });
 
+// TODO: duplicate method
+var removeDuplicates = function(array) {
+  var a = array.concat();
+  for(var i=0; i<a.length; ++i) {
+    for(var j=i+1; j<a.length; ++j) {
+      if(a[i] === a[j])
+        a.splice(j--, 1);
+      }
+  }
+  return a;
+};
+
 // jQuery UI Autocompleter directive
 freedomApp.directive('autoComplete', function(safeApply) {
 
   return {
     controller: function($scope, $element, $attrs, $http, $rootScope, $q, facebookService) {
 
-      // Get filtered friends
-      var getFilteredFriends = function(friendList) {
+      // Filter out selected firends
+      var removeSelectedFriends = function(friendList) {
         return friendList.filter(function(friend, key){
-          // remove selected friends
           if($scope.selectedFacebookFriends.indexOf(friend.id) === -1){
             return true;
           }
+        });
+      };
 
-        // re-arrange friends array
-        }).map(function(friend, key) {
+      var parseFacebookFormat = function(objects, type){
+        return objects.map(function(obj){
+          var picture_url = obj.picture ? obj.picture.data.url : '/img/default-profile-image.png';
           return {
-            label: friend.name,
-            id: friend.id,
-            picture_url: friend.picture.data.url
+            label: obj.name,
+            id: obj.id,
+            picture_url: picture_url,
+            type: type
           };
+        });
+      };
+
+      var getMembersFromFriendlist = function(friendlistId, callback){
+        // get members (friends) from friendlists
+        facebookService.api(['read_friendlists'], friendlistId + '?fields=members', function(response) {
+          var friendlistMembers = parseFacebookFormat(response.members.data, 'friend').map(function(friend){
+            return friend.id;
+          });
+
+          callback(friendlistMembers);
         });
       };
 
@@ -114,7 +140,7 @@ freedomApp.directive('autoComplete', function(safeApply) {
         // Get friends, groups and friendlists from facebook
         facebookService.api(
         ['user_friends', 'user_groups', 'read_friendlists'],
-        'me?fields=friends.fields(name,id,picture.type(square).width(100).height(100)),groups,friendlists',
+        'me?fields=friends.fields(name,id,picture.type(square).width(100).height(100)),friendlists',
         function(response) {
 
           safeApply($scope, function(){
@@ -123,22 +149,45 @@ freedomApp.directive('autoComplete', function(safeApply) {
           });
 
           // Set source for autocompleter with a result limit
-          var setSource = function(request, response) {
-            var results = $.ui.autocomplete.filter(getFilteredFriends($scope.facebookFriends), request.term);
+          var setSource = function(request, jqueryResponse) {
+            var friends = parseFacebookFormat(removeSelectedFriends(response.friends.data), 'friend');
+            var friendlists = parseFacebookFormat(response.friendlists.data, 'friendlist');
+            var source = friends.concat(friendlists);
+            var results = $.ui.autocomplete.filter(source, request.term);
 
             // limit resultset to 10
-            response(results.slice(0, 10));
+            jqueryResponse(results.slice(0, 10));
           };
 
           // bind autocompleter
           $element.autocomplete({
             source: setSource,
             select: function(event, ui) {
-              $scope.selectedFacebookFriends.push(ui.item.id);
-              $scope.$digest();
 
-              // update source
-              $(this).autocomplete("option", "source", setSource);
+              if(ui.item.type === "friend"){
+                var friendId = ui.item.id;
+                $scope.selectedFacebookFriends.push(friendId);
+
+                // update source
+                $(this).autocomplete("option", "source", setSource);
+              }else if(ui.item.type === "friendlist"){
+                $scope.autocompleteDataLoading = true;
+
+                var friendlistId = ui.item.id;
+                getMembersFromFriendlist(friendlistId, function(friendlistMembers){
+                  safeApply($scope, function(){
+                    $scope.autocompleteDataLoading = false;
+
+                    // add friendlist to selected friends - remove duplicates
+                    $scope.selectedFacebookFriends = removeDuplicates($scope.selectedFacebookFriends.concat(friendlistMembers));
+
+                    // update source
+                    $(this).autocomplete("option", "source", setSource);
+                  });
+                });
+              }
+
+              $scope.$digest();
 
               // clear input and avoid it being set again
               $(this).val('');
@@ -147,7 +196,6 @@ freedomApp.directive('autoComplete', function(safeApply) {
           })
           // custom display
           .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-
             return $( '<li>' )
               .append( '<a><div class="picture"><img src="' + item.picture_url + '"></div><div class="name">' + item.label + '</div></a>' )
               .appendTo( ul );

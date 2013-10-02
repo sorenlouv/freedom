@@ -93,14 +93,15 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
     }
 
     // check if any permissions are missing and request them if needed. Then fetch data
-    getMissingPermissions(permissionsRequired, function(){
-      console.log("Query not cached. Fetching", query);
-      FB.api(query, function(response){
-        cachedResponses[query] = response;
-        successCallback(response);
-      });
-    }, errorCallback);
-
+    safeApply($rootScope, function(){
+      getMissingPermissions(permissionsRequired, function(){
+        console.log("Query not cached. Fetching", query);
+        FB.api(query, function(response){
+          cachedResponses[query] = response;
+          successCallback(response);
+        });
+      }, errorCallback);
+    });
   };
 
   // public methods
