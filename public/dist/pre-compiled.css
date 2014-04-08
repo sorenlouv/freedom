@@ -1,0 +1,113 @@
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+}
+.container {
+  text-align: center;
+}
+.header {
+  margin-bottom: 0;
+}
+.sub-header {
+  color: #666;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-weight: 200;
+  font-size: 1.45em;
+  margin-top: -5px;
+}
+@media only screen and (max-width: 320px) {
+  .sub-header {
+    font-size: 0.82em;
+    margin-top: -10px;
+  }
+}
+@media only screen and (max-width: 480px) and (min-width: 321px) {
+  .sub-header {
+    font-size: 1.1em;
+  }
+}
+.container .step-wizard {
+  margin: 60px 0;
+}
+.container .step-wizard li {
+  opacity: 0.2;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  user-select: none;
+}
+.container .step-wizard li.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.container .step-wizard li.active h3 span {
+  margin-top: 0;
+  color: #000;
+  border: 1px solid #666;
+  font-size: 25px;
+}
+.container .step-wizard li h3 {
+  height: 50px;
+  margin-bottom: 5px;
+}
+.container .step-wizard li h3 span {
+  margin-top: 15px;
+  color: #000;
+  border: 1px solid #666;
+  font-size: 15px;
+}
+.container .step-wizard li .button {
+  background-color: #428bca;
+  border: none;
+  border-radius: 3px;
+  height: 45px;
+  line-height: 45px;
+  padding: 0 15px;
+  margin-bottom: 0;
+}
+.container .step-wizard li .button:hover {
+  background-color: #3276b1;
+}
+.container .step-wizard li .content p {
+  color: #666;
+  font-size: 11px;
+}
+.container .step-wizard li .fb-like {
+  height: 45px;
+}
+.container .step-wizard li .fb-like img {
+  height: 40px;
+}
+section.pages {
+  display: block;
+}
+section.pages h2 {
+  text-align: left;
+  font-size: 1em;
+}
+section.pages .page-content {
+  font-size: 0.8em;
+  text-align: justify;
+}
+section.footer li {
+  text-align: center;
+}
+section.footer li a {
+  color: #666;
+  font-size: 0.8em;
+  text-decoration: none;
+  border-bottom: 2px solid #fff;
+  transition: color 0.5s ease-in-out, border-bottom 0.5s ease-in-out;
+}
+section.footer li a .symbol {
+  font-weight: bold;
+}
+section.footer li a:hover {
+  color: #333333;
+}
+section.footer li a.active {
+  border-bottom: 2px solid #444;
+  color: #333;
+}
+.ng-cloak,
+.x-ng-cloak {
+  display: none;
+}

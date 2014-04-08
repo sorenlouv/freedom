@@ -1,0 +1,13 @@
+{
+  "unused": false,
+  "quotmark": false,
+  "es3": true,
+  "debug": true,
+  "globals": {
+    "freedomApp": true,
+    "console": true,
+    "angular": true,
+    "FB": true,
+    "_gaq": true
+  }
+}

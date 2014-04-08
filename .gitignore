@@ -1,16 +1,10 @@
-# Compass Sass
-.sass-cache/
-
-# Mac
-.DS_Store
-
-# Config files
-laravel/app/config/facebook.php
-laravel/app/config/freedom.php
-laravel/app/config/database.php
-
-# Laravel
 /bootstrap/compiled.php
 /vendor
 composer.phar
 composer.lock
+.env.local.php
+.env.php
+.DS_Store
+Thumbs.db
+
+node_modules/
