@@ -23,8 +23,9 @@ section.footer ul {
   padding: 0;
 }
 section.footer li {
-  width: 130px;
   display: inline-block;
+  width: 30%;
+  max-width: 150px;
 }
 section.footer li a {
   border-bottom: 2px solid #fff;
