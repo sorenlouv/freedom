@@ -1,4 +1,4 @@
-var freedomApp = angular.module('freedomApp', ['ngRoute', 'facebookDirective', 'safeApply', 'facebookService'])
+var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'facebookDirective', 'facebookService', 'safeApply'])
 
 .config(['$routeProvider', '$compileProvider', function($routeProvider, $compileProvider) {
   'use strict';
@@ -8,9 +8,12 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'facebookDirective', '
 
   $routeProvider.
     when('/home', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeCtrl'}).
+
+    //
     when('/what', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     when('/author', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/facebook', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     otherwise({redirectTo: '/home'});
 }]);

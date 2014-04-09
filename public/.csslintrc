@@ -1,4 +1,7 @@
 {
   "qualified-headings": false,
-  "compatible-vendor-prefixes": false
+  "compatible-vendor-prefixes": false,
+  "adjoining-classes": false,
+  "box-model": false,
+  "known-properties": false
 }

@@ -1,4 +1,4 @@
-freedomApp.controller("WizardController", function($scope, $rootScope, $http, facebookService) {
+freedomApp.controller("MainController", function($scope, $rootScope, $http, $location, facebookService) {
   'use strict';
 
   $scope.step = 1;

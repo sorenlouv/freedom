@@ -2,7 +2,7 @@
 *  Wrapper service to login to facebook (take care of promise stuff)
 */
 angular.module('facebookService', []).factory('facebookService', function($rootScope, safeApply) {
-
+  'use strict';
   $rootScope.facebookAuthenticated = false;
   var cachedResponses = {};
 
@@ -113,6 +113,7 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
 
 angular.module('facebookDirective', [])
 .directive('facebook', function(safeApply) {
+  'use strict';
   return {
     restrict: 'E',
     // scope: true,

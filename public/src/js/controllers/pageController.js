@@ -1,9 +1,8 @@
-freedomApp.controller("pageCtrl", function($scope, $http, $location, safeApply) {
+freedomApp.controller("pageCtrl", function($scope, $rootScope, $http, $location) {
   'use strict';
   $http.get('/data/pages.json').success(function(data, status) {
     var currentPath = $location.path().substring(1);
-    safeApply($scope, function() {
-      $scope.data = data[currentPath];
-    });
+    $rootScope.currentPath = currentPath;
+    $scope.data = data[currentPath];
   });
 });

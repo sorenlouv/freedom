@@ -1,4 +1,5 @@
 freedomApp.controller("footerCtrl", function ($scope, $location) {
+  'use strict';
   $scope.isActive = function(path) {
     return $location.path().substr(1) === path;
   };
@@ -18,10 +19,5 @@ freedomApp.controller("footerCtrl", function ($scope, $location) {
       "label": "Author",
       "symbol": "@",
       "link": "author"
-    },
-    {
-      "label": "Facebook",
-      "symbol": "#",
-      "link": "facebook"
     }];
 });

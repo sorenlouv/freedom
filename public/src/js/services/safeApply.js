@@ -1,6 +1,7 @@
 angular.module('safeApply',[])
 
 .factory('safeApply', [function($rootScope) {
+    'use strict';
     return function($scope, fn) {
         var phase = $scope.$root.$$phase;
         if(phase == '$apply' || phase == '$digest') {

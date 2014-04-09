@@ -119,7 +119,7 @@ module.exports = function(grunt) {
 
       // Live reload on change (no tasks)
       templates: {
-        files: ['src/templates/**/*.html', 'index.html']
+        files: ['templates/**/*.html', 'index.html']
       }
     }
   });

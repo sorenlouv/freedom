@@ -1,4 +1,4 @@
-var freedomApp = angular.module('freedomApp', ['ngRoute', 'facebookDirective', 'safeApply', 'facebookService'])
+var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'facebookDirective', 'facebookService', 'safeApply'])
 
 .config(['$routeProvider', '$compileProvider', function($routeProvider, $compileProvider) {
   'use strict';
@@ -8,14 +8,18 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'facebookDirective', '
 
   $routeProvider.
     when('/home', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeCtrl'}).
+
+    //
     when('/what', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     when('/author', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/facebook', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
     otherwise({redirectTo: '/home'});
 }]);
 
 freedomApp.controller("footerCtrl", function ($scope, $location) {
+  'use strict';
   $scope.isActive = function(path) {
     return $location.path().substr(1) === path;
   };
@@ -35,24 +39,10 @@ freedomApp.controller("footerCtrl", function ($scope, $location) {
       "label": "Author",
       "symbol": "@",
       "link": "author"
-    },
-    {
-      "label": "Facebook",
-      "symbol": "#",
-      "link": "facebook"
     }];
 });
-freedomApp.controller("pageCtrl", function($scope, $http, $location, safeApply) {
-  'use strict';
-  $http.get('/data/pages.json').success(function(data, status) {
-    var currentPath = $location.path().substring(1);
-    safeApply($scope, function() {
-      $scope.data = data[currentPath];
-    });
-  });
-});
 
-freedomApp.controller("WizardController", function($scope, $rootScope, $http, facebookService) {
+freedomApp.controller("MainController", function($scope, $rootScope, $http, $location, facebookService) {
   'use strict';
 
   $scope.step = 1;
@@ -117,11 +107,20 @@ freedomApp.controller("WizardController", function($scope, $rootScope, $http, fa
 
 }); // end of WizardController
 
+freedomApp.controller("pageCtrl", function($scope, $rootScope, $http, $location) {
+  'use strict';
+  $http.get('/data/pages.json').success(function(data, status) {
+    var currentPath = $location.path().substring(1);
+    $rootScope.currentPath = currentPath;
+    $scope.data = data[currentPath];
+  });
+});
+
 /**
 *  Wrapper service to login to facebook (take care of promise stuff)
 */
 angular.module('facebookService', []).factory('facebookService', function($rootScope, safeApply) {
-
+  'use strict';
   $rootScope.facebookAuthenticated = false;
   var cachedResponses = {};
 
@@ -232,6 +231,7 @@ angular.module('facebookService', []).factory('facebookService', function($rootS
 
 angular.module('facebookDirective', [])
 .directive('facebook', function(safeApply) {
+  'use strict';
   return {
     restrict: 'E',
     // scope: true,
@@ -305,9 +305,11 @@ angular.module('facebookDirective', [])
 
   };
 });
+
 angular.module('safeApply',[])
 
 .factory('safeApply', [function($rootScope) {
+    'use strict';
     return function($scope, fn) {
         var phase = $scope.$root.$$phase;
         if(phase == '$apply' || phase == '$digest') {

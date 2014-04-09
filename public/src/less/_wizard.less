@@ -1,0 +1,67 @@
+@import "_mixins.less";
+
+.step-wizard {
+  margin: 60px 0;
+  text-align: center;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    justify-content: center;
+    display: flex;
+    @media only screen and (max-width: 800px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    li {
+      flex: 1;
+
+      opacity: 0.2;
+      transition: opacity .5s ease-in-out;
+      pointer-events: none;
+      user-select: none;
+      max-width: 350px;
+
+      // active: visible
+      &.active {
+        opacity: 1;
+        pointer-events: auto;
+
+        h3 {
+          span {
+            margin-top: 0;
+            .circle(50px);
+            color: #000;
+            font-size: 25px;
+          }
+        }
+      }
+
+      h3 {
+        margin-bottom: 5px;
+        height: 50px;
+        span {
+          margin-top: 15px;
+          .circle(30px);
+          color: #000;
+          font-size: 15px;
+        }
+      }
+
+      // text below buttons
+      .content p {
+        color: #666;
+        font-size: 12px;
+      }
+
+      // like button in step 3
+      .fb-like {
+        height: 45px;
+        img {
+          height: 40px;
+        }
+      }
+    }
+  }
+}

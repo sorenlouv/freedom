@@ -29,28 +29,44 @@
   </head>
   <body>
 
-    <!-- Container -->
-    <div class="main">
-      <h1 class="header"><a href="#/home"><img src="img/freedom-logo-blue.png" alt="Freedom Calendar"></a></h1>
-      <h3 class="sub-header">Sync and weed out unanswered Facebook events</h3>
+    <div class="page-wrap" ng-controller="MainController">
+
+      <!-- Header -->
+      <div class="header">
+        <h1 class="header-logo">
+          <a href="#/home"><img src="img/freedom-logo-blue.png" alt="Freedom Calendar"></a>
+        </h1>
+        <h3 class="header-text">Sync and weed out unanswered Facebook events</h3>
+      </div>
+
+      <!-- Wizard -->
+      <div class="step-wizard">
+        <div ng-if="currentPath!='renew'" ng-include="'templates/signup.html'"></div>
+        <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
+        <img class="spinner" src="img/spinner.gif" ng-show="loading">
+      </div>
+
+      <!-- Router pages -->
       <section ng-view class="pages"></section>
-      <facebook data-app-id='408564152572106'></facebook>
-      <div id="root_footer"></div>
-    </div> <!-- End of container -->
+
+    </div>
 
     <!-- Menu -->
     <section class="footer ng-cloak" ng-controller="footerCtrl">
-      <div>
-        <div>
-          <li ng-repeat="item in menuItems"><a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}"><span class="symbol">{{item.symbol}}</span>{{item.label}}</a></li>
-        </div>
-      </div>
+      <ul>
+        <li ng-repeat="item in menuItems">
+          <a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}">
+            <span class="symbol" ng-bind="item.symbol"></span>{{item.label}}
+          </a>
+        </li>
+      </ul>
     </section>
+
+    <facebook data-app-id='408564152572106'></facebook>
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
     <script src="/dist/freedom.js"></script>
-
   </body>
 </html>

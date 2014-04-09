@@ -1,4 +1,2 @@
-<div ng-include="" src=" 'templates/wizard.html' "></div>
-
-<h2>{{data.title}}</h2>
-<div class="page-content" ng-bind-html-unsafe="data.content"></div>
+<h2 ng-bind="data.title"></h2>
+<div class="page-content" ng-bind-html="data.content"></div>

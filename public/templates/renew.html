@@ -1,0 +1,17 @@
+<ul class="">
+  <li class="step" ng-class="{active: step == '1'}">
+    <h3><span>1</span></h3>
+    <div class="content">
+      <a href ng-click="connectWithFacebook()" class="button">Re-connect to Facebook</a>
+      <p>I won't post anything to your wall</p>
+    </div>
+    <div class="alert-box secondary" ng-show="errorMessage">{{errorMessage}}</div>
+  </li>
+  <li class="step" ng-class="{active: step == '2'}">
+    <h3><span>2</span></h3>
+    <div class="content">
+      <div class="fb-like"><img src="img/fb_like.png" alt="Success!"></div>
+      <p>Well done! Your events will be back within 24 hours.</p>
+    </div>
+  </li>
+</ul> <!-- End of step wizard -->
