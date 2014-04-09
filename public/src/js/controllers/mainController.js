@@ -1,5 +1,10 @@
-freedomApp.controller("MainController", function($scope, $rootScope, $http, $location, facebookService) {
+freedomApp.controller("MainController", function($scope, $http, $location, facebookService) {
   'use strict';
+
+  // Liste for route changes
+  $scope.$on('$routeChangeSuccess', function(next, current) {
+    $scope.currentPath = $location.path().substring(1);
+  });
 
   $scope.step = 1;
 

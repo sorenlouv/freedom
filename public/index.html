@@ -41,7 +41,7 @@
 
       <!-- Wizard -->
       <div class="step-wizard">
-        <div ng-if="currentPath!='renew'" ng-include="'templates/signup.html'"></div>
+        <div ng-if="currentPath!='renew' && currentPath!='customize'" ng-include="'templates/signup.html'"></div>
         <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
         <img class="spinner" src="img/spinner.gif" ng-show="loading">
       </div>

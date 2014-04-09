@@ -18,11 +18,11 @@ class UserController extends BaseController {
     }
 
     // update
-    $user->attending_events = $_POST["attending_events"];
-    $user->maybe_attending_events = $_POST["maybe_attending_events"];
-    $user->declined_events = $_POST["declined_events"];
-    $user->not_replied_events = $_POST["not_replied_events"];
-    $user->birthday_events = $_POST["birthday_events"];
+    $user->attending = Input::get('attending');
+    $user->maybe = Input::get('maybe');
+    $user->declined = Input::get('declined');
+    $user->not_replied = Input::get('not_replied');
+    // $user->birthday_events = $_REQUEST["birthday"];
 
     // save
     $user->save();

@@ -83,8 +83,8 @@ class FeedController extends BaseController
   private function get_calendar_body()
   {
     list($events, $failed) = $this->get_events();
-    print_r($events);
-    exit();
+    // print_r($events);
+    // exit();
 
     if ($failed) {
       return $this->get_instructional_body();

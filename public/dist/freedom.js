@@ -18,6 +18,21 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'faceboo
     otherwise({redirectTo: '/home'});
 }]);
 
+freedomApp.controller("customizeCtrl", function ($scope, $http) {
+  'use strict';
+
+  $http.get('/users/settings').success(function(data, status) {
+    $scope.settings = data;
+  });
+
+  $scope.saveSettings = function(){
+    $http.post('/users/settings', $scope.settings).success(function(data, status) {
+      console.log("saved");
+    });
+  };
+
+});
+
 freedomApp.controller("footerCtrl", function ($scope, $location) {
   'use strict';
   $scope.isActive = function(path) {
@@ -42,8 +57,13 @@ freedomApp.controller("footerCtrl", function ($scope, $location) {
     }];
 });
 
-freedomApp.controller("MainController", function($scope, $rootScope, $http, $location, facebookService) {
+freedomApp.controller("MainController", function($scope, $http, $location, facebookService) {
   'use strict';
+
+  // Liste for route changes
+  $scope.$on('$routeChangeSuccess', function(next, current) {
+    $scope.currentPath = $location.path().substring(1);
+  });
 
   $scope.step = 1;
 
@@ -109,9 +129,9 @@ freedomApp.controller("MainController", function($scope, $rootScope, $http, $loc
 
 freedomApp.controller("pageCtrl", function($scope, $rootScope, $http, $location) {
   'use strict';
+  var currentPath = $location.path().substring(1);
+
   $http.get('/data/pages.json').success(function(data, status) {
-    var currentPath = $location.path().substring(1);
-    $rootScope.currentPath = currentPath;
     $scope.data = data[currentPath];
   });
 });

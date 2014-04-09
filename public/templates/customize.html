@@ -1,0 +1,9 @@
+<p>Select the events you want to see in your calendar:</p>
+<form ng-submit="saveSettings()">
+  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.attending"> Attending
+  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.maybe"> Maybe attending
+  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.declined"> Declined
+  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.not_replied"> Not replied
+
+  <button type="submit">Save</button>
+</form>
