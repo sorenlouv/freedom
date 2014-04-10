@@ -5,8 +5,18 @@ use UnitedPrototype\GoogleAnalytics\Session as GASession;
 use UnitedPrototype\GoogleAnalytics\Event as GAEvent;
 use UnitedPrototype\GoogleAnalytics\Tracker as GATracker;
 
+// Set UTC time as default timezone
+date_default_timezone_set ( "UTC" );
+
 class FeedController extends BaseController
 {
+
+  /*
+   * Get events as JSON (for preview on website)
+   ************************************/
+  public function getPreview(){
+    return $this->get_events()[0];
+  }
 
   /*
    * Download or fetch Facebook feed
@@ -295,31 +305,22 @@ class FeedController extends BaseController
    ************************************/
   private function get_event_dt($event)
   {
-    // all day event without time and end
-    if ($event["is_date_only"]) {
-      $start_time = $this->date_string_to_time($event['start_time']);
-      $end_time = $this->date_string_to_time($event['start_time'], "+1 day");
-      $time_type = "VALUE=DATE";
+    $original_timezone = isset($event["timezone"]) ? $event["timezone"]: 'UTC';
+    $is_date_only = $event["is_date_only"];
+    $time_type = $is_date_only ? "VALUE=DATE" : "VALUE=DATE-TIME";
+    $start_time = $event['start_time'];
 
-      // specific time
-    } else {
-      $time_type = "VALUE=DATE-TIME";
-
-      // without end (set end as 3 hours after start)
-      if (!isset($event['end_time'])) {
-        $start_time = $this->date_string_to_time($event['start_time']);
-        $end_time = $this->date_string_to_time($event['start_time'], "+3 hours");
-
-        // specific start and end time
-      } else {
-        $start_time = $this->date_string_to_time($event['start_time']);
-        $end_time = $this->date_string_to_time($event['end_time']);
-      }
+    // If there is no endtime, use tomorrow midnight as end
+    $original_timezone_object = new DateTimeZone($original_timezone);
+    if(isset($event['end_time'])){
+      $end_time = new DateTime($event['end_time'], $original_timezone_object);
+    }else{
+      $end_time = (new DateTime($event['start_time'], $original_timezone_object))->modify('tomorrow');
     }
 
     return array(
-      "start" => $time_type . ":" . $start_time,
-      "end" => $time_type . ":" . $end_time
+      "start" => $time_type . ":" . $this->get_formatted_date($start_time, $original_timezone, $is_date_only),
+      "end" => $time_type . ":" . $this->get_formatted_date($end_time, $original_timezone, $is_date_only)
     );
   }
 
@@ -363,7 +364,7 @@ class FeedController extends BaseController
     foreach ($events as $event) {
 
       // updated time
-      $updated_time = $this->date_string_to_time($event['updated_time']);
+      $updated_time = $this->get_formatted_date($event['updated_time']);
 
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time . "\r\n";
@@ -373,7 +374,7 @@ class FeedController extends BaseController
 
       // Owner
       $owner = isset($event["owner"]["name"]) ? $event["owner"]["name"] : "Freedom Calendar";
-      $body .= "ORGANIZER;CN=" . $this->ical_encode_text($owner) . ":MAILTO:noreply@facebookmail.com\r\n";
+      $body .= "ORGANIZER;CN=" . $this->ical_encode_text($owner, ["quotes"]) . ":MAILTO:noreply@facebookmail.com\r\n";
 
       // Datetime start/end
       $event_dt = $this->get_event_dt($event);
@@ -416,14 +417,19 @@ class FeedController extends BaseController
    ************************************/
   private function get_instructional_body()
   {
+
+    $today_date = $this->get_formatted_date(new DateTime());
+    $tomorrow_date = $this->get_formatted_date((new DateTime())->modify('+24 hours'));
+    $tomorrow_later_date = $this->get_formatted_date((new DateTime())->modify('+27 hours'));
+
     $event = "";
     $event .= "BEGIN:VEVENT\r\n";
-    $event .= "DTSTAMP:" . $this->date_string_to_time() . "\r\n";
-    $event .= "LAST-MODIFIED:" . $this->date_string_to_time() . "\r\n";
-    $event .= "CREATED:" . $this->date_string_to_time() . "\r\n";
+    $event .= "DTSTAMP:" . $today_date . "\r\n";
+    $event .= "LAST-MODIFIED:" . $today_date . "\r\n";
+    $event .= "CREATED:" . $today_date . "\r\n";
     $event .= "SEQUENCE:0\r\n";
-    $event .= "DTSTART;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+24 hours") . "\r\n";
-    $event .= "DTEND;VALUE=DATE-TIME:" . $this->date_string_to_time(null, "+27 hours") . "\r\n";
+    $event .= "DTSTART;VALUE=DATE-TIME:" . $tomorrow_date . "\r\n";
+    $event .= "DTEND;VALUE=DATE-TIME:" . $tomorrow_later_date . "\r\n";
     $event .= "URL:http://freedom.konscript.com\r\n";
     $event .= "SUMMARY:Login expired - go to freedom.konscript.com/renew\r\n";
     $event .= "DESCRIPTION:" . $this->ical_encode_text("Sorry for the inconvenience! Facebook has logged you out, therefore your Facebook events could not be loaded. Please login again here:\n\nhttp://freedom.konscript.com/renew\n\nNote: It can take several hours for your Facebook events to re-appear in your calendar") . "\r\n";
@@ -439,7 +445,7 @@ class FeedController extends BaseController
    * Splitting iCal content into multiple lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
    * Return String $value
    ************************************/
-  private function ical_encode_text($value)
+  private function ical_encode_text($value, $additional_escaping = array())
   {
     $value = trim($value);
 
@@ -455,6 +461,13 @@ class FeedController extends BaseController
     // escape commas
     $value = str_replace(',', '\\,', $value);
 
+    // escape quotes
+    // escaping double quotes in property parameter values
+    // http://www.ietf.org/rfc/rfc2445.txt 4.2
+    if(in_array("quotes", $additional_escaping)){
+      $value = str_replace('"', '\'', $value);
+    }
+
     // insert actual linebreak
     $value = wordwrap($value, 50, " \r\n ");
 
@@ -463,26 +476,25 @@ class FeedController extends BaseController
 
   /*
    * Convert timestamp from FB format to iCalendar format
+   * Facebook format (ISO-8601): http://www.cl.cam.ac.uk/~mgk25/iso-time.html
+   * iCalendar (ISO 8601) http://www.kanzaki.com/docs/ical/dateTime.html
    * Return Date $date
    ************************************/
-  private function date_string_to_time($date_string = null, $offset = "")
-  {
-    $date_obj = new DateTime($date_string);
+  private function get_formatted_date($date, $original_timezone = "UTC", $is_date_only = false){
+    $date_obj = ($date instanceof DateTime) ? $date : new DateTime($date, new DateTimeZone($original_timezone));
 
     // date without time
-    if (strlen($date_string) === 10) {
-      $facebook_format = 'Y-m-d';
+    if ($is_date_only) {
       $icalendar_format = 'Ymd';
-      $timestamp = strtotime($date_obj->format($facebook_format) . $offset);
 
-      // date with time
+    // date with time
     } else {
-      $facebook_format = 'Y-m-d H:i:s';
       $icalendar_format = 'Ymd\THis\Z';
-      $timestamp = strtotime($date_obj->format($facebook_format) . $offset) - $date_obj->format('Z');
+      $utc_timezone = new DateTimeZone('UTC');
+      $date_obj->setTimezone($utc_timezone);
     }
 
-    $date = date($icalendar_format, $timestamp);
+    $date = $date_obj->format($icalendar_format);
 
     return $date;
   }

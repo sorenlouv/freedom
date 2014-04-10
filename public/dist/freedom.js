@@ -7,33 +7,39 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'faceboo
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|webcal):/);
 
   $routeProvider.
-    when('/home', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeCtrl'}).
+    when('/home', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeController'}).
+    when('/preview', {templateUrl: 'templates/preview.html', controller: 'previewController'}).
 
     //
-    when('/what', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/author', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/what', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/author', {templateUrl: 'templates/page.html', controller: 'pageController'}).
     otherwise({redirectTo: '/home'});
 }]);
 
-freedomApp.controller("customizeCtrl", function ($scope, $http) {
+freedomApp.controller("customizeController", function ($scope, $http) {
   'use strict';
 
-  $http.get('/users/settings').success(function(data, status) {
+  $scope.isLoadingSettings = true;
+
+  $http.get('/users/settings/').success(function(data, status) {
     $scope.settings = data;
+    $scope.isLoadingSettings = false;
   });
 
   $scope.saveSettings = function(){
+    $scope.isLoadingSaveSettings = true;
     $http.post('/users/settings', $scope.settings).success(function(data, status) {
+      $scope.isLoadingSaveSettings = false;
       console.log("saved");
     });
   };
 
 });
 
-freedomApp.controller("footerCtrl", function ($scope, $location) {
+freedomApp.controller("footerController", function ($scope, $location) {
   'use strict';
   $scope.isActive = function(path) {
     return $location.path().substr(1) === path;
@@ -75,7 +81,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
   $scope.connectWithFacebook = function() {
     // remove all alerts
     $scope.errorMessage = "";
-    $scope.loading = true;
+    $scope.isLoading = true;
 
     // get token with access to user_events and user_groups
     facebookService.login(['user_events', 'user_groups', 'user_friends', 'read_friendlists'], function() {
@@ -101,7 +107,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
 
         // next step
         $scope.step = 2;
-        $scope.loading = false;
+        $scope.isLoading = false;
       });
 
       // unsuccessful login
@@ -110,7 +116,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
 
       $scope.$apply(function() {
         $scope.errorMessage = "Facebook connect failed";
-        $scope.loading = false;
+        $scope.isLoading = false;
       });
     });
   }; // End of connectWithFacebook function
@@ -127,12 +133,22 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
 
 }); // end of WizardController
 
-freedomApp.controller("pageCtrl", function($scope, $rootScope, $http, $location) {
+freedomApp.controller("pageController", function($scope, $rootScope, $http, $location) {
   'use strict';
   var currentPath = $location.path().substring(1);
 
   $http.get('/data/pages.json').success(function(data, status) {
     $scope.data = data[currentPath];
+  });
+});
+
+freedomApp.controller("previewController", function ($scope, $http) {
+  'use strict';
+  $scope.isLoading = true;
+
+  $http.get('/feeds/preview/').success(function(data, status) {
+    $scope.events = data;
+    $scope.isLoading = false;
   });
 });
 

@@ -1,4 +1,4 @@
-freedomApp.controller("footerCtrl", function ($scope, $location) {
+freedomApp.controller("footerController", function ($scope, $location) {
   'use strict';
   $scope.isActive = function(path) {
     return $location.path().substr(1) === path;

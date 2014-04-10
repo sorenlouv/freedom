@@ -1,4 +1,4 @@
-freedomApp.controller("pageCtrl", function($scope, $rootScope, $http, $location) {
+freedomApp.controller("pageController", function($scope, $rootScope, $http, $location) {
   'use strict';
   var currentPath = $location.path().substring(1);
 

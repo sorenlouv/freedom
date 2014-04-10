@@ -7,13 +7,14 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'faceboo
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|webcal):/);
 
   $routeProvider.
-    when('/home', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeCtrl'}).
+    when('/home', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/renew', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/customize', {templateUrl: 'templates/customize.html', controller: 'customizeController'}).
+    when('/preview', {templateUrl: 'templates/preview.html', controller: 'previewController'}).
 
     //
-    when('/what', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
-    when('/author', {templateUrl: 'templates/page.html', controller: 'pageCtrl'}).
+    when('/what', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/privacy', {templateUrl: 'templates/page.html', controller: 'pageController'}).
+    when('/author', {templateUrl: 'templates/page.html', controller: 'pageController'}).
     otherwise({redirectTo: '/home'});
 }]);

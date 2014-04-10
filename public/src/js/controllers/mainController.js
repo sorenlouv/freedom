@@ -16,7 +16,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
   $scope.connectWithFacebook = function() {
     // remove all alerts
     $scope.errorMessage = "";
-    $scope.loading = true;
+    $scope.isLoading = true;
 
     // get token with access to user_events and user_groups
     facebookService.login(['user_events', 'user_groups', 'user_friends', 'read_friendlists'], function() {
@@ -42,7 +42,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
 
         // next step
         $scope.step = 2;
-        $scope.loading = false;
+        $scope.isLoading = false;
       });
 
       // unsuccessful login
@@ -51,7 +51,7 @@ freedomApp.controller("MainController", function($scope, $http, $location, faceb
 
       $scope.$apply(function() {
         $scope.errorMessage = "Facebook connect failed";
-        $scope.loading = false;
+        $scope.isLoading = false;
       });
     });
   }; // End of connectWithFacebook function

@@ -41,9 +41,9 @@
 
       <!-- Wizard -->
       <div class="step-wizard">
-        <div ng-if="currentPath!='renew' && currentPath!='customize'" ng-include="'templates/signup.html'"></div>
+        <div ng-if="currentPath!='renew' && currentPath!='customize' && currentPath!='preview'" ng-include="'templates/signup.html'"></div>
         <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
-        <img class="spinner" src="img/spinner.gif" ng-show="loading">
+        <div class="spinner" ng-show="isLoading"></div>
       </div>
 
       <!-- Router pages -->
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Menu -->
-    <section class="footer ng-cloak" ng-controller="footerCtrl">
+    <section class="footer ng-cloak" ng-controller="footerController">
       <ul>
         <li ng-repeat="item in menuItems">
           <a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}">

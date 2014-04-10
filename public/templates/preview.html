@@ -1,0 +1,6 @@
+<div ng-repeat="event in events">
+  <div ng-bind="event.name"></div>
+  <div ng-bind="event.start_time"></div>
+</div>
+
+<div class="spinner" ng-show="isLoading"></div>
