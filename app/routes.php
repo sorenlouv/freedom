@@ -18,4 +18,8 @@ Route::get('/', function()
 
 Route::controller('users', 'UserController');
 Route::controller('feeds', 'FeedController');
+
+Route::get("renew", function(){
+  return Redirect::to('/#/renew');
+});
 Route::get("feed.ics", "FeedController@getDownloadFeed");

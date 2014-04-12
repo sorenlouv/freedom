@@ -180,7 +180,7 @@ class FeedController extends BaseController
 
     // prepare batch response
     $events = array();
-    if ($user["attending"]) {
+    if ($user["attending"] && !$failed) {
       $attending_events = json_decode($batch_response[$event_index["attending"]]["body"], true);
       if (isset($attending_events["data"])) {
         $attending_events = $attending_events["data"];
@@ -191,7 +191,7 @@ class FeedController extends BaseController
       }
     }
 
-    if ($user["maybe"]) {
+    if ($user["maybe"] && !$failed) {
       $maybe_events = json_decode($batch_response[$event_index["maybe"]]["body"], true);
       if (isset($maybe_events["data"])) {
         $maybe_events = $maybe_events["data"];
@@ -202,7 +202,7 @@ class FeedController extends BaseController
       }
     }
 
-    if ($user["declined"]) {
+    if ($user["declined"] && !$failed) {
       $declined_events = json_decode($batch_response[$event_index["declined"]]["body"], true);
       if (isset($declined_events["data"])) {
         $declined_events = $declined_events["data"];
@@ -213,7 +213,7 @@ class FeedController extends BaseController
       }
     }
 
-    if ($user["not_replied"]) {
+    if ($user["not_replied"] && !$failed) {
       $not_replied_events = json_decode($batch_response[$event_index["not_replied"]]["body"], true);
       if (isset($not_replied_events["data"])) {
         $not_replied_events = $not_replied_events["data"];
@@ -224,7 +224,7 @@ class FeedController extends BaseController
       }
     }
 
-    // if (in_array("birthday", $this->event_types)) {
+    // if (in_array("birthday", $this->event_types) && !$failed) {
     //   $birthday_events = json_decode($batch_response[$event_index["birthday"]]["body"], true);
     //   $birthday_events = $birthday_events["data"];
 

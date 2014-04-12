@@ -4,18 +4,23 @@ class UserController extends BaseController {
 
   public function getSettings(){
     $user_id = $this->facebook->getUser();
+
+    if(!$user_id || $user_id === 0){
+      App::abort(401, 'You are not authorized.');
+    }
+
     $user = User::find($user_id);
     return $user;
   }
 
   public function postFeedSettings(){
     $user_id = $this->facebook->getUser();
-    $user = User::find($user_id);
 
-    if(!$user){
-      echo "User not found";
-      exit();
+    if(!$user_id || $user_id === 0){
+      App::abort(401, 'You are not authorized.');
     }
+
+    $user = User::find($user_id);
 
     // update
     $user->attending = Input::get('attending');
@@ -39,6 +44,10 @@ class UserController extends BaseController {
     $access_token_short = $this->facebook->getAccessToken();
     $user_id = $this->facebook->getUser();
 
+    if(!$user_id || $user_id === 0){
+      App::abort(401, 'You are not authorized.');
+    }
+
     // extend access token
     $access_token = $this->extend_access_token($access_token_short);
 
@@ -52,11 +61,13 @@ class UserController extends BaseController {
     if(!$user){
       $user = new User;
       $user->id = $user_id;
-      $user->secure_hash = $secure_hash;
     }
 
     // set/update access token
     $user->access_token = $access_token;
+
+    // set/update secure hash
+    $user->secure_hash = $secure_hash;
 
     // save
     $user->save();
