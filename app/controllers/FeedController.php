@@ -25,8 +25,8 @@ class FeedController extends BaseController
   {
 
     // headers
-    // header('Content-type: text/calendar;charset=utf-8');
-    // header('Content-Disposition: attachment; filename=feed.ics');
+    header('Content-type: text/calendar;charset=utf-8');
+    header('Content-Disposition: attachment; filename=feed.ics');
 
     // arguments
     $user_id = isset($_GET["user_id"]) ? $_GET["user_id"] : null;
