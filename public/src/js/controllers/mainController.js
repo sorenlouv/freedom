@@ -67,8 +67,12 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
 
   // Listen for route changes
   $scope.$on('$routeChangeSuccess', function(next, current) {
+    // Set current path
     $scope.currentPath = $location.path().substring(1);
-     $window._gaq.push(['_trackPageview', $location.path()]);
+
+    // Track analytics on route change
+    $window._gaq.push(['_trackPageview', $location.path()]);
+
   });
 
   $scope.isAndroid = function() {

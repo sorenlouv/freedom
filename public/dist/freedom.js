@@ -19,11 +19,17 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'faceboo
     otherwise({redirectTo: '/home'});
 }]);
 
-freedomApp.controller('customizeController', function ($scope, $http, $timeout) {
+freedomApp.controller('customizeController', function ($scope, $http, $timeout, $location, facebook) {
   'use strict';
 
   $scope.isLoadingSettings = false;
   $scope.isLoadingEvents = false;
+
+  facebook.ready.then(function(auth){
+    if(auth.status !== 'connected'){
+      $location.path( '/home' );
+    }
+  });
 
   // Get settings
   var getSettings = function(){
@@ -136,8 +142,12 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
 
   // Listen for route changes
   $scope.$on('$routeChangeSuccess', function(next, current) {
+    // Set current path
     $scope.currentPath = $location.path().substring(1);
-     $window._gaq.push(['_trackPageview', $location.path()]);
+
+    // Track analytics on route change
+    $window._gaq.push(['_trackPageview', $location.path()]);
+
   });
 
   $scope.isAndroid = function() {
@@ -313,6 +323,8 @@ freedomApp.directive('spinner', [function() {
 freedomApp.factory('facebook', ['$q', '$rootScope', function($q, $rootScope) {
     'use strict';
     var deferred = $q.defer();
+
+    console.log('Hey');
 
     var facebook  = {};
     facebook.ready = deferred.promise;
