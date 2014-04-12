@@ -10,6 +10,8 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout) 
     $http.get('/users/settings/').success(function(data, status) {
       $scope.settings = data;
       $scope.isLoadingSettings = false;
+
+      $scope.calendarFeedUrl = 'webcal://freedom.konscript.com/feed.ics?user_id=' + data.id + '&secure_hash=' + data.secure_hash + '&dummy=' + Math.floor(Math.random() * 1000);
     });
   };
   getSettings();

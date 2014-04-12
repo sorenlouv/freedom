@@ -1,12 +1,21 @@
-<p>Select the events you want to see in your calendar:</p>
-<form ng-show="!isLoadingSettings" class="customize-form">
-  <label for="attending"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="attending" ng-model="settings.attending"> Attending</label>
-  <label for="maybe"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="maybe" ng-model="settings.maybe"> Maybe attending</label>
-  <label for="declined"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="declined" ng-model="settings.declined"> Declined</label>
-  <label for="not_replied"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="not_replied" ng-model="settings.not_replied"> Not replied</label>
-</form>
+
+<div>
+  <p class="header">Select the events you want to see in your calendar</p>
+  <form ng-show="!isLoadingSettings" class="customize-form">
+    <label for="attending"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="attending" ng-model="settings.attending"> Attending</label>
+    <label for="maybe"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="maybe" ng-model="settings.maybe"> Maybe attending</label>
+    <label for="declined"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="declined" ng-model="settings.declined"> Declined</label>
+    <label for="not_replied"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="not_replied" ng-model="settings.not_replied"> Not replied</label>
+  </form>
+</div>
+
+<div class="feed-url">
+  <p class="header">Calendar feed URL</p>
+  <input type="text" ng-model="calendarFeedUrl">
+</div>
 
 <div class="preview">
+  <p class="header">Calendar preview</p>
   <div ng-repeat="event in events">
     <div class="event">
       <div class="date small-text" ng-bind="event.start_time | date:'EEEE, MMMM d, y'" ng-hide="isEventDateIdenticalToPreviousEventDate($index)"></div>

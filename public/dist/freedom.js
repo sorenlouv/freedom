@@ -31,6 +31,8 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout) 
     $http.get('/users/settings/').success(function(data, status) {
       $scope.settings = data;
       $scope.isLoadingSettings = false;
+
+      $scope.calendarFeedUrl = 'webcal://freedom.konscript.com/feed.ics?user_id=' + data.id + '&secure_hash=' + data.secure_hash + '&dummy=' + Math.floor(Math.random() * 1000);
     });
   };
   getSettings();
@@ -208,16 +210,6 @@ freedomApp.controller('pageController', function($scope, $rootScope, $http, $loc
 
   $http.get('/data/pages.json').success(function(data, status) {
     $scope.data = data[currentPath];
-  });
-});
-
-freedomApp.controller('previewController', function ($scope, $http) {
-  'use strict';
-  $scope.isLoading = true;
-
-  $http.get('/feeds/preview/').success(function(data, status) {
-    $scope.events = data;
-    $scope.isLoading = false;
   });
 });
 
