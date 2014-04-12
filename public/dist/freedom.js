@@ -126,6 +126,17 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
     });
   };
 
+  // Set user information to help answer bug reports
+  var setUserVoiceIdentity = function(){
+    FB.api('/me', function(user){
+      $window.UserVoice.push(['identify', {
+        name: user.first_name + ' ' + user.last_name,
+        facebook_id: user.id,
+        gender: user.gender
+      }]);
+    });
+  };
+
 
   // Default values
   $scope.step = 1;
@@ -137,6 +148,7 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
   facebook.ready.then(function(auth){
     if(auth.status === 'connected'){
       $scope.userLoggedIn = true;
+      setUserVoiceIdentity();
     }
   });
 
@@ -323,8 +335,6 @@ freedomApp.directive('spinner', [function() {
 freedomApp.factory('facebook', ['$q', '$rootScope', function($q, $rootScope) {
     'use strict';
     var deferred = $q.defer();
-
-    console.log('Hey');
 
     var facebook  = {};
     facebook.ready = deferred.promise;

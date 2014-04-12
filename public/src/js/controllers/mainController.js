@@ -51,6 +51,17 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
     });
   };
 
+  // Set user information to help answer bug reports
+  var setUserVoiceIdentity = function(){
+    FB.api('/me', function(user){
+      $window.UserVoice.push(['identify', {
+        name: user.first_name + ' ' + user.last_name,
+        facebook_id: user.id,
+        gender: user.gender
+      }]);
+    });
+  };
+
 
   // Default values
   $scope.step = 1;
@@ -62,6 +73,7 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
   facebook.ready.then(function(auth){
     if(auth.status === 'connected'){
       $scope.userLoggedIn = true;
+      setUserVoiceIdentity();
     }
   });
 
