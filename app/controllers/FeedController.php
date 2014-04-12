@@ -11,6 +11,24 @@ date_default_timezone_set ( "UTC" );
 class FeedController extends BaseController
 {
 
+  public function getLegacyHandlers(){
+    $function = Input::get('f', null);
+    $user_id = Input::get('user_id', null);
+    $secure_hash = Input::get('user_id', null);
+
+    if($function === "saveAccessToken"){
+      $request = Request::create('/users/save-access-token', 'POST');
+    }else if($function === "downloadFeed"){
+      $request = Request::create('/feeds/download-feed', 'GET', array(
+        "user_id" => $user_id,
+        "secure_hash" => $secure_hash
+      ));
+    }
+
+    return Route::dispatch($request)->getContent();
+  }
+
+
   /*
    * Get events as JSON (for preview on website)
    ************************************/
@@ -29,9 +47,9 @@ class FeedController extends BaseController
     header('Content-Disposition: attachment; filename=feed.ics');
 
     // arguments
-    $user_id = isset($_GET["user_id"]) ? $_GET["user_id"] : null;
-    $secure_hash = isset($_GET["secure_hash"]) ? $_GET["secure_hash"] : null;
-    $access_token = isset($_GET["access_token"]) ? $_GET["access_token"] : null;
+    $user_id = Input::get('user_id', null);
+    $secure_hash = Input::get('secure_hash', null);
+    $access_token = Input::get('access_token', null);
 
     // get user id by access token
     if (is_null($user_id) && isset($access_token)) {

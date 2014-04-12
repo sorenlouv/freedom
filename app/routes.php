@@ -19,6 +19,9 @@ Route::get('/', function()
 Route::controller('users', 'UserController');
 Route::controller('feeds', 'FeedController');
 
+Route::get("handlers.php", "FeedController@getLegacyHandlers");
+
+
 Route::get("renew", function(){
   return Redirect::to('/#/renew');
 });
