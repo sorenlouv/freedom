@@ -1,0 +1,14 @@
+{
+  "strict": true,
+  "unused": false,
+  "quotmark": "single",
+  "es3": true,
+  "debug": true,
+  "globals": {
+    "freedomApp": true,
+    "console": true,
+    "angular": true,
+    "FB": true,
+    "_gaq": true
+  }
+}

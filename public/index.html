@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html ng-app="freedomApp">
+  <head>
+    <title>Freedom - Remove unanswered Facebook events when syncing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png">
+    <link href="/dist/freedom.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up.">
+
+    <meta property="og:title" content="Freedom - Remove unanswered Facebook events from your calendar"/>
+    <meta property="og:url" content="http://freedom.konscript.com"/>
+    <meta property="og:image" content="http://freedom.konscript.com/img/freedom-logo-blue.png"/>
+    <meta property="og:site_name" content="Freedom"/>
+    <meta property="og:type" content="website"/>
+    <meta property="fb:app_id" content="408564152572106"/>
+    <meta property="og:description" content="Remove unwanted events when syncing with Facebook events. This service will filter your events, so only the events you are attending, or maybe attending will show up."/>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39209285-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body ng-controller="MainController" ng-class="'page-' + currentPath">
+
+    <div class="page-wrap">
+
+      <!-- Header -->
+      <div class="page-header">
+        <h1 class="header-logo">
+          <a href="#/home"><img src="img/freedom-logo-blue.png" alt="Freedom Calendar"></a>
+        </h1>
+        <h3 class="header-text">Sync and weed out unanswered Facebook events</h3>
+      </div>
+
+      <!-- Wizard -->
+      <div class="step-wizard">
+        <div ng-if="currentPath!='renew' && currentPath!='customize' && currentPath!='preview'" ng-include="'templates/signup.html'"></div>
+        <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
+        <div class="spinner" is-loading="isLoading"></div>
+      </div>
+
+      <!-- Router pages -->
+      <section ng-view class="pages"></section>
+
+    </div>
+
+    <!-- Menu -->
+    <section class="page-footer ng-cloak">
+      <ul>
+        <li ng-repeat="item in menuItems" ng-hide="item.requireLogIn && !userLoggedIn">
+          <a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}">
+            <span class="symbol" ng-bind="item.symbol"></span>{{item.label}}
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <facebook data-app-id='408564152572106'></facebook>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
+    <script src="/dist/freedom.js"></script>
+
+    <script>
+    // Include the UserVoice JavaScript SDK (only needed once on a page)
+    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/6WdqEE8RIIxm94xnTZhdAg.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+
+    // Set colors
+    UserVoice.push(['set', {
+      accent_color: '#448dd6',
+      trigger_color: 'white',
+      trigger_background_color: '#448dd6'
+    }]);
+
+    // Add default trigger to the bottom-right corner of the window:
+    UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'top-right' }]);
+
+    </script>
+  </body>
+</html>

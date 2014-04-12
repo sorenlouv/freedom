@@ -1,0 +1,85 @@
+@import "_footer.less";
+@import "_customize.less";
+@import "_step-wizard.less";
+
+// Directives
+@import "_spinner.less";
+
+body {
+  // font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+}
+
+a {
+  color: rgb(59, 89, 152);
+  text-decoration: none;
+}
+
+p {
+  text-rendering: optimizeLegibility;
+  font-family: Verdana;
+  line-height: 1.6;
+}
+
+.small-text {
+  font-size: 12px;
+}
+
+div, h3, p {
+  -webkit-font-smoothing: antialiased;
+}
+
+.button {
+  display: inline-block;
+  margin-bottom: 0;
+  padding: 0 15px;
+  height: 45px;
+  border: none;
+  border-radius: 3px;
+  background-color: #428bca;
+  line-height: 45px;
+  color: #ffffff;
+  font-weight: 600;
+
+  &:hover {
+    background-color: darken(#428bca, 8%);
+  }
+}
+
+.page-header {
+  text-align: center;
+  .header-logo{
+    margin-top: 0;
+    img {
+      width: 100%;
+      max-width: 487px;
+    }
+  }
+  .header-text {
+    margin-top: -33px;
+    color: #666;
+    font-weight: 200;
+    font-size: 1.45em;
+
+    // iPhone Portrait and landscape modes
+    @media only screen and (max-width: 320px) { margin-top: -10px; font-size: 0.82em;}
+    @media only screen and (max-width: 480px) and (min-width: 321px) { font-size: 1.1em;}
+  }
+}
+
+section.pages {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 30px;
+
+
+
+  .page-content {
+    text-align: justify;
+    font-size: 0.8em;
+  }
+}
+
+.ng-cloak, .x-ng-cloak {
+  display: none;
+}

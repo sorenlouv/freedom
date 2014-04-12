@@ -1,5 +1,10 @@
-/config.php
-.sass-cache/
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock
+.env.local.php
+.env.php
 .DS_Store
-/test-cal.php
+Thumbs.db
 
+node_modules/

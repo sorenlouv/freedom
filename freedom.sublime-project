@@ -1,9 +1,0 @@
-{
-	"folders":
-	[
-		{
-			"path": "/srv/www/freedom",
-      "folder_exclude_patterns": [".sass-cache"]
-		}
-	]
-}

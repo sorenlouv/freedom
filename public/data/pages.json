@@ -1,0 +1,14 @@
+{
+  "what": {
+    "title": "What is this?",
+    "content": "<p>Facebook events can be syncronized with the calendar on your phone, computer etc. This is neat. However, if you are like me, you also get flooded with invitations to events you don't really care about.</p> <p>This service filters the events from Facebook and only shows those events you have marked as \"attending\" and \"maybe attending\"; removing those you haven't replied to yet. </p> <p>This way, you calendar will always stay tidy, and show events which are relevant to you</p>"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "content": "<p>To keep a persistent connection to Facebook, an access token is stored. However: I don't store any of your personal data (seriously, you are not that interesting). The data is pulled directly from Facebook, filtered and passed on to your calendar. No storing, caching etc. on my behalf. If you don't believe me, you can always check out the source code on <a href=\"https://github.com/sqren/freedom\">GitHub</a> :) </p>"
+  },
+  "author": {
+    "title": "Who wasted their time building this?",
+    "content": "<p>I am a 25-year old tech-happy, entrepreneur from Copenhagen. My name is Søren Louv-Jansen, or @sqren, depending on the context. Find me on <a href=\"https://twitter.com/sqrendk\" target=\"_blank\">Twitter</a>, <a href=\"https://github.com/sqren\" target=\"_blank\">GitHub</a>, <a href=\"https://www.facebook.com/sorenlouv\" target=\"_blank\">Facebook</a>, <a href=\"http://dk.linkedin.com/in/sorenlouv/\" target=\"_blank\">LinkedIn</a>. </p> <p> Frontender at <a href=\"http://tradeshift.com/\">Tradeshift</a>, Co-founder of <a href=\"http://konscript.com\" target=\"_blank\">Konscript</a> and part of <a href=\"http://www.creativedestruction.dk\" target=\"_blank\">Creative Destruction</a>.</p>"
+  }
+}

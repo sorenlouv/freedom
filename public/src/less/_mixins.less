@@ -1,0 +1,10 @@
+.circle(@radius: 40px, @duration: 0.5s) {
+  border: 1px solid #666;
+  display: inline-block;
+  height: @radius;
+  width: @radius;
+  line-height: @radius;
+  border-radius: (@radius * 3/4);
+  text-align: center;
+  transition: all @duration ease-in-out;
+}
