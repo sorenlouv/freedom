@@ -11,24 +11,6 @@ date_default_timezone_set ( "UTC" );
 class FeedController extends BaseController
 {
 
-  public function getLegacyHandlers(){
-    $function = Input::get('f', null);
-    $user_id = Input::get('user_id', null);
-    $secure_hash = Input::get('user_id', null);
-
-    if($function === "saveAccessToken"){
-      $request = Request::create('/users/save-access-token', 'POST');
-    }else if($function === "downloadFeed"){
-      $request = Request::create('/feeds/download-feed', 'GET', array(
-        "user_id" => $user_id,
-        "secure_hash" => $secure_hash
-      ));
-    }
-
-    return Route::dispatch($request)->getContent();
-  }
-
-
   /*
    * Get events as JSON (for preview on website)
    ************************************/
