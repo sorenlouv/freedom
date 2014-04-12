@@ -27,9 +27,9 @@
       })();
     </script>
   </head>
-  <body>
+  <body ng-controller="MainController" ng-class="'page-' + currentPath">
 
-    <div class="page-wrap" ng-controller="MainController">
+    <div class="page-wrap">
 
       <!-- Header -->
       <div class="header">
@@ -43,7 +43,7 @@
       <div class="step-wizard">
         <div ng-if="currentPath!='renew' && currentPath!='customize' && currentPath!='preview'" ng-include="'templates/signup.html'"></div>
         <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
-        <div class="spinner" ng-show="isLoading"></div>
+        <div class="spinner" is-loading="isLoading"></div>
       </div>
 
       <!-- Router pages -->
@@ -52,9 +52,9 @@
     </div>
 
     <!-- Menu -->
-    <section class="footer ng-cloak" ng-controller="footerController">
+    <section class="footer ng-cloak">
       <ul>
-        <li ng-repeat="item in menuItems">
+        <li ng-repeat="item in menuItems" ng-hide="item.requireLogIn && !userLoggedIn">
           <a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}">
             <span class="symbol" ng-bind="item.symbol"></span>{{item.label}}
           </a>

@@ -1,4 +1,4 @@
-freedomApp.controller("previewController", function ($scope, $http) {
+freedomApp.controller('previewController', function ($scope, $http) {
   'use strict';
   $scope.isLoading = true;
 

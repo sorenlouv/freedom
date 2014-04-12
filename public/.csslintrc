@@ -3,5 +3,6 @@
   "compatible-vendor-prefixes": false,
   "adjoining-classes": false,
   "box-model": false,
-  "known-properties": false
+  "known-properties": false,
+  "unique-headings": false
 }

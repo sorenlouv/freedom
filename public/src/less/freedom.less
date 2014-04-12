@@ -1,12 +1,18 @@
 @import "_footer.less";
-@import "_wizard.less";
+@import "_customize.less";
+@import "_preview.less";
+@import "_step-wizard.less";
+
+// Directives
+@import "_spinner.less";
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+  // font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
 }
 
 a {
-  color: #2ba6cb;
+  color: rgb(59, 89, 152);
   text-decoration: none;
 }
 
@@ -16,12 +22,12 @@ p {
   line-height: 1.6;
 }
 
-.spinner {
-  background-image: url("../img/spinner.gif");
-  background-position:center;
-  background-repeat:no-repeat;
-  background-size:32px 32px;
-  min-height: 40px;
+.small-text {
+  font-size: 12px;
+}
+
+div, h3, p {
+  -webkit-font-smoothing: antialiased;
 }
 
 .button {

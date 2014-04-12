@@ -1,4 +1,4 @@
-var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'facebookDirective', 'facebookService', 'safeApply'])
+var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'facebookDirective', 'safeApply'])
 
 .config(['$routeProvider', '$compileProvider', function($routeProvider, $compileProvider) {
   'use strict';

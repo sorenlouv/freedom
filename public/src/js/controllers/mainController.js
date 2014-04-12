@@ -1,69 +1,136 @@
-freedomApp.controller("MainController", function($scope, $http, $location, facebookService) {
+freedomApp.controller('MainController', function($scope, $http, $location, facebook) {
   'use strict';
 
-  // Liste for route changes
+  var userId;
+  var saveAccessToken = function(){
+    $http({
+      method: 'POST',
+      url: '/users/save-access-token'
+    }).success(function(response) {
+
+      userId = FB.getAuthResponse().userID;
+      var secureHash = response.secure_hash;
+
+      // Add success event to GA
+      _gaq.push(['_trackEvent', 'facebookLogin', 'success', userId]);
+
+      // to avoid Google Calendar caching an old feed
+      var dummy = Math.floor(Math.random() * 1000);
+
+      // update DOM
+      $scope.downloadFeedHref = 'webcal://freedom.konscript.com/feed.ics?user_id=' + userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
+      $scope.googleButtonHref = 'http://www.google.com/calendar/render?cid=' + encodeURIComponent($scope.downloadFeedHref);
+
+      // next step
+      $scope.step = 2;
+      $scope.isLoading = false;
+    }).error(function(){
+      $scope.errorMessage = 'Ouch! We are sorry, but we are having problems setting up your calendar. Try again later.';
+      $scope.isLoading = false;
+    });
+  };
+
+  var facebookLogin = function(){
+    var facebookPermissions = 'user_events, user_groups'; // user_friends, read_friendlists
+
+    FB.login(function(response) {
+      if(response.authResponse){
+        saveAccessToken(); // Successfully logged in
+      }else{
+        onFacebookConnectDeclinedByUser(); // User aborted Facebook login
+      }
+    }, {scope: facebookPermissions});
+  };
+
+  var onFacebookConnectDeclinedByUser = function(){
+    _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
+
+    $scope.$apply(function() {
+      $scope.errorMessage = 'It seems like you did not login with Facebook. Please try again.';
+      $scope.isLoading = false;
+    });
+  };
+
+
+  // Default values
+  $scope.step = 1;
+  $scope.errorMessage = '';
+  $scope.isLoading = false;
+  $scope.userLoggedIn = false;
+
+  // If user is logged in
+  facebook.ready.then(function(auth){
+    if(auth.status === 'connected'){
+      $scope.userLoggedIn = true;
+    }
+  });
+
+  // Listen for route changes
   $scope.$on('$routeChangeSuccess', function(next, current) {
     $scope.currentPath = $location.path().substring(1);
   });
 
-  $scope.step = 1;
-
   $scope.isAndroid = function() {
     var ua = navigator.userAgent.toLowerCase();
-    return ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+    return ua.indexOf('android') > -1; //&& ua.indexOf('mobile');
   };
 
   $scope.connectWithFacebook = function() {
     // remove all alerts
-    $scope.errorMessage = "";
+    $scope.errorMessage = '';
     $scope.isLoading = true;
 
     // get token with access to user_events and user_groups
-    facebookService.login(['user_events', 'user_groups', 'user_friends', 'read_friendlists'], function() {
-      // extend access token
+    facebook.ready.then(function(auth){
+      // User not logged in
+      if(auth !== 'connected'){
+        facebookLogin();
 
-      $http({
-        method: 'POST',
-        url: '/users/save-access-token'
-      }).success(function(response) {
+      // User already logged in
+      }else{
+        saveAccessToken();
+      }
 
-        $scope.userId = FB.getAuthResponse().userID;
-        var secureHash = response.secure_hash;
-
-        // Add success event to GA
-        _gaq.push(['_trackEvent', 'facebookLogin', 'success', $scope.userId]);
-
-        // to avoid Google Calendar caching an old feed
-        var dummy = Math.floor(Math.random() * 1000);
-
-        // update DOM
-        $scope.downloadFeedHref = "webcal://freedom.konscript.com/feed.ics?user_id=" + $scope.userId + '&secure_hash=' + secureHash + '&dummy=' + dummy;
-        $scope.googleButtonHref = "http://www.google.com/calendar/render?cid=" + encodeURIComponent($scope.downloadFeedHref);
-
-        // next step
-        $scope.step = 2;
-        $scope.isLoading = false;
-      });
-
-      // unsuccessful login
-    }, function() {
-      _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
-
-      $scope.$apply(function() {
-        $scope.errorMessage = "Facebook connect failed";
-        $scope.isLoading = false;
-      });
+    // Facebook SDK could not be loaded
+    },function(message){
+      $scope.errorMessage = message;
+      $scope.isLoading = false;
     });
   }; // End of connectWithFacebook function
 
   $scope.addToCalendarGoogle = function() {
     $scope.step = 3;
-    _gaq.push(['_trackEvent', 'addToCalendar', 'google', $scope.userId]);
+    _gaq.push(['_trackEvent', 'addToCalendar', 'google', userId]);
   };
 
   $scope.addToCalendarDownload = function() {
     $scope.step = 3;
-    _gaq.push(['_trackEvent', 'addToCalendar', 'download', $scope.userId]);
+    _gaq.push(['_trackEvent', 'addToCalendar', 'download', userId]);
   };
+
+  $scope.isActive = function(path) {
+    return $scope.currentPath === path;
+  };
+
+  $scope.menuItems =[{
+    'label': 'What',
+    'symbol': '?',
+    'link': 'what'
+  },
+  {
+    'label': 'Privacy',
+    'symbol': '!',
+    'link': 'privacy'
+  },
+  {
+    'label': 'Author',
+    'symbol': '@',
+    'link': 'author'
+  },{
+    'label': 'Customize',
+    'symbol': '#',
+    'link': 'customize',
+    'requireLogIn': true
+  }];
 
 }); // end of WizardController

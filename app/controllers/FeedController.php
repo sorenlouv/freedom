@@ -128,7 +128,7 @@ class FeedController extends BaseController
     {
       return array(
         'method' => 'GET',
-        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only,owner,admins'
+        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only,cover'
       );
     }
 

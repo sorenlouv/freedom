@@ -8,7 +8,7 @@ class UserController extends BaseController {
     return $user;
   }
 
-  public function postSettings(){
+  public function postFeedSettings(){
     $user_id = $this->facebook->getUser();
     $user = User::find($user_id);
 
@@ -26,6 +26,9 @@ class UserController extends BaseController {
 
     // save
     $user->save();
+
+    $request = Request::create('/feeds/preview', 'GET', array());
+    return Route::dispatch($request)->getContent();
   }
 
   // save access token to db
@@ -62,11 +65,6 @@ class UserController extends BaseController {
     return array(
       "secure_hash" => $secure_hash
     );
-  }
-
-  public function missingMethod($parameters = array())
-  {
-      return "404 Not Found";
   }
 
   /*************** Private Methods *******************

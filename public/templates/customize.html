@@ -1,13 +1,25 @@
 <p>Select the events you want to see in your calendar:</p>
-<form ng-submit="saveSettings()" ng-show="!isLoadingSettings">
-  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.attending"> Attending
-  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.maybe"> Maybe attending
-  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.declined"> Declined
-  <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="settings.not_replied"> Not replied
-  <button type="submit">Save</button>
+<form ng-show="!isLoadingSettings" class="customize-form">
+  <label for="attending"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="attending" ng-model="settings.attending"> Attending</label>
+  <label for="maybe"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="maybe" ng-model="settings.maybe"> Maybe attending</label>
+  <label for="declined"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="declined" ng-model="settings.declined"> Declined</label>
+  <label for="not_replied"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="not_replied" ng-model="settings.not_replied"> Not replied</label>
 </form>
 
-<div class="spinner" ng-show="isLoadingSaveSettings || isLoadingSettings"></div>
+<div class="preview">
+  <div ng-repeat="event in events">
+    <div class="event">
+      <div class="date small-text" ng-bind="event.start_time | date:'EEEE, MMMM d, y'" ng-hide="isEventDateIdenticalToPreviousEventDate($index)"></div>
+      <div class="event-info">
+        <div class="time small-text" ng-bind="event.start_time | date:'shortTime'" ></div>
+        <div class="cover"><img width="100" ng-src="{{event.cover.source}}"/></div>
+        <div class="right-container">
+          <a class="name" ng-href="http://www.facebook.com/{{event.id}}" ng-bind="event.name"></a>
+          <div class="location" ng-bind="event.location"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-<a href="/#/preview">View preview of calendar</a>
+<div class="spinner" is-loading="isLoadingSaveSettings || isLoadingSettings || isLoadingEvents"></div>

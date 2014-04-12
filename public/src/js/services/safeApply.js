@@ -1,6 +1,4 @@
-angular.module('safeApply',[])
-
-.factory('safeApply', [function($rootScope) {
+angular.module('safeApply',[]).factory('safeApply', ['$rootScope', function($rootScope) {
     'use strict';
     return function($scope, fn) {
         var phase = $scope.$root.$$phase;
