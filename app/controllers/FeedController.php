@@ -456,16 +456,16 @@ class FeedController extends BaseController
     $value = str_replace(";", "\\;", $value);
 
     // escape linebreaks
-    $value = str_replace("\n", "\\n", $value);
+    $value = str_replace(array("\r", "\n"), "\\n", $value);
 
     // escape commas
-    $value = str_replace(',', '\\,', $value);
+    $value = str_replace(",", "\\,", $value);
 
     // escape quotes
     // escaping double quotes in property parameter values
     // http://www.ietf.org/rfc/rfc2445.txt 4.2
     if(in_array("quotes", $additional_escaping)){
-      $value = str_replace('"', '\'', $value);
+      $value = str_replace("\"", "'", $value);
     }
 
     // insert actual linebreak
