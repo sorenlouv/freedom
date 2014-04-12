@@ -175,8 +175,7 @@ class FeedController extends BaseController
     }
 
     // Track in GA
-    // $this->track_download_feed_event($error_message);
-    // TODO: uncomment line
+    $this->track_download_feed_event($error_message);
 
     // prepare batch response
     $events = array();

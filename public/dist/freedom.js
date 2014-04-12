@@ -67,7 +67,7 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout) 
 
 });
 
-freedomApp.controller('MainController', function($scope, $http, $location, facebook) {
+freedomApp.controller('MainController', function($scope, $http, $location, $window, facebook) {
   'use strict';
 
   var userId;
@@ -81,7 +81,7 @@ freedomApp.controller('MainController', function($scope, $http, $location, faceb
       var secureHash = response.secure_hash;
 
       // Add success event to GA
-      _gaq.push(['_trackEvent', 'facebookLogin', 'success', userId]);
+      $window._gaq.push(['_trackEvent', 'facebookLogin', 'success', userId]);
 
       // to avoid Google Calendar caching an old feed
       var dummy = Math.floor(Math.random() * 1000);
@@ -112,7 +112,7 @@ freedomApp.controller('MainController', function($scope, $http, $location, faceb
   };
 
   var onFacebookConnectDeclinedByUser = function(){
-    _gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
+    $window._gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
 
     $scope.$apply(function() {
       $scope.errorMessage = 'It seems like you did not login with Facebook. Please try again.';
@@ -137,6 +137,7 @@ freedomApp.controller('MainController', function($scope, $http, $location, faceb
   // Listen for route changes
   $scope.$on('$routeChangeSuccess', function(next, current) {
     $scope.currentPath = $location.path().substring(1);
+     $window._gaq.push(['_trackPageview', $location.path()]);
   });
 
   $scope.isAndroid = function() {
@@ -169,12 +170,12 @@ freedomApp.controller('MainController', function($scope, $http, $location, faceb
 
   $scope.addToCalendarGoogle = function() {
     $scope.step = 3;
-    _gaq.push(['_trackEvent', 'addToCalendar', 'google', userId]);
+    $window._gaq.push(['_trackEvent', 'addToCalendar', 'google', userId]);
   };
 
   $scope.addToCalendarDownload = function() {
     $scope.step = 3;
-    _gaq.push(['_trackEvent', 'addToCalendar', 'download', userId]);
+    $window._gaq.push(['_trackEvent', 'addToCalendar', 'download', userId]);
   };
 
   $scope.isActive = function(path) {
