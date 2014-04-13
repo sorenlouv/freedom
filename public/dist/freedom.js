@@ -53,12 +53,15 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout, 
   };
   getEvents();
 
-  $scope.saveSettings = function(){
+  $scope.saveSettings = function(eventResponse){
     $scope.isLoadingSaveSettings = true;
     $http.post('/users/feed-settings', $scope.settings).success(function(data, status) {
       $scope.isLoadingSaveSettings = false;
       $scope.events = data;
     });
+
+    var action =  eventResponse + '_' + $scope.settings[eventResponse];
+    $window._gaq.push(['_trackEvent', 'customization', action, $scope.settings.id]);
   };
 
   $scope.isEventDateIdenticalToPreviousEventDate = function(index){

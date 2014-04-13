@@ -2,10 +2,10 @@
 <div>
   <p class="header">Select the events you want to see in your calendar</p>
   <form ng-show="!isLoadingSettings" class="customize-form">
-    <label for="attending"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="attending" ng-model="settings.attending"> Attending</label>
-    <label for="maybe"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="maybe" ng-model="settings.maybe"> Maybe attending</label>
-    <label for="declined"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="declined" ng-model="settings.declined"> Declined</label>
-    <label for="not_replied"><input ng-change="saveSettings()" type="checkbox" ng-true-value="1" ng-false-value="0" id="not_replied" ng-model="settings.not_replied"> Not replied</label>
+    <label for="attending"><input ng-change="saveSettings('attending')" type="checkbox" ng-true-value="1" ng-false-value="0" id="attending" ng-model="settings.attending"> Attending</label>
+    <label for="maybe"><input ng-change="saveSettings('maybe')" type="checkbox" ng-true-value="1" ng-false-value="0" id="maybe" ng-model="settings.maybe"> Maybe attending</label>
+    <label for="declined"><input ng-change="saveSettings('declined')" type="checkbox" ng-true-value="1" ng-false-value="0" id="declined" ng-model="settings.declined"> Declined</label>
+    <label for="not_replied"><input ng-change="saveSettings('not_replied')" type="checkbox" ng-true-value="1" ng-false-value="0" id="not_replied" ng-model="settings.not_replied"> Not replied</label>
   </form>
 </div>
 
