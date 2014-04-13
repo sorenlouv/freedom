@@ -19,14 +19,14 @@ var freedomApp = angular.module('freedomApp', ['ngRoute', 'ngSanitize', 'faceboo
     otherwise({redirectTo: '/home'});
 }]);
 
-freedomApp.controller('customizeController', function ($scope, $http, $timeout, $location, $window, facebook) {
+freedomApp.controller('customizeController', function ($scope, $rootScope, $http, $timeout, $location, $window, facebook) {
   'use strict';
 
   $scope.isLoadingSettings = false;
   $scope.isLoadingEvents = false;
 
   facebook.ready.then(function(auth){
-    if(auth.status !== 'connected'){
+    if(!$rootScope.userLoggedIn){
       $location.path( '/home' );
     }
   });
@@ -84,7 +84,7 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout, 
   };
 });
 
-freedomApp.controller('MainController', function($scope, $http, $location, $window, facebook) {
+freedomApp.controller('MainController', function($scope, $rootScope, $http, $location, $window, facebook, safeApply) {
   'use strict';
 
   var userId;
@@ -121,6 +121,9 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
 
     FB.login(function(response) {
       if(response.authResponse){
+        safeApply($rootScope, function(){
+          $rootScope.userLoggedIn = true;
+        });
         saveAccessToken(); // Successfully logged in
       }else{
         onFacebookConnectDeclinedByUser(); // User aborted Facebook login
@@ -153,12 +156,12 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
   $scope.step = 1;
   $scope.errorMessage = '';
   $scope.isLoading = false;
-  $scope.userLoggedIn = false;
+  $rootScope.userLoggedIn = false;
 
   // If user is logged in
   facebook.ready.then(function(auth){
     if(auth.status === 'connected'){
-      $scope.userLoggedIn = true;
+      $rootScope.userLoggedIn = true;
       setUserVoiceIdentity();
     }
   });

@@ -1,11 +1,11 @@
-freedomApp.controller('customizeController', function ($scope, $http, $timeout, $location, $window, facebook) {
+freedomApp.controller('customizeController', function ($scope, $rootScope, $http, $timeout, $location, $window, facebook) {
   'use strict';
 
   $scope.isLoadingSettings = false;
   $scope.isLoadingEvents = false;
 
   facebook.ready.then(function(auth){
-    if(auth.status !== 'connected'){
+    if(!$rootScope.userLoggedIn){
       $location.path( '/home' );
     }
   });
