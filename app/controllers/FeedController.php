@@ -166,16 +166,13 @@ class FeedController extends BaseController
 
     // get events from Facebook
     try {
-      $batch_response = $this->facebook->api('?batch=' . urlencode(json_encode($event_queries)), 'POST');
+      $batch_response = $this->facebook->api('?include_headers=false&batch=' . urlencode(json_encode($event_queries)), 'POST');
       $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
     }
     catch (Exception $e) {
       $error_message = $e->getMessage();
       $failed = true;
     }
-
-    // Track in GA
-    $this->track_download_feed_event($error_message);
 
     // prepare batch response
     $events = array();
@@ -222,6 +219,9 @@ class FeedController extends BaseController
         $failed = true;
       }
     }
+
+    // Track in GA
+    $this->track_download_feed_event($error_message);
 
     // if (in_array("birthday", $this->event_types) && !$failed) {
     //   $birthday_events = json_decode($batch_response[$event_index["birthday"]]["body"], true);
