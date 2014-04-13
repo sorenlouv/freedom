@@ -54,10 +54,20 @@
     <!-- Menu -->
     <section class="page-footer ng-cloak">
       <ul>
-        <li ng-repeat="item in menuItems" ng-hide="item.requireLogIn && !userLoggedIn">
-          <a ng-class="{active: isActive(item.link)}" href="/#/{{item.link}}">
-            <span class="symbol" ng-bind="item.symbol"></span>{{item.label}}
-          </a>
+        <li ng-class="{active: isActive('what')}">
+          <a href="/#/what">What</a>
+        </li>
+        <li ng-class="{active: isActive('privacy')}">
+          <a href="/#/privacy">Privacy</a>
+        </li>
+        <li ng-class="{active: isActive('author')}">
+          <a href="/#/author">Author</a>
+        </li>
+        <li ng-show="!userLoggedIn">
+          <a href="/#/home" ng-click="facebookLogin()">Login</a>
+        </li>
+        <li ng-class="{active: isActive('customize')}" ng-show="userLoggedIn">
+          <a href="/#/customize">Customize</a>
         </li>
       </ul>
     </section>
@@ -81,7 +91,7 @@
     }]);
 
     // Add default trigger to the bottom-right corner of the window:
-    UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'top-right' }]);
+    UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'bottom-right' }]);
 
     </script>
   </body>

@@ -162,6 +162,8 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
 
   });
 
+  $scope.facebookLogin = facebookLogin;
+
   $scope.isAndroid = function() {
     var ua = navigator.userAgent.toLowerCase();
     return ua.indexOf('android') > -1; //&& ua.indexOf('mobile');
@@ -203,27 +205,6 @@ freedomApp.controller('MainController', function($scope, $http, $location, $wind
   $scope.isActive = function(path) {
     return $scope.currentPath === path;
   };
-
-  $scope.menuItems =[{
-    'label': 'What',
-    'symbol': '?',
-    'link': 'what'
-  },
-  {
-    'label': 'Privacy',
-    'symbol': '!',
-    'link': 'privacy'
-  },
-  {
-    'label': 'Author',
-    'symbol': '@',
-    'link': 'author'
-  },{
-    'label': 'Customize',
-    'symbol': '#',
-    'link': 'customize',
-    'requireLogIn': true
-  }];
 
 }); // end of WizardController
 
