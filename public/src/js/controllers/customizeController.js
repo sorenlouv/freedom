@@ -1,4 +1,4 @@
-freedomApp.controller('customizeController', function ($scope, $http, $timeout, $location, facebook) {
+freedomApp.controller('customizeController', function ($scope, $http, $timeout, $location, $window, facebook) {
   'use strict';
 
   $scope.isLoadingSettings = false;
@@ -47,7 +47,15 @@ freedomApp.controller('customizeController', function ($scope, $http, $timeout, 
     var previousEventDate = new Date($scope.events[(index-1)].start_time).setHours(0, 0, 0, 0);
 
     return currentEventDate === previousEventDate;
-
   };
 
+  $scope.getLocaleTimeFormat = function(date){
+    var dateOnly = date.length === 10;
+    if(dateOnly){
+      return 'All day';
+    }else{
+      var dateObject = new Date(date);
+      return dateObject.toLocaleTimeString($window.navigator.language, {hour: '2-digit', minute:'2-digit'});
+    }
+  };
 });
