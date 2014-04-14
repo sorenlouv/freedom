@@ -109,8 +109,12 @@ class FeedController extends BaseController
    ************************************/
   private function getUser(){
     $user_id = $this->facebook->getUser();
-    $user = User::find($user_id);
-    return $user;
+    if($user_id === null || $user_id === 0){
+      return null;
+    }else{
+      $user = User::find($user_id);
+      return $user;
+    }
   }
 
   /*
@@ -133,6 +137,9 @@ class FeedController extends BaseController
     }
 
     $user = $this->getUser();
+    if($user === null){
+      $failed = true;
+    }
 
     // prepare batch request
     $event_queries = array();
