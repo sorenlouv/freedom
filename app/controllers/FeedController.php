@@ -173,8 +173,10 @@ class FeedController extends BaseController
 
     // get events from Facebook
     try {
-      $batch_response = $this->facebook->api('?include_headers=false&batch=' . urlencode(json_encode($event_queries)), 'POST');
-      $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+      if(!$failed){
+        $batch_response = $this->facebook->api('?include_headers=false&batch=' . urlencode(json_encode($event_queries)), 'POST');
+        $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+      }
     }
     catch (Exception $e) {
       $error_message = $e->getMessage();
