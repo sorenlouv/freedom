@@ -281,8 +281,8 @@ class FeedController extends BaseController
     // action
     $action = !is_null($error_message) ? "error: " . $error_message : "success";
 
-    // label
-    $label = $user_id = $this->facebook->getUser();
+    // label - unverified user_id
+    $label = Input::get('user_id', null);
 
     // visitor
     $visitor = new GAVisitor();
@@ -441,7 +441,7 @@ class FeedController extends BaseController
 
   /*
    * Encode string
-   * Splitting iCal content into multiple lines - See: http://www.ietf.org/rfc/rfc2445.txt, section 4.1
+   * Splitting iCal content into multiple lines - See: http://www.ietf.org/rfc/rfc5545.txt, section 3.1 (Content Lines)
    * Return String $value
    ************************************/
   private function ical_encode_text($value, $additional_escaping = array())
@@ -460,9 +460,9 @@ class FeedController extends BaseController
     // escape commas
     $value = str_replace(",", "\\,", $value);
 
-    // escape quotes
-    // escaping double quotes in property parameter values
-    // http://www.ietf.org/rfc/rfc2445.txt 4.2
+    // escape double quotes
+    // escaping DQUOTES in property parameter values
+    // http://www.ietf.org/rfc/rfc2445.txt 3.2 (Property Parameters)
     if(in_array("quotes", $additional_escaping)){
       $value = str_replace("\"", "'", $value);
     }
@@ -474,9 +474,9 @@ class FeedController extends BaseController
   }
 
   /*
-   * Convert timestamp from FB format to iCalendar format
-   * Facebook format (ISO-8601): http://www.cl.cam.ac.uk/~mgk25/iso-time.html
-   * iCalendar (ISO 8601) http://www.kanzaki.com/docs/ical/dateTime.html
+   * Timestamps in iCalendar MUST be in UTC+0 http://www.kanzaki.com/docs/ical/dateTime.html
+   * Convert from native timezone to UTC
+   * Facebook (ISO-8601), iCalendar (ISO 8601)
    * Return Date $date
    ************************************/
   private function get_formatted_date($date, $original_timezone = "UTC", $is_date_only = false){
