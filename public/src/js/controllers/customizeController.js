@@ -5,7 +5,7 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
   $scope.isLoadingEvents = false;
 
   facebook.ready.then(function(auth){
-    if(!$rootScope.userLoggedIn){
+    if(!facebook.loggedIn){
       $location.path( '/home' );
     }
   });

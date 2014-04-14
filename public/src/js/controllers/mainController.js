@@ -35,9 +35,6 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
 
     FB.login(function(response) {
       if(response.authResponse){
-        safeApply($rootScope, function(){
-          $rootScope.userLoggedIn = true;
-        });
         saveAccessToken(); // Successfully logged in
       }else{
         onFacebookConnectDeclinedByUser(); // User aborted Facebook login
@@ -70,12 +67,13 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   $scope.step = 1;
   $scope.errorMessage = '';
   $scope.isLoading = false;
-  $rootScope.userLoggedIn = false;
+  $scope.loggedIn = function(){
+    return facebook.loggedIn;
+  };
 
   // If user is logged in
   facebook.ready.then(function(auth){
-    if(auth.status === 'connected'){
-      $rootScope.userLoggedIn = true;
+    if(facebook.loggedIn){
       setUserVoiceIdentity();
     }
   });

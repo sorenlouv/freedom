@@ -26,7 +26,7 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
   $scope.isLoadingEvents = false;
 
   facebook.ready.then(function(auth){
-    if(!$rootScope.userLoggedIn){
+    if(!facebook.loggedIn){
       $location.path( '/home' );
     }
   });
@@ -121,9 +121,6 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
 
     FB.login(function(response) {
       if(response.authResponse){
-        safeApply($rootScope, function(){
-          $rootScope.userLoggedIn = true;
-        });
         saveAccessToken(); // Successfully logged in
       }else{
         onFacebookConnectDeclinedByUser(); // User aborted Facebook login
@@ -156,12 +153,13 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   $scope.step = 1;
   $scope.errorMessage = '';
   $scope.isLoading = false;
-  $rootScope.userLoggedIn = false;
+  $scope.loggedIn = function(){
+    return facebook.loggedIn;
+  };
 
   // If user is logged in
   facebook.ready.then(function(auth){
-    if(auth.status === 'connected'){
-      $rootScope.userLoggedIn = true;
+    if(facebook.loggedIn){
       setUserVoiceIdentity();
     }
   });
@@ -248,17 +246,23 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
       // Attach a watcher for, when the SDK is loaded
       $scope.$watch('sdkLoaded', function(sdkLoaded){
         if(sdkLoaded !== true) return;
-        console.log('FB: SDK loaded');
 
         // Remove timeout
         $timeout.cancel(promiseTimeout);
 
-        // Additional init code here
+        // Executed when login status is ready
         FB.getLoginStatus(function(response) {
-          console.log('FB: Login status -', response.status);
-
           safeApply($rootScope, function(){
+            console.log('FB: SDK loaded');
             $rootScope.$emit('facebook:loaded', response);
+          });
+        });
+
+        // Executed when auth status changes
+        FB.Event.subscribe('auth.statusChange', function(response){
+          safeApply($rootScope, function(){
+            console.log('FB: Auth status change: "' + response.status + '"');
+            $rootScope.$emit('facebook:authChange', response);
           });
         });
       });
@@ -328,23 +332,30 @@ freedomApp.directive('spinner', [function() {
 }]);
 
 freedomApp.factory('facebook', ['$q', '$rootScope', function($q, $rootScope) {
-    'use strict';
-    var deferred = $q.defer();
+  'use strict';
+  var deferred = $q.defer();
 
-    var facebook  = {};
-    facebook.ready = deferred.promise;
+  var facebook  = {
+    ready: deferred.promise,
+    loggedIn: false
+  };
 
-    // Facebook SDK was loaded
-    $rootScope.$on('facebook:loaded', function(evt, response){
-      deferred.resolve(response);
-    });
+  // Facebook login status changed (login or logout)
+  $rootScope.$on('facebook:authChange', function(evt, auth){
+    facebook.loggedIn = auth.status === 'connected' ? true : false;
+  });
 
-    // Facebook SDK could not be loaded within timeout
-    $rootScope.$on('facebook:timeout', function(evt, response){
-      deferred.reject(response);
-    });
+  // Facebook SDK was loaded
+  $rootScope.$on('facebook:loaded', function(evt, response){
+    deferred.resolve(response);
+  });
 
-    return facebook;
+  // Facebook SDK could not be loaded within timeout
+  $rootScope.$on('facebook:timeout', function(evt, response){
+    deferred.reject(response);
+  });
+
+  return facebook;
 }]);
 
 angular.module('safeApply',[]).factory('safeApply', ['$rootScope', function($rootScope) {

@@ -15,17 +15,23 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
       // Attach a watcher for, when the SDK is loaded
       $scope.$watch('sdkLoaded', function(sdkLoaded){
         if(sdkLoaded !== true) return;
-        console.log('FB: SDK loaded');
 
         // Remove timeout
         $timeout.cancel(promiseTimeout);
 
-        // Additional init code here
+        // Executed when login status is ready
         FB.getLoginStatus(function(response) {
-          console.log('FB: Login status -', response.status);
-
           safeApply($rootScope, function(){
+            console.log('FB: SDK loaded');
             $rootScope.$emit('facebook:loaded', response);
+          });
+        });
+
+        // Executed when auth status changes
+        FB.Event.subscribe('auth.statusChange', function(response){
+          safeApply($rootScope, function(){
+            console.log('FB: Auth status change: "' + response.status + '"');
+            $rootScope.$emit('facebook:authChange', response);
           });
         });
       });

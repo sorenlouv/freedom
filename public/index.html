@@ -63,10 +63,10 @@
         <li ng-class="{active: isActive('author')}">
           <a href="/#/author">Author</a>
         </li>
-        <li ng-show="!userLoggedIn">
+        <li ng-show="!loggedIn()">
           <a href="/#/home" ng-click="facebookLogin()">Login</a>
         </li>
-        <li ng-class="{active: isActive('customize')}" ng-show="userLoggedIn">
+        <li ng-class="{active: isActive('customize')}" ng-show="loggedIn()">
           <a href="/#/customize">Customize</a>
         </li>
       </ul>
