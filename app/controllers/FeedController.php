@@ -93,8 +93,6 @@ class FeedController extends BaseController
   private function get_calendar_body()
   {
     list($events, $failed) = $this->get_events();
-    // print_r($events);
-    // exit();
 
     if ($failed) {
       return $this->get_instructional_body();
@@ -139,6 +137,7 @@ class FeedController extends BaseController
     $user = $this->getUser();
     if($user === null){
       $failed = true;
+      $error_message = "Facebook user could not be retrieve";
     }
 
     // prepare batch request
