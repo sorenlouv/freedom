@@ -33,19 +33,15 @@ class FeedController extends BaseController
     // arguments
     $user_id = Input::get('user_id', null);
     $secure_hash = Input::get('secure_hash', null);
-    $access_token = Input::get('access_token', null);
 
-    // get user id by access token
-    if (is_null($user_id) && isset($access_token)) {
-      $user_id = $this->get_user_id_by_access_token($access_token);
-
-      // get access token by user id
-    } elseif (isset($user_id) && isset($secure_hash)) {
-      $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
-    }
+    // Get access token
+    $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
 
     // set access token
-    $this->facebook->setAccessToken($access_token);
+    if ($access_token !== null) {
+      $this->access_token = $access_token;
+      $this->facebook->setAccessToken($access_token);
+    }
 
     // Output
     $header = $this->get_calendar_header();
@@ -141,7 +137,8 @@ class FeedController extends BaseController
 
       Log::warning('Facebook user could not be retrieved', array(
           "user_id" => Input::get('user_id', null),
-          "secure_hash" => Input::get('secure_hash', null)
+          "secure_hash" => Input::get('secure_hash', null),
+          "access_token" => $this->access_token
         ));
     }
 
@@ -351,7 +348,8 @@ class FeedController extends BaseController
         Log::error('Event "name" is missing', array(
           "event" => $event,
           "user_id" => Input::get('user_id', null),
-          "secure_hash" => Input::get('secure_hash', null)
+          "secure_hash" => Input::get('secure_hash', null),
+          "access_token" => $this->access_token
         ));
       }
 
@@ -538,24 +536,4 @@ class FeedController extends BaseController
     }
   }
 
-  /*
-   * Getter: User id
-   * Return String $user_id
-   ************************************/
-  private function get_user_id_by_access_token($user_access_token)
-  {
-    $user_id = null;
-
-    if ($user_access_token !== null && strlen($user_access_token) > 0) {
-      $APP_ACCESS_TOKEN_converted = str_replace("\|", "|", Config::get('facebook.appAccessToken')); // HACK: Pagodabox apparently escapes certain characters. Not cool!
-      $url = 'https://graph.facebook.com/debug_token?input_token=' . $user_access_token . '&access_token=' . $APP_ACCESS_TOKEN_converted;
-      $response = json_decode(file_get_contents($url));
-
-      if (isset($response->data->user_id)) {
-        $user_id = $response->data->user_id;
-      }
-    }
-
-    return $user_id;
-  }
 }
