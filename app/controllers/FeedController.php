@@ -11,6 +11,8 @@ date_default_timezone_set ( "UTC" );
 class FeedController extends BaseController
 {
 
+  private $access_token = null;
+
   /*
    * Get events as JSON (for preview on website)
    ************************************/
@@ -40,8 +42,6 @@ class FeedController extends BaseController
       // get access token by user id
     } elseif (isset($user_id) && isset($secure_hash)) {
       $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
-
-      // TODO: log with analytics
     }
 
     // set access token
@@ -137,7 +137,12 @@ class FeedController extends BaseController
     $user = $this->getUser();
     if($user === null){
       $failed = true;
-      $error_message = "Facebook user could not be retrieve";
+      $error_message = "Facebook user could not be retrieved";
+
+      Log::warning('Facebook user could not be retrieved', array(
+          "user_id" => Input::get('user_id', null),
+          "secure_hash" => Input::get('secure_hash', null)
+        ));
     }
 
     // prepare batch request
@@ -341,6 +346,15 @@ class FeedController extends BaseController
     // add question mark to event title if rsvp is "unsure"
     function get_event_name($event)
     {
+
+      if(!isset($event["name"])){
+        Log::error('Event "name" is missing', array(
+          "event" => $event,
+          "user_id" => Input::get('user_id', null),
+          "secure_hash" => Input::get('secure_hash', null)
+        ));
+      }
+
       if ($event["rsvp_status"] === "unsure" || $event["rsvp_status"] === "not_replied") {
         return $event["name"] . " [?]";
       } else {
@@ -513,8 +527,14 @@ class FeedController extends BaseController
   private function get_access_token_by_user_id($user_id, $secure_hash)
   {
     $user = User::where('secure_hash', $secure_hash)->select(array('access_token'))->find($user_id);
-    if ($user) {
+    if ($user && $user->access_token) {
       return $user->access_token;
+    }else{
+      Log::warning('Access token could not be retrieved', array(
+        "user_id" => $user_id,
+        "secure_hash" => $secure_hash
+      ));
+      return null;
     }
   }
 
