@@ -97,8 +97,8 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
       userId = FB.getAuthResponse().userID;
       var secureHash = response.secure_hash;
 
-      // Add success event to GA
-      $window._gaq.push(['_trackEvent', 'facebookLogin', 'success', userId]);
+      // Add facebook login event to GA
+      $window.ga('send', 'event', 'facebookLogin', 'success', userId, 5);
 
       // to avoid Google Calendar caching an old feed
       var dummy = Math.floor(Math.random() * 1000);
@@ -130,6 +130,7 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
 
   var onFacebookConnectDeclinedByUser = function(){
     $window._gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
+    $window.ga('send', 'event', 'facebookLogin', 'failed', null, 0);
 
     $scope.$apply(function() {
       $scope.errorMessage = 'It seems like you did not login with Facebook. Please try again.';
@@ -170,7 +171,7 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
     $scope.currentPath = $location.path().substring(1);
 
     // Track analytics on route change
-    $window._gaq.push(['_trackPageview', $location.path()]);
+    $window.ga('send', 'pageview', $location.path());
 
   });
 
@@ -198,27 +199,28 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
       }
 
     // Facebook SDK could not be loaded
-    },function(message){
-      $scope.errorMessage = message;
+    },function(response){
+      $window.ga('send', 'event', 'facebookLogin', 'timeout');
+      $scope.errorMessage = 'A connection to Facebook could not be established. If you have installed any blocking extensions like Ghostery, Do Not Track Me, Priv3 or anything similar, you must disable them, or whitelist this website.';
       $scope.isLoading = false;
     });
   }; // End of connectWithFacebook function
 
   $scope.addToCalendarGoogle = function() {
     $scope.step = 3;
-    $window._gaq.push(['_trackEvent', 'addToCalendar', 'google', userId]);
+    $window.ga('send', 'event', 'addToCalendar', 'google', userId, 10);
   };
 
   $scope.addToCalendarDownload = function() {
     $scope.step = 3;
-    $window._gaq.push(['_trackEvent', 'addToCalendar', 'download', userId]);
+    $window.ga('send', 'event', 'addToCalendar', 'download', userId, 10);
   };
 
   $scope.isActive = function(path) {
     return $scope.currentPath === path;
   };
 
-}); // end of WizardController
+});
 
 freedomApp.controller('pageController', function($scope, $rootScope, $http, $location) {
   'use strict';
@@ -237,11 +239,13 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
 
     // Controller
     controller: function($scope, $attrs, $rootScope, $q) {
+      var timeoutSeconds = 15;
+
       // Abort with error if Facebook SDK has not been loaded after 15 seconds
       var promiseTimeout = $timeout(function(){
         console.log('Facebook Connect timed out');
-        $rootScope.$emit('facebook:timeout','A connection to Facebook could not be established. If you have installed any blocking extensions like Ghostery, Do Not Track Me, Priv3 or anything similar, you must disable them, or whitelist this website.');
-      }, 15000);
+        $rootScope.$emit('facebook:timeout', 'Timed out loading Facebook SDK after ' + timeoutSeconds + ' seconds');
+      }, timeoutSeconds * 1000);
 
       // Attach a watcher for, when the SDK is loaded
       $scope.$watch('sdkLoaded', function(sdkLoaded){

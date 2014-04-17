@@ -6,11 +6,13 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
 
     // Controller
     controller: function($scope, $attrs, $rootScope, $q) {
+      var timeoutSeconds = 15;
+
       // Abort with error if Facebook SDK has not been loaded after 15 seconds
       var promiseTimeout = $timeout(function(){
         console.log('Facebook Connect timed out');
-        $rootScope.$emit('facebook:timeout','A connection to Facebook could not be established. If you have installed any blocking extensions like Ghostery, Do Not Track Me, Priv3 or anything similar, you must disable them, or whitelist this website.');
-      }, 15000);
+        $rootScope.$emit('facebook:timeout', 'Timed out loading Facebook SDK after ' + timeoutSeconds + ' seconds');
+      }, timeoutSeconds * 1000);
 
       // Attach a watcher for, when the SDK is loaded
       $scope.$watch('sdkLoaded', function(sdkLoaded){
