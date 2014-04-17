@@ -37,16 +37,19 @@ class FeedController extends BaseController
     // Get access token
     $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
 
-    // set access token
+    // Access token was found in DB
     if ($access_token !== null) {
-      $this->access_token = $access_token;
-      $this->facebook->setAccessToken($access_token);
+      $this->facebook->setAccessToken($access_token); // set access token
+      list($events, $failed) = $this->get_events(); // get events
+      $body = $failed ? $this->get_renew_instructions_body() : $this->get_normal_body($events);
+    }else{
+      $body = $this->get_reset_instructions_body();
     }
 
-    // Output
     $header = $this->get_calendar_header();
-    $body = $this->get_calendar_body();
     $footer = "END:VCALENDAR\r\n";
+
+    // Output
     return $header . $body . $footer;
   }
 
@@ -80,21 +83,6 @@ class FeedController extends BaseController
     return array_map(function($close_friend){
       return $close_friend["id"];
     }, $close_friends);
-  }
-
-  /*
-   * Getter: Calendar body
-   * return String $body
-   ************************************/
-  private function get_calendar_body()
-  {
-    list($events, $failed) = $this->get_events();
-
-    if ($failed) {
-      return $this->get_instructional_body();
-    } else {
-      return $this->get_normal_body($events);
-    }
   }
 
   /*
@@ -134,12 +122,6 @@ class FeedController extends BaseController
     if($user === null){
       $failed = true;
       $error_message = "Facebook user could not be retrieved";
-
-      Log::warning('Facebook user could not be retrieved', array(
-          "user_id" => Input::get('user_id', null),
-          "secure_hash" => Input::get('secure_hash', null),
-          "access_token" => $this->access_token
-        ));
     }
 
     // prepare batch request
@@ -345,11 +327,15 @@ class FeedController extends BaseController
     {
 
       if(!isset($event["name"])){
+        $user_id = Input::get('user_id', null);
+        if (extension_loaded('newrelic')) {
+          newrelic_add_custom_parameter ("user_id", $user_id);
+        }
         Log::error('Event "name" is missing', array(
           "event" => $event,
-          "user_id" => Input::get('user_id', null),
+          "user_id" => $user_id,
           "secure_hash" => Input::get('secure_hash', null),
-          "access_token" => $this->access_token
+          "access_token" => $facebook->getAccessToken()
         ));
       }
 
@@ -434,7 +420,7 @@ class FeedController extends BaseController
    * When login is expired. Add dummy event to calendar, which describes how to re-enable calendar (re-login)
    * Return String $event
    ************************************/
-  private function get_instructional_body()
+  private function get_renew_instructions_body()
   {
 
     $today_date = $this->get_formatted_date(new DateTime());
@@ -452,6 +438,36 @@ class FeedController extends BaseController
     $event .= "URL:http://freedom.konscript.com\r\n";
     $event .= "SUMMARY:Login expired - go to freedom.konscript.com/renew\r\n";
     $event .= "DESCRIPTION:" . $this->ical_encode_text("Sorry for the inconvenience! Facebook has logged you out, therefore your Facebook events could not be loaded. Please login again here:\n\nhttp://freedom.konscript.com/renew\n\nNote: It can take several hours for your Facebook events to re-appear in your calendar") . "\r\n";
+    $event .= "CLASS:PUBLIC\r\n";
+    $event .= "STATUS:CONFIRMED\r\n";
+    $event .= "END:VEVENT\r\n";
+
+    return $event;
+  }
+
+  /*
+   * Getter: Instructions to setup calendar again
+   * The parameters (user id, and secure hash) does not match any record in the DB. The calendar should be setup again
+   * Return String $event
+   ************************************/
+  private function get_reset_instructions_body()
+  {
+
+    $today_date = $this->get_formatted_date(new DateTime());
+    $tomorrow_date = $this->get_formatted_date((new DateTime())->modify('+24 hours'));
+    $tomorrow_later_date = $this->get_formatted_date((new DateTime())->modify('+27 hours'));
+
+    $event = "";
+    $event .= "BEGIN:VEVENT\r\n";
+    $event .= "DTSTAMP:" . $today_date . "\r\n";
+    $event .= "LAST-MODIFIED:" . $today_date . "\r\n";
+    $event .= "CREATED:" . $today_date . "\r\n";
+    $event .= "SEQUENCE:0\r\n";
+    $event .= "DTSTART;VALUE=DATE-TIME:" . $tomorrow_date . "\r\n";
+    $event .= "DTEND;VALUE=DATE-TIME:" . $tomorrow_later_date . "\r\n";
+    $event .= "URL:http://freedom.konscript.com\r\n";
+    $event .= "SUMMARY:Feed invalid. Go to freedom.konscript.com\r\n";
+    $event .= "DESCRIPTION:" . $this->ical_encode_text("Sorry for the inconvenience! It seems there is a problem with your Freedom Calendar. Please remove this calendar subscription, and redo the setup steps here:\n\nhttp://freedom.konscript.com/renew\n\nNote: It can take several hours for your Facebook events to re-appear in your calendar") . "\r\n";
     $event .= "CLASS:PUBLIC\r\n";
     $event .= "STATUS:CONFIRMED\r\n";
     $event .= "END:VEVENT\r\n";
@@ -524,6 +540,12 @@ class FeedController extends BaseController
    ************************************/
   private function get_access_token_by_user_id($user_id, $secure_hash)
   {
+    // Invalid user_id or secure_hash
+    if($user_id === null || $secure_hash === null){
+      return null;
+    }
+
+    // Lookup access_token in DB
     $user = User::where('secure_hash', $secure_hash)->select(array('access_token'))->find($user_id);
     if ($user && $user->access_token) {
       return $user->access_token;
