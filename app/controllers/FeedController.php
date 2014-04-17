@@ -1,10 +1,5 @@
 <?php
 
-use UnitedPrototype\GoogleAnalytics\Visitor as GAVisitor;
-use UnitedPrototype\GoogleAnalytics\Session as GASession;
-use UnitedPrototype\GoogleAnalytics\Event as GAEvent;
-use UnitedPrototype\GoogleAnalytics\Tracker as GATracker;
-
 // Set UTC time as default timezone
 date_default_timezone_set ( "UTC" );
 
@@ -276,18 +271,18 @@ class FeedController extends BaseController
     // label - unverified user_id
     $label = Input::get('user_id', null);
 
-    // visitor
-    $visitor = new GAVisitor();
-    $visitor->setIpAddress($_SERVER['REMOTE_ADDR']);
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $visitor->setUserAgent($_SERVER['HTTP_USER_AGENT']);
-    }
-
     // Google Analytics: track event
-    $session = new GASession();
-    $event = new GAEvent($category, $action, $label);
-    $tracker = new GATracker('UA-39209285-1', 'freedom.konscript.com');
-    $tracker->trackEvent($event, $session, $visitor);
+    $client = Krizon\Google\Analytics\MeasurementProtocol\MeasurementProtocolClient::factory(array('ssl' => false));
+    $client->event(array(
+        'tid' => 'UA-39209285-1', // Tracking Id
+        'cid' => Input::get('user_id', 'anonymous'), // Customer Id
+        't' => 'event',
+        'ec' => $category,
+        'ea' => $action,
+        'el' => $label,
+        'ua' => $_SERVER['HTTP_USER_AGENT'],
+        'dh' => 'konscript.com'
+    ));
   }
 
   /*
