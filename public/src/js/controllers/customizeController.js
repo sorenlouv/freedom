@@ -4,8 +4,8 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
   $scope.isLoadingSettings = false;
   $scope.isLoadingEvents = false;
 
-  facebook.ready.then(function(auth){
-    if(!facebook.loggedIn){
+  facebook.sdkReady.then(function(auth){
+    if(!facebook.isLoggedIn){
       $location.path( '/home' );
     }
   });

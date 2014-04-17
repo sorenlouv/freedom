@@ -54,11 +54,13 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   // Set user information to help answer bug reports
   var setUserVoiceIdentity = function(){
     FB.api('/me', function(user){
+      var name = user.first_name + ' ' + user.last_name;
+
       $window.UserVoice.push(['identify', {
-        name: user.first_name + ' ' + user.last_name,
-        facebook_id: user.id,
-        gender: user.gender
+        name: name,
+        id: user.id
       }]);
+
     });
   };
 
@@ -68,14 +70,12 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   $scope.errorMessage = '';
   $scope.isLoading = false;
   $scope.loggedIn = function(){
-    return facebook.loggedIn;
+    return facebook.isLoggedIn;
   };
 
   // If user is logged in
-  facebook.ready.then(function(auth){
-    if(facebook.loggedIn){
-      setUserVoiceIdentity();
-    }
+  facebook.loggedInReady.then(function(auth){
+    setUserVoiceIdentity();
   });
 
   // Listen for route changes
@@ -101,7 +101,7 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
     $scope.isLoading = true;
 
     // get token with access to user_events and user_groups
-    facebook.ready.then(function(auth){
+    facebook.sdkReady.then(function(auth){
       // User not logged in
       if(auth !== 'connected'){
         facebookLogin();

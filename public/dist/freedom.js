@@ -25,8 +25,8 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
   $scope.isLoadingSettings = false;
   $scope.isLoadingEvents = false;
 
-  facebook.ready.then(function(auth){
-    if(!facebook.loggedIn){
+  facebook.sdkReady.then(function(auth){
+    if(!facebook.isLoggedIn){
       $location.path( '/home' );
     }
   });
@@ -140,11 +140,13 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   // Set user information to help answer bug reports
   var setUserVoiceIdentity = function(){
     FB.api('/me', function(user){
+      var name = user.first_name + ' ' + user.last_name;
+
       $window.UserVoice.push(['identify', {
-        name: user.first_name + ' ' + user.last_name,
-        facebook_id: user.id,
-        gender: user.gender
+        name: name,
+        id: user.id
       }]);
+
     });
   };
 
@@ -154,14 +156,12 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   $scope.errorMessage = '';
   $scope.isLoading = false;
   $scope.loggedIn = function(){
-    return facebook.loggedIn;
+    return facebook.isLoggedIn;
   };
 
   // If user is logged in
-  facebook.ready.then(function(auth){
-    if(facebook.loggedIn){
-      setUserVoiceIdentity();
-    }
+  facebook.loggedInReady.then(function(auth){
+    setUserVoiceIdentity();
   });
 
   // Listen for route changes
@@ -187,7 +187,7 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
     $scope.isLoading = true;
 
     // get token with access to user_events and user_groups
-    facebook.ready.then(function(auth){
+    facebook.sdkReady.then(function(auth){
       // User not logged in
       if(auth !== 'connected'){
         facebookLogin();
@@ -333,26 +333,31 @@ freedomApp.directive('spinner', [function() {
 
 freedomApp.factory('facebook', ['$q', '$rootScope', function($q, $rootScope) {
   'use strict';
-  var deferred = $q.defer();
+  var sdkDefer = $q.defer();
+  var loginDefer = $q.defer();
 
   var facebook  = {
-    ready: deferred.promise,
-    loggedIn: false
+    sdkReady: sdkDefer.promise,
+    loggedInReady: loginDefer.promise,
+    isLoggedIn: false
   };
 
   // Facebook login status changed (login or logout)
   $rootScope.$on('facebook:authChange', function(evt, auth){
-    facebook.loggedIn = auth.status === 'connected' ? true : false;
+    if(auth.status === 'connected'){
+      loginDefer.resolve(auth);
+      facebook.isLoggedIn = true;
+    }
   });
 
   // Facebook SDK was loaded
   $rootScope.$on('facebook:loaded', function(evt, response){
-    deferred.resolve(response);
+    sdkDefer.resolve(response);
   });
 
   // Facebook SDK could not be loaded within timeout
   $rootScope.$on('facebook:timeout', function(evt, response){
-    deferred.reject(response);
+    sdkDefer.reject(response);
   });
 
   return facebook;
