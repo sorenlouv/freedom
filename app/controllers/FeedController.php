@@ -280,7 +280,6 @@ class FeedController extends BaseController
         'ec' => $category,
         'ea' => $action,
         'el' => $label,
-        'ua' => $_SERVER['HTTP_USER_AGENT'],
         'dh' => 'konscript.com'
     ));
   }
