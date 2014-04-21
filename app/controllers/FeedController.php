@@ -262,11 +262,18 @@ class FeedController extends BaseController
   private function track_download_feed_event($error_message)
   {
 
-    // category
-    $category = !is_null($error_message) ? "feedDownload - error" : "feedDownload - success";
+    // success
+    if(is_null($error_message)){
+      $category = "feedDownload - success";
+      $action = "success";
+      $value = 0.1;
 
-    // action
-    $action = !is_null($error_message) ? "error: " . $error_message : "success";
+    // Error
+    }else{
+      $category = "feedDownload - error";
+      $action = "error: " . $error_message;
+      $value = 0;
+    }
 
     // label - unverified user_id
     $label = Input::get('user_id', null);
@@ -280,6 +287,7 @@ class FeedController extends BaseController
         'ec' => $category,
         'ea' => $action,
         'el' => $label,
+        'ev' => $value,
         'dh' => 'konscript.com'
     ));
   }
