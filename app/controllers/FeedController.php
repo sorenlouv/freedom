@@ -266,7 +266,7 @@ class FeedController extends BaseController
     if(is_null($error_message)){
       $category = "feedDownload - success";
       $action = "success";
-      $value = 0.1;
+      $value = 0;
 
     // Error
     }else{
