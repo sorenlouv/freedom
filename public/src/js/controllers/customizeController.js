@@ -40,7 +40,7 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
     });
 
     var action =  eventResponse + '_' + $scope.settings[eventResponse];
-    $window._gaq.push(['_trackEvent', 'customization', action, $scope.settings.id]);
+    $window.ga('send', 'event', 'customization', action, $scope.settings.id, 1);
   };
 
   $scope.isEventDateIdenticalToPreviousEventDate = function(index){

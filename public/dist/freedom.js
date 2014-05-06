@@ -61,7 +61,7 @@ freedomApp.controller('customizeController', function ($scope, $rootScope, $http
     });
 
     var action =  eventResponse + '_' + $scope.settings[eventResponse];
-    $window._gaq.push(['_trackEvent', 'customization', action, $scope.settings.id]);
+    $window.ga('send', 'event', 'customization', action, $scope.settings.id, 1);
   };
 
   $scope.isEventDateIdenticalToPreviousEventDate = function(index){
@@ -129,7 +129,6 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   };
 
   var onFacebookConnectDeclinedByUser = function(){
-    $window._gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
     $window.ga('send', 'event', 'facebookLogin', 'failed', null, 0);
 
     $scope.$apply(function() {

@@ -8,7 +8,6 @@
     "freedomApp": true,
     "console": true,
     "angular": true,
-    "FB": true,
-    "_gaq": true
+    "FB": true
   }
 }

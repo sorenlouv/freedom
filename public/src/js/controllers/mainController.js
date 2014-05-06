@@ -43,7 +43,6 @@ freedomApp.controller('MainController', function($scope, $rootScope, $http, $loc
   };
 
   var onFacebookConnectDeclinedByUser = function(){
-    $window._gaq.push(['_trackEvent', 'facebookLogin', 'failed']);
     $window.ga('send', 'event', 'facebookLogin', 'failed', null, 0);
 
     $scope.$apply(function() {
