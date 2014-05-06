@@ -367,17 +367,30 @@ class FeedController extends BaseController
       }
     }
 
+    function get_sequence_number()
+    {
+      $past = 1399366333; // 6th of May, 2014
+      $now = time();
+      $diff = $now - $past;
+
+      $sequence_number = floor($diff / 3600);
+      return $sequence_number;
+    }
+
     $body = "";
     foreach ($events as $event) {
 
       // updated time
       $updated_time = $this->get_formatted_date($event['updated_time']);
 
+      // sequence number
+      $sequence = $this->get_sequence_number();
+
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time . "\r\n";
       $body .= "LAST-MODIFIED:" . $updated_time . "\r\n";
       $body .= "CREATED:" . $updated_time . "\r\n";
-      $body .= "SEQUENCE:0\r\n";
+      $body .= "SEQUENCE:" . $sequence . "\r\n";
 
       // Owner
       $owner = isset($event["owner"]["name"]) ? $event["owner"]["name"] : "Freedom Calendar";
