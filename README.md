@@ -15,3 +15,7 @@ Find the service [here](http://freedom.konscript.com)
   1. ```git clone git@github.com:sqren/freedom.git```
 
   2. ```composer update```
+
+  3. ```npm install```
+
+  4. ```grunt (watch)```
