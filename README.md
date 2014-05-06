@@ -9,3 +9,9 @@ Find the service [here](http://freedom.konscript.com)
 
 ### Roadmap
  - Option to show all events (even unanswered) from specific friends/groups
+
+### Install
+
+  1. ```git clone git@github.com:sqren/freedom.git```
+
+  2. ```composer update```
