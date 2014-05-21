@@ -384,7 +384,7 @@ class FeedController extends BaseController
       $updated_time = $this->get_formatted_date($event['updated_time']);
 
       // sequence number
-      $sequence = $this->get_sequence_number();
+      $sequence = get_sequence_number();
 
       $body .= "BEGIN:VEVENT\r\n";
       $body .= "DTSTAMP:" . $updated_time . "\r\n";
