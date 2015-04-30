@@ -45,8 +45,9 @@ class UserController extends BaseController {
   // return generated secure hash
   public function postSaveAccessToken(){
     $session = $this->get_session();
-    return 'as';
-    $user_id = $this->get_user_id($session);    
+    $user_id = $this->get_user_id($session);
+
+    return $user_id;
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
@@ -88,6 +89,7 @@ class UserController extends BaseController {
 
   private function get_user_id($session){
     $response = (new FacebookRequest($session, 'GET', '/me'))->execute();
+    return $response;
     $user_id = $response->getGraphObject()->getProperty('id');
     return $user_id;
   }
