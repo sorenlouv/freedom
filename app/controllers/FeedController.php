@@ -153,8 +153,11 @@ class FeedController extends BaseController
     // get events from Facebook
     try {
       if(!$failed){
-        $batch_response = $this->facebook->api('?include_headers=false&batch=' . urlencode(json_encode($event_queries)), 'POST');
-        $events = isset($data["events"]["data"]) ? $data["events"]["data"] : array();
+
+
+        $path = '?include_headers=false&batch=' . urlencode(json_encode($event_queries));
+        $response = (new FacebookRequest($session, 'POST', $path))->execute();
+        $batch_response = $response->getGraphObject()->asArray();
       }
     }
     catch (Exception $e) {
@@ -438,6 +441,8 @@ class FeedController extends BaseController
    ************************************/
   private function get_renew_instructions_body()
   {
+
+    return "";
 
     $today_date = $this->get_formatted_date(new DateTime());
     $tomorrow_date = $this->get_formatted_date((new DateTime())->modify('+24 hours'));
