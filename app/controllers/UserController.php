@@ -45,9 +45,7 @@ class UserController extends BaseController {
   // return generated secure hash
   public function postSaveAccessToken(){
     $session = $this->get_session();
-    $user_id = $this->get_user_id($session);
-
-    return var_dump($user_id);
+    $user_id = $this->get_user_id($session);    
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
@@ -100,9 +98,8 @@ class UserController extends BaseController {
   }
 
   private function extend_access_token($session){
-    $session->getToken();
-    $access_token_extended = $session->getLongLivedSession(Config::get('facebook.appId'), Config::get('facebook.secret'));
-
+    $session = $session->getLongLivedSession(Config::get('facebook.appId'), Config::get('facebook.secret'));
+    $access_token_extended = $session->getToken();
     return $access_token_extended;
   }
 
