@@ -5,7 +5,7 @@ use Facebook\FacebookRequest;
 class UserController extends BaseController {
 
   public function getSettings(){
-    $session = FacebookSession::newAppSession();
+    $session = $this->get_session();
     $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
@@ -17,7 +17,7 @@ class UserController extends BaseController {
   }
 
   public function postFeedSettings(){
-    $session = FacebookSession::newAppSession();
+    $session = $this->get_session();
     $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
@@ -43,11 +43,7 @@ class UserController extends BaseController {
   // save access token to db
   // return generated secure hash
   public function postSaveAccessToken(){
-
-    // arguments
-    // $access_token_short = $this->facebook->getAccessToken();
-    // $user_id = $this->facebook->getUser();
-    $session = FacebookSession::newAppSession();
+    $session = $this->get_session();
     $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
@@ -92,6 +88,12 @@ class UserController extends BaseController {
     $response = (new FacebookRequest($session, 'GET', '/me'))->execute();
     $user_id = $response->getGraphObject()->getProperty('id');
     return $user_id;
+  }
+
+  private function get_session() {
+    $helper = new FacebookJavaScriptLoginHelper();
+    $session = $helper->getSession();
+    return $session;
   }
 
   private function extend_access_token($session){
