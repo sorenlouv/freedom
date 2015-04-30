@@ -47,7 +47,7 @@ class UserController extends BaseController {
     $session = $this->get_session();
     $user_id = $this->get_user_id($session);
 
-    return $user_id;
+    return var_dump($user_id);
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
