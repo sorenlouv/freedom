@@ -45,9 +45,8 @@ class UserController extends BaseController {
   // return generated secure hash
   public function postSaveAccessToken(){
     $session = $this->get_session();
-    $user_id = $this->get_user_id($session);
-
     return 'as';
+    $user_id = $this->get_user_id($session);    
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
