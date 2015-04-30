@@ -1,7 +1,7 @@
 <?php
+use Facebook\FacebookSession;
 
-class BaseController extends Controller {
-	use Facebook\FacebookSession;
+class BaseController extends Controller {	
 
 	// Add global Facebook object
 	protected $facebook;
