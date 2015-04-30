@@ -7,7 +7,7 @@ class BaseController extends Controller {
 	protected $facebook;
 	public function __construct()
 	{
-		FacebookSession::setDefaultApplication(
+		$this->facebook = FacebookSession::setDefaultApplication(
 			Config::get('facebook.appId'), 
 			Config::get('facebook.secret')
 		);
