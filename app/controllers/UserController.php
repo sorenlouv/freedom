@@ -3,7 +3,8 @@
 class UserController extends BaseController {
 
   public function getSettings(){
-    $user_id = $this->facebook->getUser();
+    $session = FacebookSession::newAppSession();
+    $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
@@ -14,7 +15,8 @@ class UserController extends BaseController {
   }
 
   public function postFeedSettings(){
-    $user_id = $this->facebook->getUser();
+    $session = FacebookSession::newAppSession();
+    $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
@@ -41,15 +43,17 @@ class UserController extends BaseController {
   public function postSaveAccessToken(){
 
     // arguments
-    $access_token_short = $this->facebook->getAccessToken();
-    $user_id = $this->facebook->getUser();
+    // $access_token_short = $this->facebook->getAccessToken();
+    // $user_id = $this->facebook->getUser();
+    $session = FacebookSession::newAppSession();
+    $user_id = $this->get_user_id($session);
 
     if(!$user_id || $user_id === 0){
       App::abort(401, 'You are not authorized.');
     }
 
     // extend access token
-    $access_token = $this->extend_access_token($access_token_short);
+    $access_token_extended = $this->extend_access_token($session);    
 
     // secure hash
     $secure_hash = $this->get_secure_hash($user_id);
@@ -64,7 +68,7 @@ class UserController extends BaseController {
     }
 
     // set/update access token
-    $user->access_token = $access_token;
+    $user->access_token = $access_token_extended;
 
     // set/update secure hash
     $user->secure_hash = $secure_hash;
@@ -82,15 +86,17 @@ class UserController extends BaseController {
    *
    **************************************************/
 
-  private function extend_access_token($access_token_short){
-    // set short lived access token
-    $this->facebook->setAccessToken($access_token_short);
+  private function get_user_id($session){
+    $response = (new FacebookRequest($session, 'GET', '/me'))->execute();
+    $user_id = $response->getGraphObject()->getProperty('id');
+    return $user_id;
+  }
 
-    // get long-lived
-    $this->facebook->setExtendedAccessToken();
-    $access_token = $this->facebook->getAccessToken();
+  private function extend_access_token($session){
+    $session->getToken();
+    $access_token_extended = $session->getLongLivedSession(Config::get('facebook.appId'), Config::get('facebook.secret'));
 
-    return $access_token;
+    return $access_token_extended;
   }
 
   private function get_secure_hash($user_id){
