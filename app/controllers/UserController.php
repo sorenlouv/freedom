@@ -1,5 +1,6 @@
 <?php
 use Facebook\FacebookSession;
+use Facebook\FacebookRequest;
 
 class UserController extends BaseController {
 
