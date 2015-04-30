@@ -6,10 +6,10 @@ class BaseController extends Controller {
 	protected $facebook;
 	public function __construct()
 	{
-	  $this->facebook = new Facebook(array(
-	    'appId' => Config::get('facebook.appId'),
-	    'secret' => Config::get('facebook.secret')
-	  ));
+		FacebookSession::setDefaultApplication(
+			Config::get('facebook.appId'), 
+			Config::get('facebook.secret')
+		);
 	}
 
 

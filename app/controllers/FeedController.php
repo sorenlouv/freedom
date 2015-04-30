@@ -34,7 +34,7 @@ class FeedController extends BaseController
 
     // Access token was found in DB
     if ($access_token !== null) {
-      $this->facebook->setAccessToken($access_token); // set access token
+      $session = new FacebookSession('access-token');
       list($events, $failed) = $this->get_events(); // get events
       $body = $failed ? $this->get_renew_instructions_body() : $this->get_normal_body($events);
     }else{
