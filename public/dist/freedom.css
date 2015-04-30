@@ -34,7 +34,6 @@ body {
   display: inline-block;
   width: 20%;
   max-width: 130px;
-  -webkit-transition: color 0.5s ease-in-out, border-top 0.5s ease-in-out;
   transition: color 0.5s ease-in-out, border-top 0.5s ease-in-out;
   border-top: 2px solid #f5f5f5;
 }
@@ -63,7 +62,6 @@ body {
 .page-customize .feed-url input {
   padding: 10px;
   width: 100%;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   border: 1px solid #ddd;
@@ -78,14 +76,12 @@ body {
   margin: 20px 0;
 }
 .page-customize .preview .event .event-info {
-  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   margin: 20px 0;
 }
 .page-customize .preview .event .event-info .time {
-  -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -93,7 +89,6 @@ body {
   color: #808080;
 }
 .page-customize .preview .event .event-info .cover {
-  -webkit-box-flex: 2;
   -webkit-flex: 2;
   -ms-flex: 2;
   flex: 2;
@@ -101,7 +96,6 @@ body {
   margin: 0 10px;
 }
 .page-customize .preview .event .event-info .right-container {
-  -webkit-box-flex: 8;
   -webkit-flex: 8;
   -ms-flex: 8;
   flex: 8;
@@ -118,35 +112,28 @@ body {
 .step-wizard ul {
   list-style-type: none;
   padding: 0;
-  -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
 @media only screen and (max-width: 800px) {
   .step-wizard ul {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-align: center;
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
   }
 }
 .step-wizard ul li {
-  -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
   opacity: 0.2;
-  -webkit-transition: opacity 0.5s ease-in-out;
   transition: opacity 0.5s ease-in-out;
   pointer-events: none;
   -webkit-user-select: none;
@@ -168,7 +155,6 @@ body {
   line-height: 50px;
   border-radius: 37.5px;
   text-align: center;
-  -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   color: #000;
   font-size: 25px;
@@ -186,7 +172,6 @@ body {
   line-height: 30px;
   border-radius: 22.5px;
   text-align: center;
-  -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   color: #000;
   font-size: 15px;
@@ -211,7 +196,6 @@ body {
   padding: 0;
   top: 0;
   left: 0;
-  -webkit-transition: all 0.5s;
   transition: all 0.5s;
   z-index: -1;
 }

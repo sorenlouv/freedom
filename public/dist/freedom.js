@@ -272,12 +272,12 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
 
       // Load the SDK Asynchronously
       (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = '//connect.facebook.net/en_US/all.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = '//connect.facebook.net/en_US/sdk.js';
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
 
     }, // controller end
 
@@ -295,6 +295,7 @@ angular.module('facebookDirective', []).directive('facebook', function(safeApply
       // fbAsyncInit is run as soon as the SDK is loaded
       window.fbAsyncInit = function() {
         FB.init({
+          version    : 'v2.3',
           appId      : $attrs.appId,                   // App ID
           channelUrl : $attrs.channelUrl || 'channel.php',
           status     : $attrs.status || false,         // check login status
