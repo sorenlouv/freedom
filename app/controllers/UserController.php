@@ -3,7 +3,6 @@ use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;
 use Facebook\FacebookJavaScriptLoginHelper;
-use Facebook\FacebookJavaScriptLoginHelper;
 
 class UserController extends BaseController {
 
