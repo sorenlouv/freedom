@@ -87,7 +87,8 @@ class UserController extends BaseController {
 
   private function get_user_id($session){
     $response = (new FacebookRequest($session, 'GET', '/me'))->execute();
-    $user_id = $response->getGraphObject()->getId();
+    $user = $response->getGraphObject(GraphUser::className());
+    $user_id = $user->getId();
     return $user_id;
   }
 
