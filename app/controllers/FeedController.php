@@ -1,5 +1,8 @@
 <?php
 use Facebook\FacebookSession;
+use Facebook\FacebookRequest;
+use Facebook\GraphUser;
+use Facebook\FacebookJavaScriptLoginHelper;
 
 // Set UTC time as default timezone
 date_default_timezone_set ( "UTC" );
