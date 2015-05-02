@@ -69,17 +69,17 @@ class FeedController extends BaseController
    * return Array $response
    * TODO: caching http://davidwalsh.name/php-cache-function
    ************************************/
-  private function get_close_friends(){
-    $access_token = $this->get_access_token();
-    $session = new FacebookSession($access_token);
-    $response = (new FacebookRequest($session, 'GET', '/me/friendlists/close_friends?fields=members.fields(id)'))->execute();
-    $responseArray = $response->getGraphObject()->asArray();
-    $close_friends = $responseArray["data"][0]["members"]["data"];
+  // private function get_close_friends(){
+  //   $access_token = $this->get_access_token();
+  //   $session = new FacebookSession($access_token);
+  //   $response = (new FacebookRequest($session, 'GET', '/me/friendlists/close_friends?fields=members.fields(id)'))->execute();
+  //   $responseArray = $response->getGraphObject()->asArray();
+  //   $close_friends = $responseArray["data"][0]["members"]["data"];
 
-    return array_map(function($close_friend){
-      return $close_friend["id"];
-    }, $close_friends);
-  }
+  //   return array_map(function($close_friend){
+  //     return $close_friend["id"];
+  //   }, $close_friends);
+  // }
 
   /*
    * Getter: User from database
@@ -113,7 +113,7 @@ class FeedController extends BaseController
     {
       return array(
         'method' => 'GET',
-        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,location,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only,cover'
+        'relative_url' => '/me/events/' . $event_type . '?limit=1000&fields=description,end_time,id,owner,rsvp_status,start_time,name,timezone,updated_time,is_date_only,cover'
       );
     }
 
@@ -160,7 +160,10 @@ class FeedController extends BaseController
         $session = $this->get_session();
         $path = '?include_headers=false&batch=' . urlencode(json_encode($event_queries));
         $response = (new FacebookRequest($session, 'POST', $path))->execute();
-        $batch_response = $response->getGraphObject()->asArray();
+        $batch_response = $response->getGraphObject();
+        $batch_response2 = $response->getGraphObject()->getProperty('data$');
+        var_dump($batch_response);
+        var_dump($batch_response2);
       }
     }
     catch (Exception $e) {
@@ -414,11 +417,6 @@ class FeedController extends BaseController
 
       // Title
       $body .= "SUMMARY:" . $this->ical_encode_text(get_event_name($event)) . "\r\n";
-
-      // location
-      if (isset($event["location"])) {
-        $body .= "LOCATION:" . $this->ical_encode_text($event["location"]) . "\r\n";
-      }
 
       // URL
       $body .= "URL:" . get_event_url($event) . "/\r\n";
