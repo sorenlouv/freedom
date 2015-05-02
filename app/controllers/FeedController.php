@@ -34,7 +34,7 @@ class FeedController extends BaseController
     $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
 
     // Access token was found in DB
-    if ($access_token !== null) {
+    if ($access_token !== null) {      
       $session = new FacebookSession($access_token);
       list($events, $failed) = $this->get_events(); // get events
       $body = $failed ? $this->get_renew_instructions_body() : $this->get_normal_body($events);
@@ -73,8 +73,9 @@ class FeedController extends BaseController
    * TODO: caching http://davidwalsh.name/php-cache-function
    ************************************/
   private function get_close_friends(){
-    $response = $this->facebook->api('/me/friendlists/close_friends?fields=members.fields(id)');
-    $close_friends = $response["data"][0]["members"]["data"];
+    $response = (new FacebookRequest($session, 'GET', '/me/friendlists/close_friends?fields=members.fields(id)'))->execute();
+    $responseArray = $response->getGraphObject()->asArray();
+    $close_friends = $responseArray["data"][0]["members"]["data"];
 
     return array_map(function($close_friend){
       return $close_friend["id"];
@@ -85,8 +86,11 @@ class FeedController extends BaseController
    * Getter: User from database
    * return Object $user
    ************************************/
-  private function getUser(){
-    $user_id = $this->facebook->getUser();
+  private function getUser($session){
+    $response = (new FacebookRequest($session, 'GET', '/me'))->execute();
+    $user = $response->getGraphObject(GraphUser::className());
+    $user_id = $user->getId();
+
     if($user_id === null || $user_id === 0){
       return null;
     }else{
@@ -114,7 +118,8 @@ class FeedController extends BaseController
       );
     }
 
-    $user = $this->getUser();
+    $session = $this->get_session();
+    $user = $this->getUser($session);
     if($user === null){
       $failed = true;
       $error_message = "Facebook user could not be retrieved";
@@ -153,8 +158,7 @@ class FeedController extends BaseController
     // get events from Facebook
     try {
       if(!$failed){
-
-
+        $session = $this->get_session();
         $path = '?include_headers=false&batch=' . urlencode(json_encode($event_queries));
         $response = (new FacebookRequest($session, 'POST', $path))->execute();
         $batch_response = $response->getGraphObject()->asArray();
@@ -327,10 +331,11 @@ class FeedController extends BaseController
    ************************************/
   private function get_normal_body($events)
   {
+    $session = $this->get_session();
 
     // add question mark to event title if rsvp is "unsure"
     function get_event_name($event)
-    {
+    {      
 
       if(!isset($event["name"])){
         $user_id = Input::get('user_id', null);
@@ -341,7 +346,7 @@ class FeedController extends BaseController
           "event" => $event,
           "user_id" => $user_id,
           "secure_hash" => Input::get('secure_hash', null),
-          "access_token" => $facebook->getAccessToken()
+          "access_token" => $session->getToken()
         ));
       }
 
@@ -577,6 +582,12 @@ class FeedController extends BaseController
       ));
       return null;
     }
+  }
+
+  private function get_session() {
+    $helper = new FacebookJavaScriptLoginHelper();
+    $session = $helper->getSession();
+    return $session;
   }
 
 }
