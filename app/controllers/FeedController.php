@@ -2,7 +2,6 @@
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;
-use Facebook\FacebookJavaScriptLoginHelper;
 
 // Set UTC time as default timezone
 date_default_timezone_set ( "UTC" );
@@ -29,12 +28,7 @@ class FeedController extends BaseController
     header('Content-type: text/calendar;charset=utf-8');
     header('Content-Disposition: attachment; filename=feed.ics');
 
-    // arguments
-    $user_id = Input::get('user_id', null);
-    $secure_hash = Input::get('secure_hash', null);
-
-    // Get access token
-    $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
+    $access_token = $this->get_access_token();
 
     // Access token was found in DB
     if ($access_token !== null) {      
@@ -76,6 +70,8 @@ class FeedController extends BaseController
    * TODO: caching http://davidwalsh.name/php-cache-function
    ************************************/
   private function get_close_friends(){
+    $access_token = $this->get_access_token();
+    $session = new FacebookSession($access_token);
     $response = (new FacebookRequest($session, 'GET', '/me/friendlists/close_friends?fields=members.fields(id)'))->execute();
     $responseArray = $response->getGraphObject()->asArray();
     $close_friends = $responseArray["data"][0]["members"]["data"];
@@ -342,9 +338,6 @@ class FeedController extends BaseController
 
       if(!isset($event["name"])){
         $user_id = Input::get('user_id', null);
-        if (extension_loaded('newrelic')) {
-          newrelic_add_custom_parameter ("user_id", $user_id);
-        }
         Log::error('Event "name" is missing', array(
           "event" => $event,
           "user_id" => $user_id,
@@ -587,9 +580,17 @@ class FeedController extends BaseController
     }
   }
 
+  private function get_access_token(){
+    $user_id = Input::get('user_id', null);
+    $secure_hash = Input::get('secure_hash', null);
+
+    $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
+    return $get_access_token;
+  }
+
   private function get_session() {
-    $helper = new FacebookJavaScriptLoginHelper();
-    $session = $helper->getSession();
+    $access_token = $this->get_access_token();
+    $session = new FacebookSession($access_token);
     return $session;
   }
 
