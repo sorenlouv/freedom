@@ -585,7 +585,7 @@ class FeedController extends BaseController
     $secure_hash = Input::get('secure_hash', null);
 
     $access_token = $this->get_access_token_by_user_id($user_id, $secure_hash);
-    return $get_access_token;
+    return $access_token;
   }
 
   private function get_session() {
