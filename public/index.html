@@ -40,6 +40,21 @@
 
       <!-- Wizard -->
       <div class="step-wizard">
+        <div style="
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            width: 100%;
+            top: 140px;
+            min-height: 300px;
+            padding: 50px 10%;
+            z-index: 10;
+            box-sizing: border-box;">
+                <h1>Out of order</h1>
+                <p style="text-align: left;">
+                Facebook has changed their API and I have not yet had the time to update this app. I've put a lot of hours into this thing, and I really want everybody who uses it today, to keep being happy with it. Due to personal reasons, I cannot promise an ETA. I'm very sorry.
+                <p>Best regards, Søren<br><em>26th of May 2015</em></p>
+            </p>
+        </div>        
         <div ng-if="currentPath!='renew' && currentPath!='customize' && currentPath!='preview'" ng-include="'templates/signup.html'"></div>
         <div ng-if="currentPath=='renew'" ng-include="'templates/renew.html'"></div>
         <div class="spinner" is-loading="isLoading"></div>
